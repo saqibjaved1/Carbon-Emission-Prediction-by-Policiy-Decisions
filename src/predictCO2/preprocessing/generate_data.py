@@ -79,7 +79,7 @@ class CountryPolicyCarbonData(TrainDataInterface):
         """
         Return features as specified by argument
         :param data_type DataType either DICT or PANDAS_DF
-        :rtype: python dictionary or pandas dataframe
+        :rtype: python dictionary or pandas data frame
         """
         if not self.feature_dict:
             for index, row in self.policy_df.iterrows():
@@ -100,7 +100,7 @@ class CountryPolicyCarbonData(TrainDataInterface):
         """
         Return labels as specified by argument
         :param data_type DataType either DICT or PANDAS_DF
-        :rtype: python dictionary or pandas dataframe
+        :rtype: python dictionary or pandas data frame
         """
         if not self.label_dict:
             for index, row in self.carbon_df.iterrows():
@@ -118,7 +118,7 @@ class CountryPolicyCarbonData(TrainDataInterface):
         """
         Return features as specified by argument
         :param data_type DataType either DICT or PANDAS_DF
-        :rtype: python dictionary or pandas dataframe. For dictionary returntype, first argument will be country name
+        :rtype: python dictionary or pandas data frame. For dictionary return type, first argument will be country name
         followed by dictionary of augmented data.
         """
         if not self.combined_data_dict:

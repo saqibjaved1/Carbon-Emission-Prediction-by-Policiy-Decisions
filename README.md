@@ -11,3 +11,9 @@ This is our git repo!
 
 ## Install predictCO2 package
 ```pip install -e .```
+
+## Run tests
+```pytest ./tests```
+
+## Run linter
+```pylint src```

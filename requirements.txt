@@ -4,3 +4,4 @@ seaborn
 predictCO2
 pylint
 jupyter-notebook
+tensorflow

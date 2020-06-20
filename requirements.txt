@@ -3,3 +3,4 @@ pandas
 seaborn
 predictCO2
 pylint
+jupyter-notebook

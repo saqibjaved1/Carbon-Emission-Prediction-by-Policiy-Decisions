@@ -1,0 +1,16 @@
+image: python:3.8.3-buster
+
+stages:
+  - test
+
+test:
+  script:
+    - pip install -r requirements.txt
+    - pip install -e .
+    - pytest ./tests
+
+linter:
+  script:
+    - pip install -r requirements.txt
+    - pip install -e .
+    - pylint --fail-under=-108 ./src

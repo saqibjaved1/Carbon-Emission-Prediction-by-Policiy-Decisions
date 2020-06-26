@@ -160,7 +160,6 @@ class CountryPolicyCarbonData(TrainDataInterface):
         """
         pass
 
-    @abc.abstractmethod
     def save_data_frame_to_npz(self, location: str):
         """
         Save data frame as compressed numpy arrays to location provided by the argument.

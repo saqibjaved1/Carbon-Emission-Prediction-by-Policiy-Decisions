@@ -57,6 +57,14 @@ class TrainDataInterface(object):
         """
         pass
 
+    @abc.abstractmethod
+    def save_data_frame_to_npz(self, location: str):
+        """
+        Save data frame as compressed numpy arrays
+        :param location: Location on local file system
+        """
+        pass
+
 
 class CountryPolicyCarbonData(TrainDataInterface):
     def __init__(self, policy_csv, carbon_csv):
@@ -149,6 +157,14 @@ class CountryPolicyCarbonData(TrainDataInterface):
         """
         Method saves data frame to csv to location provided by the argument.
         :param location: Location of output csv on local file system.
+        """
+        pass
+
+    @abc.abstractmethod
+    def save_data_frame_to_npz(self, location: str):
+        """
+        Save data frame as compressed numpy arrays to location provided by the argument.
+        :param location: Location of output npz on local file system
         """
         pass
 

@@ -173,32 +173,141 @@ class CountryPolicyCarbonData(TrainDataInterface):
         Return 17 policy parameters along with flags in relevant fields as list
         :rtype: List of policy parameters
         """
-        c1 = data_row['C1_School closing']
-        c1_flag = data_row['C1_Flag']
-        c2 = data_row['C2_Workplace closing']
-        c2_flag = data_row['C2_Flag']
-        c3 = data_row['C3_Cancel public events']
-        c3_flag = data_row['C3_Flag']
-        c4 = data_row['C4_Restrictions on gatherings']
-        c4_flag = data_row['C4_Flag']
-        c5 = data_row['C5_Close public transport']
-        c5_flag = data_row['C5_Flag']
-        c6 = data_row['C6_Stay at home requirements']
-        c6_flag = data_row['C6_Flag']
-        c7 = data_row['C7_Restrictions on internal movement']
-        c7_flag = data_row['C7_Flag']
-        c8 = data_row['C8_International travel controls']
-        e1 = data_row['E1_Income support']
-        e1_flag = data_row['E1_Flag']
-        e2 = data_row['E2_Debt/contract relief']
-        e3 = data_row['E3_Fiscal measures']
-        e4 = data_row['E4_International support']
-        h1 = data_row['H1_Public information campaigns']
-        h1_flag = data_row['H1_Flag']
-        h2 = data_row['H2_Testing policy']
-        h3 = data_row['H3_Contact tracing']
-        h4 = data_row['H4_Emergency investment in healthcare']
-        h5 = data_row['H5_Investment in vaccines']
+        c1 = data_row[PolicyData.get_c1()]
+        c1_flag = data_row[PolicyData.get_c1_flag()]
+        c2 = data_row[PolicyData.get_c2()]
+        c2_flag = data_row[PolicyData.get_c2_flag()]
+        c3 = data_row[PolicyData.get_c3()]
+        c3_flag = data_row[PolicyData.get_c3_flag()]
+        c4 = data_row[PolicyData.get_c4()]
+        c4_flag = data_row[PolicyData.get_c4_flag()]
+        c5 = data_row[PolicyData.get_c5()]
+        c5_flag = data_row[PolicyData.get_c5_flag()]
+        c6 = data_row[PolicyData.get_c6()]
+        c6_flag = data_row[PolicyData.get_c6_flag()]
+        c7 = data_row[PolicyData.get_c7()]
+        c7_flag = data_row[PolicyData.get_c7_flag()]
+        c8 = data_row[PolicyData.get_c8()]
+        e1 = data_row[PolicyData.get_e1()]
+        e1_flag = data_row[PolicyData.get_e1_flag()]
+        e2 = data_row[PolicyData.get_e2()]
+        e3 = data_row[PolicyData.get_e3()]
+        e4 = data_row[PolicyData.get_e4()]
+        h1 = data_row[PolicyData.get_h1()]
+        h1_flag = data_row[PolicyData.get_h1_flag()]
+        h2 = data_row[PolicyData.get_h2()]
+        h3 = data_row[PolicyData.get_h3()]
+        h4 = data_row[PolicyData.get_h4()]
+        h5 = data_row[PolicyData.get_h5()]
         return [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
                 c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2, e3, e4, h1,
                 h1_flag, h2, h3, h4, h5]
+
+
+class PolicyData:
+
+    @staticmethod
+    def get_c1():
+        return 'C1_School closing'
+
+    @staticmethod
+    def get_c1_flag():
+        return 'C1_Flag'
+
+    @staticmethod
+    def get_c2():
+        return 'C2_Workplace closing'
+
+    @staticmethod
+    def get_c2_flag():
+        return 'C2_Flag'
+
+    @staticmethod
+    def get_c3():
+        return 'C3_Cancel public events'
+
+    @staticmethod
+    def get_c3_flag():
+        return 'C3_Flag'
+
+    @staticmethod
+    def get_c4():
+        return 'C4_Restrictions on gatherings'
+
+    @staticmethod
+    def get_c4_flag():
+        return 'C4_Flag'
+
+    @staticmethod
+    def get_c5():
+        return 'C5_Close public transport'
+
+    @staticmethod
+    def get_c5_flag():
+        return 'C5_Flag'
+
+    @staticmethod
+    def get_c6():
+        return 'C6_Stay at home requirements'
+
+    @staticmethod
+    def get_c6_flag():
+        return 'C6_Flag'
+
+    @staticmethod
+    def get_c7():
+        return 'C7_Restrictions on internal movement'
+
+    @staticmethod
+    def get_c7_flag():
+        return 'C7_Flag'
+
+    @staticmethod
+    def get_c8():
+        return 'C8_International travel controls'
+
+    @staticmethod
+    def get_e1():
+        return 'E1_Income support'
+
+    @staticmethod
+    def get_e1_flag():
+        return 'E1_Flag'
+
+    @staticmethod
+    def get_e2():
+        return 'E2_Debt/contract relief'
+
+    @staticmethod
+    def get_e3():
+        return 'E3_Fiscal measures'
+
+    @staticmethod
+    def get_e4():
+        return 'E4_International support'
+
+    @staticmethod
+    def get_h1():
+        return 'H1_Public information campaigns'
+
+    @staticmethod
+    def get_h1_flag():
+        return 'H1_Flag'
+
+    @staticmethod
+    def get_h2():
+        return 'H2_Testing policy'
+
+    @staticmethod
+    def get_h3():
+        return 'H3_Contact tracing'
+
+    @staticmethod
+    def get_h4():
+        return 'H4_Emergency investment in healthcare'
+
+    @staticmethod
+    def get_h5():
+        return 'H5_Investment in vaccines'
+
+

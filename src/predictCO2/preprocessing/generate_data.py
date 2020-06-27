@@ -4,6 +4,7 @@ Date: 20/6/2020
 """
 
 import abc
+import Globals
 import pandas as pd
 import predictCO2.preprocessing.utils as utils
 
@@ -167,144 +168,127 @@ class CountryPolicyCarbonData(TrainDataInterface):
         """
         pass
 
-    @staticmethod
-    def policy_values_as_list(data_row):
-        """
-        Return 17 policy parameters along with flags in relevant fields as list
-        :rtype: List of policy parameters
-        """
-        c1 = data_row[PolicyData.get_c1()]
-        c1_flag = data_row[PolicyData.get_c1_flag()]
-        c2 = data_row[PolicyData.get_c2()]
-        c2_flag = data_row[PolicyData.get_c2_flag()]
-        c3 = data_row[PolicyData.get_c3()]
-        c3_flag = data_row[PolicyData.get_c3_flag()]
-        c4 = data_row[PolicyData.get_c4()]
-        c4_flag = data_row[PolicyData.get_c4_flag()]
-        c5 = data_row[PolicyData.get_c5()]
-        c5_flag = data_row[PolicyData.get_c5_flag()]
-        c6 = data_row[PolicyData.get_c6()]
-        c6_flag = data_row[PolicyData.get_c6_flag()]
-        c7 = data_row[PolicyData.get_c7()]
-        c7_flag = data_row[PolicyData.get_c7_flag()]
-        c8 = data_row[PolicyData.get_c8()]
-        e1 = data_row[PolicyData.get_e1()]
-        e1_flag = data_row[PolicyData.get_e1_flag()]
-        e2 = data_row[PolicyData.get_e2()]
-        e3 = data_row[PolicyData.get_e3()]
-        e4 = data_row[PolicyData.get_e4()]
-        h1 = data_row[PolicyData.get_h1()]
-        h1_flag = data_row[PolicyData.get_h1_flag()]
-        h2 = data_row[PolicyData.get_h2()]
-        h3 = data_row[PolicyData.get_h3()]
-        h4 = data_row[PolicyData.get_h4()]
-        h5 = data_row[PolicyData.get_h5()]
-        return [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
-                c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2, e3, e4, h1,
-                h1_flag, h2, h3, h4, h5]
-
 
 class PolicyData:
+    C1 = 'C1_School closing'
+    C1_FLAG = 'C1_Flag'
+    C2 = 'C2_Workplace closing'
+    C2_FLAG = 'C2_Flag'
+    C3 = 'C3_Cancel public events'
+    C3_FLAG = 'C3_Flag'
+    C4 = 'C4_Restrictions on gatherings'
+    C4_FLAG = 'C4_Flag'
+    C5 = 'C5_Close public transport'
+    C5_FLAG = 'C5_Flag'
+    C6 = 'C6_Stay at home requirements'
+    C6_FLAG = 'C6_Flag'
+    C7 = 'C7_Restrictions on internal movement'
+    C7_FLAG = 'C7_Flag'
+    C8 = 'C8_International travel controls'
+    E1 = 'E1_Income support'
+    E1_FLAG = 'E1_Flag'
+    E2 = 'E2_Debt/contract relief'
+    E3 = 'E3_Fiscal measures'
+    E4 = 'E4_International support'
+    H1 = 'H1_Public information campaigns'
+    H1_FLAG = 'H1_Flag'
+    H2 = 'H2_Testing policy'
+    H3 = 'H3_Contact tracing'
+    H4 = 'H4_Emergency investment in healthcare'
+    H5 = 'H5_Investment in vaccines'
 
-    @staticmethod
-    def get_c1():
-        return 'C1_School closing'
+    # POLICY_DATA_FRAME_FULL = None
 
-    @staticmethod
-    def get_c1_flag():
-        return 'C1_Flag'
+    def __init__(self, policy_csv, country):
+        """
+        Policy/Feature Data set is available as a merged excel file with each country having it's individual sheet named
+        after that country.
+        :param self.__country_name: Name of country
+        :param self.__country_policy_dict: Dictionary of policy
+        :param self.__country_policy_df: Data frame of policy
+        """
+        self.__country_name = country
+        self.__country_policy_dict = {}
+        self.__country_policy_df = pd.read_excel(policy_csv, sheet_name=country)
+        self.__set_properties()
 
-    @staticmethod
-    def get_c2():
-        return 'C2_Workplace closing'
+    def __set_properties(self):
+        """
+        Private method which filters the policy data and sets only policy keys.
+        """
+        if not self.__country_policy_dict:
+            for index, row in self.__country_policy_df.iterrows():
+                date = row['Date']
+                c1 = row[PolicyData.C1]
+                c1_flag = row[PolicyData.C1_FLAG]
+                c2 = row[PolicyData.C2]
+                c2_flag = row[PolicyData.C2_FLAG]
+                c3 = row[PolicyData.C3]
+                c3_flag = row[PolicyData.C3_FLAG]
+                c4 = row[PolicyData.C4]
+                c4_flag = row[PolicyData.C4_FLAG]
+                c5 = row[PolicyData.C5]
+                c5_flag = row[PolicyData.C5_FLAG]
+                c6 = row[PolicyData.C6]
+                c6_flag = row[PolicyData.C6_FLAG]
+                c7 = row[PolicyData.C7]
+                c7_flag = row[PolicyData.C7_FLAG]
+                c8 = row[PolicyData.C8]
+                e1 = row[PolicyData.E1]
+                e1_flag = row[PolicyData.E1_FLAG]
+                e2 = row[PolicyData.E2]
+                e3 = row[PolicyData.E3]
+                e4 = row[PolicyData.E4]
+                h1 = row[PolicyData.H1]
+                h1_flag = row[PolicyData.H1_FLAG]
+                h2 = row[PolicyData.H2]
+                h3 = row[PolicyData.H3]
+                h4 = row[PolicyData.H4]
+                h5 = row[PolicyData.H5]
+                self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
+                                                         c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2, e3, e4,
+                                                         h1,
+                                                         h1_flag, h2, h3, h4, h5]
 
-    @staticmethod
-    def get_c2_flag():
-        return 'C2_Flag'
+    def get_country_policy_data(self, data_type):
+        """
+        Method to fetch policy/feature data for country
+        :param data_type: Specifies the format of return data type
+        :return: Policy data frame or dictionary for country
+        """
+        if data_type == DataType.DICT:
+            return self.__country_policy_dict
 
-    @staticmethod
-    def get_c3():
-        return 'C3_Cancel public events'
+        if data_type == DataType.PANDAS_DF:
+            return self.__country_policy_df
 
-    @staticmethod
-    def get_c3_flag():
-        return 'C3_Flag'
+    def get_specific_policy_data(self, policy_key, data_type):
+        """
+        Method to return policy for specific policy parameter (e.g. C1, C2, etc....)
+        :param policy_key: Name of policy parameter
+        :param data_type: Specifies the format of return data type
+        :return: Policy specific data frame or dictionary for country
+        """
+        policy_values_series = self.__country_policy_df[policy_key]
+        date_series = self.__country_policy_df['Date'].astype(str)
+        dates = date_series.to_list()
+        frame = policy_values_series.to_frame()
+        if data_type == DataType.PANDAS_DF:
+            frame.index = dates
+            return frame
+        if data_type == DataType.DICT:
+            policy_dict = frame.to_dict()[policy_key]
+            return policy_dict
 
-    @staticmethod
-    def get_c4():
-        return 'C4_Restrictions on gatherings'
+    @property
+    def get_country_name(self):
+        """
+        Method to  return country name
+        :return: Country name string
+        """
+        return self.__country_name
 
-    @staticmethod
-    def get_c4_flag():
-        return 'C4_Flag'
 
-    @staticmethod
-    def get_c5():
-        return 'C5_Close public transport'
-
-    @staticmethod
-    def get_c5_flag():
-        return 'C5_Flag'
-
-    @staticmethod
-    def get_c6():
-        return 'C6_Stay at home requirements'
-
-    @staticmethod
-    def get_c6_flag():
-        return 'C6_Flag'
-
-    @staticmethod
-    def get_c7():
-        return 'C7_Restrictions on internal movement'
-
-    @staticmethod
-    def get_c7_flag():
-        return 'C7_Flag'
-
-    @staticmethod
-    def get_c8():
-        return 'C8_International travel controls'
-
-    @staticmethod
-    def get_e1():
-        return 'E1_Income support'
-
-    @staticmethod
-    def get_e1_flag():
-        return 'E1_Flag'
-
-    @staticmethod
-    def get_e2():
-        return 'E2_Debt/contract relief'
-
-    @staticmethod
-    def get_e3():
-        return 'E3_Fiscal measures'
-
-    @staticmethod
-    def get_e4():
-        return 'E4_International support'
-
-    @staticmethod
-    def get_h1():
-        return 'H1_Public information campaigns'
-
-    @staticmethod
-    def get_h1_flag():
-        return 'H1_Flag'
-
-    @staticmethod
-    def get_h2():
-        return 'H2_Testing policy'
-
-    @staticmethod
-    def get_h3():
-        return 'H3_Contact tracing'
-
-    @staticmethod
-    def get_h4():
-        return 'H4_Emergency investment in healthcare'
 
     @staticmethod
     def get_h5():

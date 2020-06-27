@@ -38,3 +38,12 @@ def conform_date(date_str):
             raise ValueError("Failed to conform date in YYYYMMDD format for received: {}".format(date_str))
 
 
+def load_cfg_file(cfg_name):
+    cfg_prefix = Globals.ROOT_DIR + '/cfg/'
+    cfg_rel_path = cfg_prefix + "/" + cfg_name
+    cfg = None
+    with open(r'{}'.format(cfg_rel_path)) as file:
+        # The FullLoader parameter handles the conversion from YAML
+        # scalar values to Python the dictionary format
+        cfg = yaml.load(file, Loader=yaml.FullLoader)
+    return cfg

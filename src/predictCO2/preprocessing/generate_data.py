@@ -68,17 +68,23 @@ class TrainDataInterface(object):
 
 
 class CountryPolicyCarbonData(TrainDataInterface):
-    def __init__(self, policy_csv, carbon_csv):
+    def __init__(self, training_cfg, country):
         """
         Class to keep Policy and Carbon data by country.
         Uses OXFORD OxCGRT (https://github.com/OxCGRT/covid-policy-tracker) as features/policy
         Uses Global Carbon Project (https://www.icos-cp.eu/gcp-covid19) as labels/carbon
-        :param policy_csv: Path to policy/features csv file
-        :param carbon_csv: Path to carbon/label csv file
+        :param training_cfg: yaml configuration file where location of data set and other parameters as kept
+        :param country: name of country for which data is required.
         """
-        self.policy_df = pd.read_csv(policy_csv)
-        self.carbon_df = pd.read_csv(carbon_csv)
-        self.country_name = self.carbon_df.iloc[1, :]['REGION_NAME']
+
+        self.training_cfg = utils.load_cfg_file(training_cfg)
+        self.country_name = country
+        carbon_csv = Globals.ROOT_DIR + "/" + self.training_cfg['labels']
+        self.carbon_emission_data = CarbonEmissionData(carbon_csv, country)
+
+        policy_csv = Globals.ROOT_DIR + "/" + self.training_cfg['features']
+        self.policy_data = PolicyData(policy_csv, self.country_name)
+
         self.combined_data_dict = {}
         self.feature_dict = {}
         self.label_dict = {}
@@ -90,16 +96,10 @@ class CountryPolicyCarbonData(TrainDataInterface):
         :param data_type DataType either DICT or PANDAS_DF
         :rtype: python dictionary or pandas data frame
         """
-        if not self.feature_dict:
-            for index, row in self.policy_df.iterrows():
-                if row['CountryName'] != self.country_name:
-                    continue
-                else:
-                    date = row['Date']
-                    policy = CountryPolicyCarbonData.policy_values_as_list(row)
-                    self.feature_dict[str(date)] = policy
-            self.num_features = len(next(iter(self.feature_dict.values())))
         if data_type == DataType.DICT:
+            if not self.feature_dict:
+                self.feature_dict = self.policy_data.get_country_policy_data(DataType.DICT)
+                self.num_features = len(next(iter(self.feature_dict.values())))
             return self.feature_dict
         if data_type == DataType.PANDAS_DF:
             countries = [self.country_name for i in range(self.num_features)]
@@ -112,12 +112,7 @@ class CountryPolicyCarbonData(TrainDataInterface):
         :rtype: python dictionary or pandas data frame
         """
         if not self.label_dict:
-            for index, row in self.carbon_df.iterrows():
-                if "MTCO2/day" in row['TOTAL_CO2_MED']:
-                    continue
-                date = utils.conform_date(row['DATE'])
-                self.label_dict[date] = row['TOTAL_CO2_MED']
-
+            self.label_dict = self.carbon_emission_data.get_country_carbon_emission_data(DataType.DICT)
         if data_type == DataType.DICT:
             return self.label_dict
         if data_type == DataType.PANDAS_DF:
@@ -289,9 +284,44 @@ class PolicyData:
         return self.__country_name
 
 
+class CarbonEmissionData:
+    def __init__(self, carbon_csv, country):
+        """
+        Carbon emission data initializer.
+        :param carbon_csv: Path to carbon emission excel
+        :param country: country name
+        """
+        self.__carbon_df = pd.read_excel(carbon_csv, sheet_name=country)
+        self.__country_name = country
+        self.__carbon_emission_dict = {}
+        self.__set_properties()
 
-    @staticmethod
-    def get_h5():
-        return 'H5_Investment in vaccines'
+    def __set_properties(self):
+        """
+        Filters the Carbon emission file to select relevant keys/rows
+        """
+        if not self.__carbon_emission_dict:
+            for index, row in self.__carbon_df.iterrows():
+                if "MTCO2/day" in str(row['TOTAL_CO2_MED']):
+                    continue
+                date = utils.conform_date(row['DATE'])
+                self.__carbon_emission_dict[date] = row['TOTAL_CO2_MED']
 
+    def get_country_carbon_emission_data(self, data_type):
+        """
+        Provides carbon emission data as specified
+        :param data_type: Specifies the format of return data type
+        :return: either dict or data frame as specified
+        """
+        if data_type == DataType.DICT:
+            return self.__carbon_emission_dict
+        if data_type == DataType.PANDAS_DF:
+            return self.__carbon_df
 
+    @property
+    def get_country_name(self):
+        """
+        Returns name of country
+        :return: country name
+        """
+        return self.__country_name

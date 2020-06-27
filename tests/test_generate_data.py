@@ -69,3 +69,51 @@ class TestCountryPolicyCarbonData(TestCase):
         self.assertTrue(not augmented_data_df.empty)
         self.assertEqual(len(augmented_data_df.index), 27)
         self.assertEqual(len(augmented_data_df.columns), 163)
+
+
+class TestPolicyData(TestCase):
+    def test_get_country_policy_data(self):
+        data = PolicyData(policy_csv_loc, country)
+        data_dict = data.get_country_policy_data(DataType.DICT)
+        data_frame = data.get_country_policy_data(DataType.PANDAS_DF)
+
+        self.assertTrue(data_dict)
+        self.assertEqual(len(data_dict), 171)
+
+        self.assertTrue(not data_frame.empty)
+        self.assertEqual(len(data_frame.columns), 43)
+        self.assertEqual(len(data_frame.index), 171)
+
+    def test_get_specific_policy_data(self):
+        data = PolicyData(policy_csv_loc, country)
+        data_dict_c1 = data.get_specific_policy_data(PolicyData.C1, DataType.DICT)
+        data_df_c1 = data.get_specific_policy_data(PolicyData.C1, DataType.PANDAS_DF)
+
+        self.assertTrue(data_dict_c1)
+        self.assertEqual(len(data_dict_c1), 171)
+
+        self.assertTrue(not data_df_c1.empty)
+        self.assertEqual(len(data_df_c1.columns), 1)
+        self.assertEqual(len(data_df_c1.index), 171)
+
+    def test_get_country_name(self):
+        data = PolicyData(policy_csv_loc, country)
+        self.assertEqual(data.get_country_name, country)
+
+
+class TestCarbonEmissionData(TestCase):
+    def test_get_country_carbon_emission_data(self):
+        data = CarbonEmissionData(carbon_csv_loc, country)
+        data_dict = data.get_country_carbon_emission_data(DataType.DICT)
+        data_df = data.get_country_carbon_emission_data(DataType.PANDAS_DF)
+
+        self.assertTrue(data_dict)
+        self.assertEqual(len(data_dict), 163)
+
+        self.assertTrue(not data_df.empty)
+        self.assertEqual(len(data_df.index), 164)
+        self.assertEqual(len(data_df.columns), 27)
+
+    def test_get_country_name(self):
+        data = CarbonEmissionData(carbon_csv_loc, country)
+        self.assertEqual(country, data.get_country_name)

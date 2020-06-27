@@ -6,3 +6,5 @@ pylint
 jupyter-notebook
 tensorflow
 matplotlib
+pyyaml
+xlrd

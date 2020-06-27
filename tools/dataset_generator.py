@@ -72,8 +72,8 @@ def main():
     names_gcp, emi_dict_new = read_emissions(emission_file_name)
     stringency, names_stringency = read_stringency(stringency_file_name)
     emit_mod, stringency_dict, common_countries = generate_emission_and_stringency_dicts(names_gcp, names_stringency, emi_dict_new, stringency)
-    file_generator(emit_mod, 'Modified Emission Data.xlsx', common_countries)
-    file_generator(stringency_dict, 'Modified Stringency Data.xlsx', common_countries)
+    file_generator(emit_mod, 'Modified_Emission_Data.xlsx', common_countries)
+    file_generator(stringency_dict, 'Modified_Stringency_Data.xlsx', common_countries)
 
 
 

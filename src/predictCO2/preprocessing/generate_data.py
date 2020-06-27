@@ -96,10 +96,10 @@ class CountryPolicyCarbonData(TrainDataInterface):
         :param data_type DataType either DICT or PANDAS_DF
         :rtype: python dictionary or pandas data frame
         """
+        if not self.feature_dict:
+            self.feature_dict = self.policy_data.get_country_policy_data(DataType.DICT)
+        self.num_features = len(next(iter(self.feature_dict.values())))
         if data_type == DataType.DICT:
-            if not self.feature_dict:
-                self.feature_dict = self.policy_data.get_country_policy_data(DataType.DICT)
-                self.num_features = len(next(iter(self.feature_dict.values())))
             return self.feature_dict
         if data_type == DataType.PANDAS_DF:
             countries = [self.country_name for i in range(self.num_features)]

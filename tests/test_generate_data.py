@@ -4,14 +4,16 @@ Date: 20/06/20
 """
 import logging
 import os
+import Globals
 
 from unittest import TestCase
-from predictCO2.preprocessing.generate_data import CountryPolicyCarbonData, DataType
+from predictCO2.preprocessing.generate_data import CountryPolicyCarbonData, DataType, PolicyData, CarbonEmissionData
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
+carbon_csv_loc = Globals.ROOT_DIR + "/dataset/labels/Modified_Emission_Data.xlsx"
+policy_csv_loc = Globals.ROOT_DIR + "/dataset/features/Modified_Stringency_Data.xlsx"
 
-carbon_csv_loc = dir_path + "/test_csv_files/label.csv"
-policy_csv_loc = dir_path + "/test_csv_files/feature.csv"
+cfg = "training_data.yaml"
+country = "Germany"
 
 logging.getLogger().setLevel(logging.INFO)
 
@@ -24,7 +26,7 @@ class TestCountryPolicyCarbonData(TestCase):
             2. Check expected dimensionality of data type
         """
         logging.info("Testing features!")
-        data = CountryPolicyCarbonData(policy_csv_loc, carbon_csv_loc)
+        data = CountryPolicyCarbonData(cfg, country)
         features = data.get_features(DataType.DICT)
         features_df = data.get_features(DataType.PANDAS_DF)
 
@@ -41,7 +43,7 @@ class TestCountryPolicyCarbonData(TestCase):
             2. Check expected dimensionality of data type
         """
         logging.info("Testing labels!")
-        data = CountryPolicyCarbonData(policy_csv_loc, carbon_csv_loc)
+        data = CountryPolicyCarbonData(cfg, country)
         labels = data.get_labels(DataType.DICT)
         labels_df = data.get_labels(DataType.PANDAS_DF)
 
@@ -58,7 +60,7 @@ class TestCountryPolicyCarbonData(TestCase):
             2. Check expected dimensionality of data type
         """
         logging.info("Testing augmented data!")
-        data = CountryPolicyCarbonData(policy_csv_loc, carbon_csv_loc)
+        data = CountryPolicyCarbonData(cfg, country)
         augmented_data = data.get_augmented_data(DataType.DICT)
         augmented_data_df = data.get_augmented_data(DataType.PANDAS_DF)
 

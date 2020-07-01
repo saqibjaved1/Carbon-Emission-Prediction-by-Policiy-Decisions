@@ -1,0 +1,10 @@
+
+{
+  "model": {
+            "checkpoint_path": "E:\\AMI\\Project\\group07\\checkpoint\\",
+            "restore_model": "...",
+            "loss": "mse",
+            "optimizer": "adam",
+            "metrics": "accuracy",
+  }
+}

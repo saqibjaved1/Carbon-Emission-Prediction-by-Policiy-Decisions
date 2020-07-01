@@ -6,3 +6,6 @@ pylint
 notebook
 tensorflow
 matplotlib
+pyyaml
+xlrd
+country-converter

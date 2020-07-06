@@ -1,10 +1,17 @@
 
 {
   "model": {
-            "checkpoint_path": "E:\\AMI\\Project\\group07\\checkpoint\\",
+            "checkpoint_path": "/content/checkpoint/",
             "restore_model": "...",
-            "loss": "mse",
+            "loss": "mean_squared_error",
             "optimizer": "adam",
-            "metrics": "accuracy",
-  }
+            "learning_rate": 0.001,
+            "epochs": 40,
+            "verbose": 1,
+            "batch_size": 4,
+            "tensorboard_dir": "./logs"
+  },
+  "time_steps": 3,
+  "validation_split": 0.3,
+  "country": "Germany"
 }

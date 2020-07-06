@@ -2,6 +2,8 @@
 Author: Saqib Javed
 Date: 01/7/2020
 """
+import os
+
 
 class NN_Template(object):
     def __init__(self, config):
@@ -14,15 +16,18 @@ class NN_Template(object):
         """
         raise NotImplementedError
 
-    def save(self):
+    def save(self, name):
         """
         Saves the model checkpoint to the path specified by the argument
         """
         if self.model is None:
             raise Exception("Build the model first!")
 
+        if os.path.isdir(self.config["model"]["checkpoint_path"]) is False:
+            os.makedirs(self.config["model"]["checkpoint_path"])
+
         print("Saving model...")
-        self.model.save_weights(self.config["model"]["checkpoint_path"])
+        self.model.save_weights(self.config["model"]["checkpoint_path"] + name)
         print("Model saved!")
 
     def load(self):

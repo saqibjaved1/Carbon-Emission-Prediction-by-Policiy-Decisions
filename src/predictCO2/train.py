@@ -26,8 +26,7 @@ def main():
     aug_data = aug_data.drop(["index"], axis=1)
     aug_data = aug_data.drop([1, 3, 5, 7, 9, 11, 13])
     features = preprocessing.scale(aug_data[:8].values.T)
-    features = features[:8].values.T
-    labels = features[19:].values.T
+    labels = aug_data[19:].values.T
 
     model = Lstm(config)
     model.train(features, labels)

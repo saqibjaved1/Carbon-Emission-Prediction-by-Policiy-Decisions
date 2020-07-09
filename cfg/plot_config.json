@@ -1,0 +1,5 @@
+{
+  "config_file": "training_data.yaml",
+  "country": "France",
+  "policy" : "c1"
+}

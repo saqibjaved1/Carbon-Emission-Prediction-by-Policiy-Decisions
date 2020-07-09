@@ -1,0 +1,7 @@
+{
+  "config_file": "training_data.yaml",
+  "country": "Germany",
+  "validation_split": 0.25,
+  "window_sz": 15,
+  "output_dir": "./forecast_logs"
+}

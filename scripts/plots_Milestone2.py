@@ -14,7 +14,10 @@ from src.predictCO2.preprocessing import generate_data
 from matplotlib.ticker import ScalarFormatter, FormatStrFormatter
 
 
-def plot_xy(x, y, format, xlabel, ylabel, title, fir_dir, fig_name):
+def plot_xy(x, y, format, xlabel, ylabel, title, fig_dir, fig_name):
+    """
+    Generates plot from given x, y values
+    """
     fig = plt.figure(figsize=(5, 5))
     ax = fig.add_subplot(111)
     ax.yaxis.set_major_formatter(FormatStrFormatter('%0.1f'))
@@ -23,11 +26,18 @@ def plot_xy(x, y, format, xlabel, ylabel, title, fir_dir, fig_name):
     plt.ylabel(ylabel)
     plt.title(title)
     # plt.xlim(-1, 5)
-    plt.savefig(fir_dir + '/' + fig_name)
+    plt.savefig(fig_dir + '/' + fig_name)
     plt.show()
 
 
 def plot_stringency_index(df, country_name, config_file):
+    """
+    PLots CO2 reduction vs countrywise Government Response Stringency Index ((0 to 100, 100 = strictest)
+    :param df: Dataframe containing Country Policy Carbon Data
+    :param country_name: country specified in config gile
+    :param config_file: contains csv file locations for features and labels
+    :return:
+    """
     training_cfg = utils.load_cfg_file(config_file)
     policy_csv = Globals.ROOT_DIR + "/" + training_cfg['features']
     policy_data = pd.read_excel(policy_csv, sheet_name=country_name)
@@ -52,6 +62,13 @@ def plot_stringency_index(df, country_name, config_file):
 
 
 def plot_features_vs_labels(df, policy, country_name):
+    """
+    Plots CO2 reduction vs Strictness of specified policy, eg, c1, c2
+    :param df: Dataframe containing Country Policy Carbon Data
+    :param policy:
+    :param country_name: country specified in config gile
+    :return:
+    """
     # feature_dict
     feature_dict = {'c1': {'data': df.iloc[0, :], 'name': generate_data.PolicyData.C1},
                     'c2': {'data': df.iloc[2, :], 'name': generate_data.PolicyData.C2},

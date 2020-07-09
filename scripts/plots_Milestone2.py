@@ -77,7 +77,16 @@ def plot_features_vs_labels(df, policy, country_name):
                     'c5': {'data': df.iloc[8, :], 'name': generate_data.PolicyData.C5},
                     'c6': {'data': df.iloc[10, :], 'name': generate_data.PolicyData.C6},
                     'c7': {'data': df.iloc[12, :], 'name': generate_data.PolicyData.C7},
-                    'c8': {'data': df.iloc[14, :], 'name': generate_data.PolicyData.C8}}
+                    'c8': {'data': df.iloc[14, :], 'name': generate_data.PolicyData.C8},
+                    'e1': {'data': df.iloc[15, :], 'name': generate_data.PolicyData.E1},
+                    'e2': {'data': df.iloc[17, :], 'name': generate_data.PolicyData.E2},
+                    'e3': {'data': df.iloc[18, :], 'name': generate_data.PolicyData.E3},
+                    'e4': {'data': df.iloc[19, :], 'name': generate_data.PolicyData.E4},
+                    'h1': {'data': df.iloc[20, :], 'name': generate_data.PolicyData.H1},
+                    'h2': {'data': df.iloc[22, :], 'name': generate_data.PolicyData.H2},
+                    'h3': {'data': df.iloc[23, :], 'name': generate_data.PolicyData.H3},
+                    'h4': {'data': df.iloc[24, :], 'name': generate_data.PolicyData.H4},
+                    'h5': {'data': df.iloc[25, :], 'name': generate_data.PolicyData.H5}}
 
     feature = feature_dict[policy]['data'].tolist()
 

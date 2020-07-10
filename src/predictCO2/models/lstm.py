@@ -16,6 +16,9 @@ class Lstm(nn_template.NN_Template):
         self.build_model()
 
     def build_model(self):
+        """
+        Method to create the model
+        """
         self.model = Sequential()
         self.model.add(LSTM(20, input_shape=(self.config['time_steps'], 8), return_sequences=True))
         self.model.add(Dropout(0.4))

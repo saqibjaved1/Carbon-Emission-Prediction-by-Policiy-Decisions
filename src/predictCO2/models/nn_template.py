@@ -3,6 +3,7 @@ Author: Saqib Javed
 Date: 01/7/2020
 """
 import os
+import abc
 
 
 class NN_Template(object):
@@ -10,11 +11,12 @@ class NN_Template(object):
         self.model = None
         self.config = config
 
+    @abc.abstractmethod
     def build_model(self):
         """
         Method to create the model
         """
-        raise NotImplementedError
+        pass
 
     def save(self, name):
         """
@@ -40,3 +42,12 @@ class NN_Template(object):
         print("Loading model checkpoint {} ...\n".format(self.config["model"]["restore_model"]))
         self.model.load_weights(self.config["model"]["restore_model"])
         print("Model loaded!")
+
+    @abc.abstractmethod
+    def train(self, features, labels):
+        """
+        Trains the model on the provided data and save logs.
+        :param features: Data matrix of features
+        :param labels: Data matrix of labels
+        """
+        pass

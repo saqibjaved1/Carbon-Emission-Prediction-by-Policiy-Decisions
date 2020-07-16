@@ -93,6 +93,10 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         self.feature_df = pd.DataFrame()
         self.label_df = pd.DataFrame()
         self.num_features = 0
+        self.num_timestamps = 0
+        self.test_feature_df = pd.DataFrame()
+        self.test_label_df = pd.DataFrame()
+        self.normalize = self.training_cfg['normalize']
 
     def get_features(self, data_type):
         """

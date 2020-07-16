@@ -11,6 +11,8 @@ from predictCO2.models.lstm_2 import LSTM_2
 from predictCO2.preprocessing import utils
 from predictCO2.preprocessing.generate_data import CountryPolicyCarbonData
 
+matplotlib.use('Qt5Agg')
+
 with open('cfg/lstm_config.json') as f:
     training_config = json.load(f)
 

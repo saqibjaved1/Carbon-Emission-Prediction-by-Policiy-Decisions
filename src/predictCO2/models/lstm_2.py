@@ -51,6 +51,20 @@ class LSTM_2(NN_Template):
                            optimizer=optimizers.Adam(self.config['model']['learning_rate']),
                            metrics=[self.soft_acc])
 
+    def train_with_validation_provided(self, features, labels, val_features, val_labels):
+        """
+        Trains the model on the provided data and save logs.
+        :param features: Data matrix of features
+        :param labels: Data matrix of labels
+        :return hist: History of training
+        """
+        hist = self.model.fit(
+            features, labels, batch_size=self.config['training']['batch_size'],
+            epochs=self.config['training']['epochs'],
+            validation_data=(val_features, val_labels),
+            validation_freq=self.config['training']['validation_frequency'],
+            callbacks=[TensorBoard(log_dir=self.config['model']['tensorboard_dir'])])
+        return hist
 
     def train(self, features, labels):
         pass

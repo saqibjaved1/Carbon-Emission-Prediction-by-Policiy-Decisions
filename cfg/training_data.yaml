@@ -1,2 +1,4 @@
 labels: dataset/labels/Modified_Emission_Data.xlsx
 features: dataset/features/Modified_Stringency_Data.xlsx
+val_pc: 0.1
+normalize: 1

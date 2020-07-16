@@ -48,3 +48,8 @@ plt.ylabel('Loss')
 plt.legend(loc='upper right')
 plt.title('Loss')
 plt.show()
+
+# Prediction
+model_eval = lstm.model.evaluate(val_f, val_l)
+print("\n\nTesting Loss: {}\nTesting Accuracy: {}".format(model_eval[0], model_eval[1]))
+lstm.save("LSTM_TAPAN")

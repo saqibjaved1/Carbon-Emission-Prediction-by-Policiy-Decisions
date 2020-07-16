@@ -89,9 +89,9 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         policy_csv = Globals.ROOT_DIR + "/" + self.training_cfg['features']
         self.policy_data = PolicyData(policy_csv, self.country_name)
 
-        self.combined_data_dict = {}
-        self.feature_dict = {}
-        self.label_dict = {}
+        self.combined_data_df = pd.DataFrame()
+        self.feature_df = pd.DataFrame()
+        self.label_df = pd.DataFrame()
         self.num_features = 0
 
     def get_features(self, data_type):
@@ -100,14 +100,12 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         :param data_type DataType either DICT or PANDAS_DF
         :rtype: python dictionary or pandas data frame
         """
-        if not self.feature_dict:
-            self.feature_dict = self.policy_data.get_country_policy_data(DataType.DICT)
-        self.num_features = len(next(iter(self.feature_dict.values())))
+        if self.feature_df.empty:
+            self.feature_df, _ = self.__get_conformed_data()
         if data_type == DataType.DICT:
-            return self.feature_dict
+            return self.feature_df.to_dict()
         if data_type == DataType.PANDAS_DF:
-            countries = [self.country_name for i in range(self.num_features)]
-            return pd.DataFrame.from_records(self.feature_dict, index=countries)
+            return self.feature_df
 
     def get_labels(self, data_type):
         """
@@ -115,43 +113,39 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         :param data_type DataType either DICT or PANDAS_DF
         :rtype: python dictionary or pandas data frame
         """
-        if not self.label_dict:
-            self.label_dict = self.carbon_emission_data.get_country_carbon_emission_data(DataType.DICT)
+        if self.label_df.empty:
+            _, self.label_df = self.__get_conformed_data()
         if data_type == DataType.DICT:
-            return self.label_dict
+            return self.label_df.to_dict()
         if data_type == DataType.PANDAS_DF:
-            return pd.DataFrame.from_records(self.label_dict, index=[0])
+            return self.label_df
 
-    def get_augmented_data(self, data_type):
+    def __get_conformed_data(self):
         """
-        Return features as specified by argument
-        :param data_type DataType either DICT or PANDAS_DF
-        :rtype: python dictionary or pandas data frame. For dictionary return type, first argument will be country name
-        followed by dictionary of augmented data.
+        Conforms sizes of features and labels so that they are equal.
+        :rtype: feature and label data frames.
         """
-        if not self.combined_data_dict:
-            if not self.feature_dict:
-                self.get_features(DataType.DICT)
+        if self.feature_df.empty:
+            self.feature_df = self.policy_data.get_country_policy_data(DataType.PANDAS_DF)
+            self.num_features, self.num_timestamps = self.feature_df.shape
 
-            if not self.label_dict:
-                self.get_labels(DataType.DICT)
+        if self.label_df.empty:
+            self.label_df = self.carbon_emission_data.get_country_carbon_emission_data(DataType.PANDAS_DF)
 
-            min_entries = len(self.label_dict) if (len(self.feature_dict) > len(self.label_dict)) else \
-                len(self.feature_dict)
-            iterable_dict = self.label_dict if (min_entries == len(self.label_dict)) else self.feature_dict
+        feat_shape = self.feature_df.shape
+        lab_shape = self.label_df.shape
 
-            for key in iterable_dict:
-                features = self.feature_dict[key]
-                label = self.label_dict[key]
-                features.append(label)
-                self.combined_data_dict[key] = features
+        # Equate sizes
+        if feat_shape[1] > lab_shape[1]:
+            self.feature_df = self.feature_df[self.feature_df.columns[0:lab_shape[1]]]
+        else:
+            self.label_df = self.label_df[self.label_df.columns[0:feat_shape[1]]]
 
-        if data_type == DataType.DICT:
-            return [self.country_name, self.combined_data_dict]
+        if self.normalize:
+            self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
+            self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
+        return self.feature_df, self.label_df
 
-        if data_type == DataType.PANDAS_DF:
-            countries = [self.country_name for i in range(self.num_features + 1)]
-            return pd.DataFrame.from_records(self.combined_data_dict, index=countries)
 
     def save_data_frame_to_csv(self, location):
         """
@@ -248,6 +242,7 @@ class PolicyData:
                                                          c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2, e3, e4,
                                                          h1,
                                                          h1_flag, h2, h3, h4, h5]
+            self.__country_policy_df = pd.DataFrame.from_records(self.__country_policy_dict)
 
     def get_country_policy_data(self, data_type):
         """
@@ -309,7 +304,8 @@ class CarbonEmissionData:
                 if "MTCO2/day" in str(row['TOTAL_CO2_MED']):
                     continue
                 date = utils.conform_date(row['DATE'])
-                self.__carbon_emission_dict[date] = row['TOTAL_CO2_MED']
+                self.__carbon_emission_dict[str(date)] = [row['TOTAL_CO2_MED']]
+        self.__carbon_df = pd.DataFrame.from_records(self.__carbon_emission_dict)
 
     def get_country_carbon_emission_data(self, data_type):
         """

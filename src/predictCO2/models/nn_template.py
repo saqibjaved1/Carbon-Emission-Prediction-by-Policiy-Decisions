@@ -51,3 +51,12 @@ class NN_Template(object):
         :param labels: Data matrix of labels
         """
         pass
+
+    @abc.abstractmethod
+    def train_with_validation_provided(self, features, labels, validation_features, validation_labels):
+        """
+        Trains the model on the provided data and save logs.
+        :param features: Data matrix of features
+        :param labels: Data matrix of labels
+        """
+        pass

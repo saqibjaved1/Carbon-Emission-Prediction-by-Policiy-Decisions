@@ -4,6 +4,7 @@ Date: 20/6/2020
 """
 
 import abc
+import math
 from abc import ABC
 import logging
 import Globals
@@ -80,7 +81,6 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         :param training_cfg: yaml configuration file where location of data set and other parameters as kept
         :param country: name of country for which data is required.
         """
-
         self.training_cfg = utils.load_cfg_file(training_cfg)
         self.country_name = country
         carbon_csv = Globals.ROOT_DIR + "/" + self.training_cfg['labels']
@@ -106,6 +106,7 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         """
         if self.feature_df.empty:
             self.feature_df, _ = self.__get_conformed_data()
+
         if data_type == DataType.DICT:
             return self.feature_df.to_dict()
         if data_type == DataType.PANDAS_DF:
@@ -119,6 +120,7 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         """
         if self.label_df.empty:
             _, self.label_df = self.__get_conformed_data()
+
         if data_type == DataType.DICT:
             return self.label_df.to_dict()
         if data_type == DataType.PANDAS_DF:
@@ -150,6 +152,38 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
             self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
         return self.feature_df, self.label_df
 
+    def split_train_test(self, validation_percentage=None, fill_nan=False):
+        """
+        Splits the data set into training and testing. (Learning process can further have a possibility to split data
+        into training and validation. Hence, from this function, test data can be used as a new unseen data for model
+        to be evaluated upon. Otherwise, test set generated can be used as explicit validation set during training.)
+        :param validation_percentage: percentage of validation split
+        :param fill_nan: If true replaces all NaNs with 0.
+        :return: training and testing data sets.
+        """
+        if not validation_percentage:
+            validation_percentage = self.training_cfg['val_pc']
+
+        logger.info("Splitting data set for {} with test percentage: {}".format(self.country_name,
+                                                                                validation_percentage))
+
+        features_raw = self.get_features(DataType.PANDAS_DF)
+        features_raw = features_raw.T
+        labels_raw = self.get_labels(DataType.PANDAS_DF)
+        labels_raw = labels_raw.T
+
+        if fill_nan:
+            features_raw = features_raw.fillna(0)
+            labels_raw = labels_raw.fillna(0)
+
+        samples = features_raw.shape[0]
+        val_samples = math.ceil(samples * validation_percentage)
+        train_features = features_raw.head(samples - val_samples)
+        test_features = features_raw.tail(val_samples)
+        train_labels = labels_raw.head(samples - val_samples)
+        test_labels = labels_raw.tail(val_samples)
+
+        return train_features, train_labels, test_features, test_labels
 
     def save_data_frame_to_csv(self, location):
         """

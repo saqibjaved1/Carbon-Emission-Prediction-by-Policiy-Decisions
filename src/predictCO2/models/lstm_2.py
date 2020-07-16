@@ -51,3 +51,6 @@ class LSTM_2(NN_Template):
                            optimizer=optimizers.Adam(self.config['model']['learning_rate']),
                            metrics=[self.soft_acc])
 
+
+    def train(self, features, labels):
+        pass

@@ -5,12 +5,15 @@ Date: 20/6/2020
 
 import abc
 from abc import ABC
+import logging
 import Globals
 import pandas as pd
 import predictCO2.preprocessing.utils as utils
 
 from enum import Enum
 
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+logger = logging.getLogger(__name__)
 
 class DataType(Enum):
     """

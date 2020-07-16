@@ -68,3 +68,12 @@ class LSTM_2(NN_Template):
 
     def train(self, features, labels):
         pass
+
+    def soft_acc(self, y_true, y_pred):
+        """
+        Evaluates soft accuracy by comparing ground truth label with the predicted label within some tolerance level.
+        :param y_true: Ground truth
+        :param y_pred: Predictions
+        :return: normalized accuracy score
+        """
+        return backend.mean(backend.abs(backend.round(y_true) - backend.round(y_pred)) <= self.prediction_tolerance)

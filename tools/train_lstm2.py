@@ -37,3 +37,12 @@ val_f, val_l = utils.data_sequence_generator(test_features, test_labels, trainin
 h = lstm.train_with_validation_provided(features, labels, val_f, val_l)
 loss = h.history['loss']
 
+
+# Plot training loss
+fig1, ax1 = plt.subplots()
+ax1.plot(range(len(loss)), loss, label='Training Loss')
+plt.xlabel('Epoch')
+plt.ylabel('Loss')
+plt.legend(loc='upper right')
+plt.title('Loss')
+plt.show()

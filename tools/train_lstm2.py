@@ -28,3 +28,12 @@ for country in countries:
     test_features = test_features.append(test_x)
     train_labels = train_labels.append(train_y)
     test_labels = test_labels.append(test_y)
+
+# Train model
+_, n_features = train_features.shape
+lstm = LSTM_2(training_config, num_features=n_features, num_outputs=1)
+features, labels = utils.data_sequence_generator(train_features, train_labels, training_config['time_steps'])
+val_f, val_l = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
+h = lstm.train_with_validation_provided(features, labels, val_f, val_l)
+loss = h.history['loss']
+

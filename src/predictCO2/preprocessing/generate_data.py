@@ -4,6 +4,7 @@ Date: 20/6/2020
 """
 
 import abc
+from abc import ABC
 import Globals
 import pandas as pd
 import predictCO2.preprocessing.utils as utils
@@ -67,7 +68,7 @@ class TrainDataInterface(object):
         pass
 
 
-class CountryPolicyCarbonData(TrainDataInterface):
+class CountryPolicyCarbonData(TrainDataInterface, ABC):
     def __init__(self, training_cfg, country):
         """
         Class to keep Policy and Carbon data by country.

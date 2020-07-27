@@ -91,3 +91,23 @@ def data_sequence_generator(features, labels, n_steps):
             y.append(labels.iloc[start:end, :].to_numpy())
         start += 1
     return np.array(x), np.array(y)
+
+
+def time_series_data_generator(features, labels, n_steps):
+    """
+    convert data into overlapping sequences as specified by n_seq
+    :param features: Data matrix for features
+    :param labels: Data matrix for labels
+    :param n_steps: Number of previous inputs to be considered
+    :return: Modified features and labels matrix
+    """
+    x, y = list(), list()
+    feat_row = list(features.index.values)
+    start = 0
+    for _ in range(len(feat_row)):
+        end = start + n_steps
+        if end < len(feat_row):
+            x.append(features.iloc[start:end, :].to_numpy())
+            y.append(labels.iloc[end, 0])
+        start += 1
+    return np.array(x), np.array(y)

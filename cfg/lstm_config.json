@@ -81,7 +81,7 @@
          {
             "type":"lstm",
             "neurons":100,
-            "input_timesteps":15,
+            "input_timesteps":7,
             "return_seq":true
          },
          {
@@ -120,6 +120,6 @@
       "optimizer":"adam",
       "save_dir":"models"
    },
-   "time_steps":15,
+   "time_steps":7,
    "validation_split":0.3
 }

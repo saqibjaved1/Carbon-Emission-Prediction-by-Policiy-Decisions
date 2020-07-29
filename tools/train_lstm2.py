@@ -6,10 +6,12 @@ import json
 
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 import pandas as pd
 from predictCO2.models.lstm_2 import LSTM_2
 from predictCO2.preprocessing import utils
-from predictCO2.preprocessing.generate_data import CountryPolicyCarbonData
+from predictCO2.preprocessing.generate_data import CountryPolicyCarbonData, PolicyCategory
+from sklearn.model_selection import TimeSeriesSplit
 
 matplotlib.use('Qt5Agg')
 
@@ -24,32 +26,47 @@ test_labels = pd.DataFrame()
 
 # Collect data
 for country in countries:
-    countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country)
+    countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
+                                                      policy_category=PolicyCategory.HEALTH_INDICATORS)
     train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=True)
     train_features = train_features.append(train_x)
     test_features = test_features.append(test_x)
     train_labels = train_labels.append(train_y)
     test_labels = test_labels.append(test_y)
 
-# Train model
+print(train_features.shape)
+print(train_labels.shape)
+print(test_features.shape)
+print(test_labels.shape)
+# Train model with 5 fold cross validation
+tss = TimeSeriesSplit()
 _, n_features = train_features.shape
 lstm = LSTM_2(training_config, num_features=n_features, num_outputs=1)
-features, labels = utils.data_sequence_generator(train_features, train_labels, training_config['time_steps'])
-val_f, val_l = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
-h = lstm.train_with_validation_provided(features, labels, val_f, val_l)
-loss = h.history['loss']
-
+losses = []
+for train_idx, test_idx in tss.split(train_features):
+    X, X_val = train_features.iloc[train_idx], train_features.iloc[test_idx]
+    Y, Y_val = train_labels.iloc[train_idx], train_labels.iloc[test_idx]
+    features, labels = utils.data_sequence_generator(X, Y, training_config['time_steps'])
+    val_f, val_l = utils.data_sequence_generator(X_val, Y_val, training_config['time_steps'])
+    h = lstm.train_with_validation_provided(features, labels, val_f, val_l)
+    losses.append(h.history['loss'])
 
 # Plot training loss
+loss_arr = np.zeros((50, 1))
+for loss_per_fold in losses:
+    for j, loss in enumerate(loss_per_fold):
+        loss_arr[j] = loss_arr[j] + loss
+loss_arr = loss_arr / 5
 fig1, ax1 = plt.subplots()
-ax1.plot(range(len(loss)), loss, label='Training Loss')
+ax1.plot(range(len(loss_arr)), loss_arr, label='Training Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.legend(loc='upper right')
 plt.title('Loss')
 plt.show()
 
-# Prediction
-model_eval = lstm.model.evaluate(val_f, val_l)
+# # Prediction
+test_f, test_l = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
+model_eval = lstm.model.evaluate(test_f, test_l)
 print("\n\nTesting Loss: {}\nTesting Accuracy: {}".format(model_eval[0], model_eval[1]))
 lstm.save("LSTM_TAPAN")

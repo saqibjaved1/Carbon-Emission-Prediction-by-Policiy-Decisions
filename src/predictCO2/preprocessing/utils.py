@@ -88,7 +88,7 @@ def data_sequence_generator(features, labels, n_steps):
         end = start + n_steps
         if end < len(feat_row):
             x.append(features.iloc[start:end, :].to_numpy())
-            y.append(labels.iloc[start:end, :].to_numpy())
+            y.append(labels.iloc[end, :].to_numpy())
         start += 1
     return np.array(x), np.array(y)
 

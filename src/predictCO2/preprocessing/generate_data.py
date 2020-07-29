@@ -16,12 +16,20 @@ from enum import Enum
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
+
 class DataType(Enum):
     """
     Enum specifying type in which training data is to be made available.
     """
     DICT = 1  # For type dictionary
     PANDAS_DF = 2  # For type pandas data frame
+
+
+class PolicyCategory(Enum):
+    ALL = 1
+    SOCIAL_INDICATORS = 2
+    ECONOMIC_INDICATORS = 3
+    HEALTH_INDICATORS = 4
 
 
 class TrainDataInterface(object):

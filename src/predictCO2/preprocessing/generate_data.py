@@ -81,7 +81,7 @@ class TrainDataInterface(object):
 
 
 class CountryPolicyCarbonData(TrainDataInterface, ABC):
-    def __init__(self, training_cfg, country):
+    def __init__(self, training_cfg, country, policy_category=PolicyCategory.ALL, include_flags=True):
         """
         Class to keep Policy and Carbon data by country.
         Uses OXFORD OxCGRT (https://github.com/OxCGRT/covid-policy-tracker) as features/policy
@@ -95,7 +95,8 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         self.carbon_emission_data = CarbonEmissionData(carbon_csv, country)
 
         policy_csv = Globals.ROOT_DIR + "/" + self.training_cfg['features']
-        self.policy_data = PolicyData(policy_csv, self.country_name)
+        self.policy_data = PolicyData(policy_csv, self.country_name, policy_category=policy_category,
+                                      include_flags=include_flags)
 
         self.combined_data_df = pd.DataFrame()
         self.feature_df = pd.DataFrame()
@@ -106,7 +107,7 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         self.test_label_df = pd.DataFrame()
         self.normalize = self.training_cfg['normalize']
 
-    def get_features(self, data_type):
+    def get_features(self, data_type, fill_na=True):
         """
         Return features as specified by argument
         :param data_type DataType either DICT or PANDAS_DF
@@ -115,12 +116,15 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         if self.feature_df.empty:
             self.feature_df, _ = self.__get_conformed_data()
 
+        if fill_na:
+            self.feature_df = self.feature_df.fillna(0)
+
         if data_type == DataType.DICT:
             return self.feature_df.to_dict()
         if data_type == DataType.PANDAS_DF:
             return self.feature_df
 
-    def get_labels(self, data_type):
+    def get_labels(self, data_type, fill_na=True):
         """
         Return labels as specified by argument
         :param data_type DataType either DICT or PANDAS_DF
@@ -128,7 +132,8 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         """
         if self.label_df.empty:
             _, self.label_df = self.__get_conformed_data()
-
+        if fill_na:
+            self.label_df = self.label_df.fillna(0)
         if data_type == DataType.DICT:
             return self.label_df.to_dict()
         if data_type == DataType.PANDAS_DF:
@@ -238,7 +243,7 @@ class PolicyData:
 
     # POLICY_DATA_FRAME_FULL = None
 
-    def __init__(self, policy_csv, country):
+    def __init__(self, policy_csv, country, policy_category=PolicyCategory.ALL, include_flags=True):
         """
         Policy/Feature Data set is available as a merged excel file with each country having it's individual sheet named
         after that country.
@@ -249,6 +254,8 @@ class PolicyData:
         self.__country_name = country
         self.__country_policy_dict = {}
         self.__country_policy_df = pd.read_excel(policy_csv, sheet_name=country)
+        self.__policy_category = policy_category
+        self.__include_flags = include_flags
         self.__set_properties()
 
     def __set_properties(self):
@@ -284,10 +291,28 @@ class PolicyData:
                 h3 = row[PolicyData.H3]
                 h4 = row[PolicyData.H4]
                 h5 = row[PolicyData.H5]
-                self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
-                                                         c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2, e3, e4,
-                                                         h1,
-                                                         h1_flag, h2, h3, h4, h5]
+                if self.__include_flags:
+                    if self.__policy_category == PolicyCategory.ALL:
+                        self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
+                                                                 c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2,
+                                                                 e3, e4, h1, h1_flag, h2, h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.SOCIAL_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
+                                                                 c5_flag, c6, c6_flag, c7, c7_flag, c8]
+                    elif self.__policy_category == PolicyCategory.ECONOMIC_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [e1, e1_flag, e2, e3, e4]
+                    elif self.__policy_category == PolicyCategory.HEALTH_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [h1, h1_flag, h2, h3, h4, h5]
+                else:
+                    if self.__policy_category == PolicyCategory.ALL:
+                        self.__country_policy_dict[str(date)] = [c1, c2, c3, c4, c5, c6, c7, c8, e1, e2, e3, e4, h1, h2,
+                                                                 h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.SOCIAL_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [c1, c2, c3, c4, c5, c6, c7, c8]
+                    elif self.__policy_category == PolicyCategory.ECONOMIC_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [e1, e2, e3, e4]
+                    elif self.__policy_category == PolicyCategory.HEALTH_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [h1, h2, h3, h4, h5]
             self.__country_policy_df = pd.DataFrame.from_records(self.__country_policy_dict)
 
     def get_country_policy_data(self, data_type):

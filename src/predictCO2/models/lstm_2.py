@@ -23,7 +23,7 @@ class LSTM_2(NN_Template):
         self.n_feats = num_features
         self.n_ops = num_outputs
         self.build_model()
-        self.prediction_tolerance = 1e-1
+        self.prediction_tolerance = 20e-2
 
     def build_model(self):
         """
@@ -76,4 +76,4 @@ class LSTM_2(NN_Template):
         :param y_pred: Predictions
         :return: normalized accuracy score
         """
-        return backend.mean(backend.abs(backend.round(y_true) - backend.round(y_pred)) <= self.prediction_tolerance)
+        return backend.mean(backend.abs(y_true - y_pred) <= self.prediction_tolerance)

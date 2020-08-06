@@ -71,7 +71,8 @@
    "training":{
       "epochs":50,
       "batch_size":32,
-      "validation_frequency":4
+      "validation_frequency":1,
+      "normalize":1
    },
    "model":{
       "checkpoint_path":"./content/checkpoint/",
@@ -118,7 +119,8 @@
       ],
       "loss":"mse",
       "optimizer":"adam",
-      "save_dir":"models"
+      "save_dir":"models",
+      "prediction_tolerance": 20e-5
    },
    "time_steps":7,
    "validation_split":0.3

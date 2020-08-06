@@ -1,29 +1,29 @@
 """
 Created by: Tapan Sharma
-Date: 14/07/20
+Date: 04/08/20
 """
+
 import tensorflow
 from tensorflow.python.keras.callbacks import TensorBoard
 
 from predictCO2.models.nn_template import NN_Template
 from tensorflow.keras import layers, models, optimizers, backend
 
-
 tensorflow.get_logger().setLevel('INFO')
 
 
-class LSTM_2(NN_Template):
+class DeepLearningModel(NN_Template):
 
     def __init__(self, config, num_features, num_outputs):
         """
-        Initializer for LSTM RNN.
+        Initializer for CNN.
         :param config: Configuration file containing parameters
         """
-        super(LSTM_2, self).__init__(config)
+        super(DeepLearningModel, self).__init__(config)
         self.n_feats = num_features
         self.n_ops = num_outputs
+        self.prediction_tolerance = self.config['model']['prediction_tolerance']
         self.build_model()
-        self.prediction_tolerance = 20e-2
 
     def build_model(self):
         """
@@ -36,6 +36,11 @@ class LSTM_2(NN_Template):
             activation = layer['activation'] if 'activation' in layer else None
             return_seq = layer['return_seq'] if 'return_seq' in layer else None
             input_timesteps = layer['input_timesteps'] if 'input_timesteps' in layer else None
+            filters = layer['filters'] if 'filters' in layer else None
+            kernel_size = layer['kernel_size'] if 'kernel_size' in layer else None
+            leaky_alpha = layer['leak_factor'] if 'leak_factor' in layer else None
+            pool_size = layer['pool_size'] if 'pool_size' in layer else None
+
             input_dim = self.n_feats
 
             if layer['type'] == 'dense':
@@ -45,8 +50,16 @@ class LSTM_2(NN_Template):
             if layer['type'] == 'lstm':
                 self.model.add(
                     layers.LSTM(neurons, input_shape=(input_timesteps, input_dim), return_sequences=return_seq))
+            if layer['type'] == 'conv1d':
+                self.model.add(layers.Conv1D(filters=filters, kernel_size=kernel_size,
+                                             input_shape=(input_timesteps, input_dim)))
+            if layer['type'] == 'leakyrelu':
+                self.model.add(layers.LeakyReLU(alpha=leaky_alpha))
+            if layer['type'] == 'max_pool':
+                self.model.add(layers.MaxPooling1D(pool_size=pool_size))
             if layer['type'] == 'dropout':
                 self.model.add(layers.Dropout(dropout_rate))
+
         self.model.compile(loss=self.config['model']['loss'],
                            optimizer=optimizers.Adam(self.config['model']['learning_rate']),
                            metrics=[self.soft_acc])

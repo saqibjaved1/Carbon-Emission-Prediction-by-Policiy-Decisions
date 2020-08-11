@@ -81,7 +81,7 @@ class TrainDataInterface(object):
 
 
 class CountryPolicyCarbonData(TrainDataInterface, ABC):
-    def __init__(self, training_cfg, country, policy_category=PolicyCategory.ALL, include_flags=True):
+    def __init__(self, training_cfg, country, policy_category=PolicyCategory.ALL, include_flags=True, normalize=0):
         """
         Class to keep Policy and Carbon data by country.
         Uses OXFORD OxCGRT (https://github.com/OxCGRT/covid-policy-tracker) as features/policy
@@ -105,7 +105,7 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         self.num_timestamps = 0
         self.test_feature_df = pd.DataFrame()
         self.test_label_df = pd.DataFrame()
-        self.normalize = self.training_cfg['normalize']
+        self.normalize = normalize
 
     def get_features(self, data_type, fill_na=True):
         """
@@ -161,8 +161,12 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
             self.label_df = self.label_df[self.label_df.columns[0:feat_shape[1]]]
 
         if self.normalize:
-            self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
-            self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
+            self.feature_df = self.feature_df.sub(self.feature_df.min()).div(self.feature_df.max().
+                                                                                     sub(self.feature_df.min()))
+            # self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
+            self.label_df = self.label_df.sub(self.label_df.min()).div(self.label_df.max().
+                                                                               sub(self.label_df.min()))
+            # self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
         return self.feature_df, self.label_df
 
     def split_train_test(self, validation_percentage=None, fill_nan=False):

@@ -1,7 +1,8 @@
 """
 Created by: Tapan Sharma
-Date: 14/07/20
+Date: 04/08/20
 """
+
 import json
 
 import matplotlib
@@ -16,7 +17,7 @@ from sklearn.model_selection import TimeSeriesSplit
 
 matplotlib.use('Qt5Agg')
 
-with open('cfg/lstm_config.json') as f:
+with open('cfg/cnn_config.json') as f:
     training_config = json.load(f)
 
 countries = training_config['countries']
@@ -25,12 +26,13 @@ train_labels = pd.DataFrame()
 test_features = pd.DataFrame()
 test_labels = pd.DataFrame()
 norm_data = training_config['training']['normalize']
+
 # Collect data
 for country in countries:
     countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
-                                                      policy_category=PolicyCategory.ALL,
+                                                      policy_category=PolicyCategory.HEALTH_INDICATORS,
                                                       normalize=norm_data)
-    train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=True)
+    train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=False)
     train_features = train_features.append(train_x)
     test_features = test_features.append(test_x)
     train_labels = train_labels.append(train_y)
@@ -43,7 +45,8 @@ print(test_labels.shape)
 # Train model with 5 fold cross validation
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
-lstm = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
+cnn = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
+print(cnn.model.summary())
 losses = []
 val_losses = []
 start = time.time()
@@ -52,12 +55,11 @@ for train_idx, test_idx in tss.split(train_features):
     Y, Y_val = train_labels.iloc[train_idx], train_labels.iloc[test_idx]
     features, labels = utils.data_sequence_generator(X, Y, training_config['time_steps'])
     val_f, val_l = utils.data_sequence_generator(X_val, Y_val, training_config['time_steps'])
-    h = lstm.train_with_validation_provided(features, labels, val_f, val_l)
+    h = cnn.train_with_validation_provided(features, labels, val_f, val_l)
     losses.append(h.history['loss'])
     val_losses.append(h.history['val_loss'])
 end = time.time()
 print("TRAINING TIME: {}".format(end - start))
-
 
 # Plot training loss
 loss_arr = np.zeros((50, 1))
@@ -79,11 +81,11 @@ plt.legend(loc='upper right')
 plt.title('Loss')
 plt.show()
 
-# # Prediction
+# # # Prediction
 test_start = time.time()
 test_f, test_l = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
-model_eval = lstm.model.evaluate(test_f, test_l)
+model_eval = cnn.model.evaluate(test_f, test_l)
 test_end = time.time()
 print("TESTING TIME: {}".format(test_end - test_start))
 print("\n\nTesting Loss: {}\nTesting Accuracy: {}".format(model_eval[0], model_eval[1]))
-lstm.save("LSTM_TAPAN")
+cnn.save("CNN_TAPAN")

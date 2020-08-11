@@ -70,7 +70,7 @@
    ],
    "training":{
       "epochs":50,
-      "batch_size":32,
+      "batch_size":64,
       "validation_frequency":1,
       "normalize":1
    },
@@ -80,41 +80,50 @@
       "tensorboard_dir":"./logs",
       "layers":[
          {
-            "type":"lstm",
-            "neurons":100,
-            "input_timesteps":7,
-            "return_seq":true
+            "type":"conv1d",
+            "filters":64,
+            "kernel_size":2,
+            "input_timesteps":7
          },
+        {
+          "type": "leakyrelu",
+          "leak_factor": 0.001
+        },
          {
-            "type":"dropout",
-            "rate":0.2
+            "type":"max_pool",
+            "pool_size":2
          },
-         {
-            "type":"lstm",
-            "neurons":50,
-            "return_seq":true
+        {
+            "type":"conv1d",
+            "filters":32,
+            "kernel_size":2
          },
+        {
+          "type": "leakyrelu",
+          "leak_factor": 0.001
+        },
          {
-            "type":"lstm",
-            "neurons":50,
-            "return_seq":false
+            "type":"max_pool",
+            "pool_size":2
          },
          {
             "type":"flatten"
          },
          {
             "type":"dense",
-            "neurons":10,
-            "activation":"linear"
+            "neurons":7
          },
-         {
-            "type":"dropout",
-            "rate":0.2
-         },
+        {
+          "type": "leakyrelu",
+          "leak_factor": 0.001
+        },
+        {
+          "type": "dropout",
+          "rate": 0.4
+        },
          {
             "type":"dense",
-            "neurons":1,
-            "activation":"linear"
+            "neurons":1
          }
       ],
       "loss":"mse",

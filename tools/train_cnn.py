@@ -30,7 +30,7 @@ norm_data = training_config['training']['normalize']
 # Collect data
 for country in countries:
     countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
-                                                      policy_category=PolicyCategory.HEALTH_INDICATORS,
+                                                      policy_category=PolicyCategory.ALL,
                                                       normalize=norm_data)
     train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=False)
     train_features = train_features.append(train_x)
@@ -46,6 +46,7 @@ print(test_labels.shape)
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
 cnn = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
+cnn.plot_and_save_model("content/model_arch/CNN_TAPAN.png")
 print(cnn.model.summary())
 losses = []
 val_losses = []

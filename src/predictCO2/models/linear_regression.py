@@ -13,7 +13,7 @@ from predictCO2.preprocessing.co2_percent_dict import co2_percentage
 from predictCO2.preprocessing.generate_data import CountryPolicyCarbonData, PolicyCategory
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 def soft_accuracy(y_true, y_pred, tolerance):
     return np.mean(np.abs(y_true - y_pred) <= tolerance)
@@ -42,8 +42,8 @@ for country in countries:
                                                       policy_category=policy,
                                                       normalize=0)
     train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=False)
-    # train_x['percent_contrib'] = co2_percentage[country]
-    # test_x['percent_contrib'] = co2_percentage[country]
+    train_x['percent_contrib'] = co2_percentage[country]
+    test_x['percent_contrib'] = co2_percentage[country]
     train_features = train_features.append(train_x)
     test_features = test_features.append(test_x)
     train_labels = train_labels.append(train_y)
@@ -55,8 +55,8 @@ print(test_features.shape)
 print(test_labels.shape)
 
 #Scale data
-xscaler = StandardScaler()
-yscaler = StandardScaler()
+xscaler = MinMaxScaler()
+yscaler = MinMaxScaler()
 X_train_scaled = xscaler.fit_transform(train_features)
 X_test_scaled = xscaler.transform(test_features)
 y_train_scaled = yscaler.fit_transform(train_labels)

@@ -40,7 +40,8 @@ if __name__ == '__main__':
                                                       policy_category=PolicyCategory.ALL,
                                                       normalize=norm_data)
 
-    # Just get test data for evaluating a pre-trained model.
+    # Just get test data for evaluating a pre-trained model. The test data obtained is previously unseen to the training
+    # data
     features = pd.DataFrame()
     labels = pd.DataFrame()
     _, _, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=True)

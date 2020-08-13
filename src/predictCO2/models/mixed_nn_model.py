@@ -23,7 +23,7 @@ class nn_model(NN_Template):
         self.n_feats = num_features
         self.n_steps = self.config['time_steps']
         self.n_ops = num_outputs
-        self.prediction_tolerance = 0.1
+        self.prediction_tolerance = self.config['model']['prediction_tolerance']
         self.build_model()
 
     def build_model(self):
@@ -70,7 +70,8 @@ class nn_model(NN_Template):
         """
 
         checkpoint_path = self.config["model"]["checkpoint_path"]
-        filename = "best_epoch_"+self.config["country"]+".h5"
+        # filename = "best_epoch_"+self.config["country"]+".h5"
+        filename = "best_epoch.h5"
         checkpoint_dir = os.path.join(checkpoint_path, filename)
 
         # print(os.path.isdir(checkpoint_path))

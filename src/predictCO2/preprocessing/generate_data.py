@@ -30,7 +30,7 @@ class PolicyCategory(Enum):
     SOCIAL_INDICATORS = 2
     ECONOMIC_INDICATORS = 3
     HEALTH_INDICATORS = 4
-
+    STRINGENCY_INDEX = 5
 
 class TrainDataInterface(object):
     """
@@ -244,6 +244,7 @@ class PolicyData:
     H3 = 'H3_Contact tracing'
     H4 = 'H4_Emergency investment in healthcare'
     H5 = 'H5_Investment in vaccines'
+    STRINGENCY_INDEX = 'StringencyIndexForDisplay'
 
     # POLICY_DATA_FRAME_FULL = None
 
@@ -295,6 +296,8 @@ class PolicyData:
                 h3 = row[PolicyData.H3]
                 h4 = row[PolicyData.H4]
                 h5 = row[PolicyData.H5]
+                stringency = row[PolicyData.STRINGENCY_INDEX]
+
                 if self.__include_flags:
                     if self.__policy_category == PolicyCategory.ALL:
                         self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
@@ -307,6 +310,8 @@ class PolicyData:
                         self.__country_policy_dict[str(date)] = [e1, e1_flag, e2, e3, e4]
                     elif self.__policy_category == PolicyCategory.HEALTH_INDICATORS:
                         self.__country_policy_dict[str(date)] = [h1, h1_flag, h2, h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.STRINGENCY_INDEX:
+                        self.__country_policy_dict[str(date)] = [stringency]
                 else:
                     if self.__policy_category == PolicyCategory.ALL:
                         self.__country_policy_dict[str(date)] = [c1, c2, c3, c4, c5, c6, c7, c8, e1, e2, e3, e4, h1, h2,
@@ -317,6 +322,8 @@ class PolicyData:
                         self.__country_policy_dict[str(date)] = [e1, e2, e3, e4]
                     elif self.__policy_category == PolicyCategory.HEALTH_INDICATORS:
                         self.__country_policy_dict[str(date)] = [h1, h2, h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.STRINGENCY_INDEX:
+                        self.__country_policy_dict[str(date)] = [stringency]
             self.__country_policy_df = pd.DataFrame.from_records(self.__country_policy_dict)
 
     def get_country_policy_data(self, data_type):

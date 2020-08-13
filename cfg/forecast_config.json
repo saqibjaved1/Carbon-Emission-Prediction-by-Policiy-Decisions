@@ -1,7 +1,22 @@
 {
   "config_file": "training_data.yaml",
-  "country": "Germany",
-  "validation_split": 0.25,
+   "countries":[
+      "India",
+      "Turkmenistan",
+      "Croatia",
+      "United Arab Emirates",
+      "Mexico",
+      "Israel",
+      "Oman",
+      "Portugal",
+      "Latvia"
+   ],
+  "validation_split": 0.8,
   "window_sz": 15,
+  "visualize_countrywise_co2_data": 0,
+  "visualize_countrywise_co2_train_data": 0,
+  "visualize_countrywise_co2_test_data": 0,
+  "visualize_moving_average_forecast": 0,
+  "log_countrywise_stats": 1,
   "output_dir": "./forecast_logs"
 }

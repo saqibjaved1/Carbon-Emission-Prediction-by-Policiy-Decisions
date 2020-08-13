@@ -36,7 +36,6 @@ def train_test_split_data(time, series, validation_split):
     """ Split data into train and validation sets"""
 
     split_time = round(len(series) * (1 - validation_split))
-    print(split_time)
     time_train = time[:split_time]
     x_train = series[:split_time]
     time_valid = time[split_time:]
@@ -89,63 +88,85 @@ def main():
 
     # Get values from configuration file
     config_file = config["config_file"]
-    country_name = config["country"]
+    countries = config["countries"]
     validation_split = config["validation_split"]
+    visualize_countrywise_co2_data = config["visualize_countrywise_co2_data"]
+    visualize_countrywise_co2_train_data = config["visualize_countrywise_co2_train_data"]
+    visualize_countrywise_co2_test_data = config["visualize_countrywise_co2_test_data"]
+    visualize_moving_average_forecast = config["visualize_moving_average_forecast"]
+    log_countrywise_stats = config["log_countrywise_stats"]
 
     # Get CO2 values as time_series data
     data_type = generate_data.DataType.PANDAS_DF
-    data = generate_data.CountryPolicyCarbonData(config_file, country_name)
-    data = data.get_labels(data_type)
-    co2 = data.iloc[0]
-    dates = data.columns
-    time = range(len(co2))
+    mse_total = 0
+    mae_total = 0
+    mavg_mse_total = 0
+    mavg_mae_total = 0
 
-    # Visualize CO2 data as a time series for the given country
-    fig = plt.figure(figsize=(10, 6))
-    title = 'CO2 Data '+country_name
-    plot_series(fig, dates, co2, title=title, format="-", start=0, end=len(co2))
-    plt.show()
+    for country in countries:
+        data = generate_data.CountryPolicyCarbonData(config_file, country)
+        data = data.get_labels(data_type)
+        co2 = data.iloc[0]
+        dates = data.columns
+        time = range(len(co2))
 
-    # Divide data into train and test sets
-    date_train, x_train, date_valid, x_valid, split_time = train_test_split_data(dates, co2, validation_split)
+        # Visualize CO2 data as a time series for the given country
+        if visualize_countrywise_co2_data:
+            fig = plt.figure(figsize=(10, 6))
+            title = 'CO2 Data '+country
+            plot_series(fig, dates, co2, title=title, format="-", start=0, end=len(co2))
+            plt.show()
 
-    # Visualize train data
-    fig = plt.figure(figsize=(10, 6))
-    title = 'CO2 Train Data '+country_name
-    plot_series(fig, date_train, x_train, title, format="-", start=0, end=len(x_train))
-    plt.show()
+        # Divide data into train and test sets
+        date_train, x_train, date_valid, x_valid, split_time = train_test_split_data(dates, co2, validation_split)
 
-    # Visualize validation data
-    fig = plt.figure(figsize=(10, 6))
-    title = 'CO2 Validation Data ' + country_name
-    plot_series(fig, date_valid, x_valid, title, format="-", start=0, end=len(x_valid))
-    plt.show()
+        # Visualize train data
+        if visualize_countrywise_co2_train_data:
+            fig = plt.figure(figsize=(10, 6))
+            title = 'CO2 Train Data '+country
+            plot_series(fig, date_train, x_train, title, format="-", start=0, end=len(x_train))
+            plt.show()
 
-    # Naive forecast
-    n_forecast = naive_forecast(co2, split_time)
-    n_forecast_mse = keras.metrics.mean_squared_error(x_valid, n_forecast).numpy()
-    n_forecast_mae = keras.metrics.mean_absolute_error(x_valid, n_forecast).numpy()
-    print("Mean squared error for naive forecast = {}".format(n_forecast_mse))
-    print("Mean absolute error for naive forecast = {}".format(n_forecast_mae))
+        # Visualize validation data
+        if visualize_countrywise_co2_test_data:
+            fig = plt.figure(figsize=(10, 6))
+            title = 'CO2 Validation Data ' + country
+            plot_series(fig, date_valid, x_valid, title, format="-", start=0, end=len(x_valid))
+            plt.show()
 
-    # Moving average forecast
-    window_size = config["window_sz"]
-    moving_avg = moving_average_forecast(co2, window_size)[split_time - window_size:]
-    mavg_forecast_mse = keras.metrics.mean_squared_error(x_valid, moving_avg).numpy()
-    mavg_forecast_mae = keras.metrics.mean_absolute_error(x_valid, moving_avg).numpy()
-    print("Mean squared error for naive forecast = {}".format(mavg_forecast_mse))
-    print("Mean absolute error for naive forecast = {}".format(mavg_forecast_mae))
+        # Naive forecast
+        n_forecast = naive_forecast(co2, split_time)
+        n_forecast_mse = keras.metrics.mean_squared_error(x_valid, n_forecast).numpy()
+        n_forecast_mae = keras.metrics.mean_absolute_error(x_valid, n_forecast).numpy()
+        mse_total += n_forecast_mse
+        mae_total += n_forecast_mae
 
-    # Visualize moving average forecast
-    fig = plt.figure(figsize=(10, 6))
-    title = 'CO2 Actual vs Moving Average ' + country_name
-    plot_series(fig, date_valid, x_valid, title, format="-", start=0, end=len(x_valid))
-    plot_series(fig, date_valid, moving_avg, title, format="r-", start=0, end=len(x_valid))
-    plt.show()
+        # Moving average forecast
+        window_size = config["window_sz"]
+        moving_avg = moving_average_forecast(co2, window_size)[split_time - window_size:]
+        mavg_forecast_mse = keras.metrics.mean_squared_error(x_valid, moving_avg).numpy()
+        mavg_forecast_mae = keras.metrics.mean_absolute_error(x_valid, moving_avg).numpy()
+        mavg_mse_total += mavg_forecast_mse
+        mavg_mae_total += mavg_forecast_mae
 
-    # Log the forecast stats
-    path = config["output_dir"]
-    log_stats(country_name, n_forecast_mse, n_forecast_mae, mavg_forecast_mse, mavg_forecast_mae, path)
+        # Visualize moving average forecast
+        if visualize_moving_average_forecast:
+            fig = plt.figure(figsize=(10, 6))
+            title = 'CO2 Actual vs Moving Average ' + country
+            plot_series(fig, date_valid, x_valid, title, format="-", start=0, end=len(x_valid))
+            plot_series(fig, date_valid, moving_avg, title, format="r-", start=0, end=len(x_valid))
+            plt.show()
+
+        # Log the forecast stats
+        if log_countrywise_stats:
+            path = config["output_dir"]
+            log_stats(country, n_forecast_mse, n_forecast_mae, mavg_forecast_mse, mavg_forecast_mae, path)
+
+    print("Mean squared error for naive forecast = {}".format(mse_total/len(countries)))
+    print("Mean absolute error for naive forecast = {}".format(mae_total/len(countries)))
+    print("Mean squared error for moving average forecast = {}".format(mavg_mse_total/len(countries)))
+    print("Mean absolute error for moving average forecast = {}".format(mavg_mae_total/len(countries)))
+
 
 
 if __name__ == "__main__":

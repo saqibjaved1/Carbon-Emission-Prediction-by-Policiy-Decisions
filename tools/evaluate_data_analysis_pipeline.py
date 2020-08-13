@@ -30,15 +30,19 @@ if __name__ == '__main__':
         print(*countries_labels.keys(), sep=",")
 
     # 1. Load Configuration
+    print("\nLOADING TRAINING CONFIGURATION..................")
     with open('cfg/cnn_config.json') as f:
         training_config = json.load(f)
     norm_data = training_config['training']['normalize']
+    print("\nTRAINING CONFIGURATION LOADED SUCCESSFULLY..................")
 
     # 2. Data Processing (split into train & test as specified by the percentage in the configuration file) and perform
     # Min-Max feature scaling. Full feature space is considered i.e. Social, Economic, Health policy indicators.
+    print("PRE-PROCESSING.........................")
     countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
                                                       policy_category=PolicyCategory.ALL,
                                                       normalize=norm_data)
+    print("PRE-PROCESSING COMPLETE.........................")
 
     # Just get test data for evaluating a pre-trained model. The test data obtained is previously unseen to the training
     # data
@@ -49,15 +53,17 @@ if __name__ == '__main__':
     labels = labels.append(test_y)
 
     # 3. Data Modeling (load pre-trained model for evaluation). Full feature space having all policy indicators is a
-    # 17-D data matrix as a time series.
+    # 17-D data matrix as a time series. Prints model summary
+    print("LOADING MODEL.........................")
     cnn = DeepLearningModel(training_config, num_features=17, num_outputs=1)
     cnn.load()
+    print(cnn.model.summary())
+    print("MODEL LOADED SUCCESSFULLY.........................")
 
     # 4. Evaluate the trained model. Calculate prediction latency. Get prediction MSE, MAE and Soft Accuracy.
     test_start = time.time()
     test_f, test_l = utils.data_sequence_generator(features, labels, training_config['time_steps'])
     model_eval = cnn.model.evaluate(test_f, test_l)
     test_end = time.time()
-    print("TESTING TIME: {}".format(test_end - test_start))
-    print("\n\nTesting MSE: {}\nTesting Soft Accuracy: {}\nTesting MAE: {}".format(model_eval[0], model_eval[1],
-                                                                                   model_eval[2]))
+    print("\n\nPREDICTION LATENCY: {}s".format(test_end - test_start))
+    print("\n\nMSE: {}\nSOFT ACCURACY: {}\nMAE: {}".format(model_eval[0], model_eval[1], model_eval[2]))

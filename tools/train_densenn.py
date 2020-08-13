@@ -99,7 +99,8 @@ print("Test Set Evaluation:\n")
 model_eval = nn.model.evaluate(test_f, test_l)
 print("\n\nMSE: {}\nMAE: {}\nR2 Score: {}\nSoft Accuracy: {}".format(model_eval[0], model_eval[1], model_eval[2], model_eval[3]))
 
-plot_model(nn.model)
+# plot_model(nn.model)
+nn.save("DNN_Sreetama")
 # # Save best model and log metrics
 # mse = nn.model.evaluate(val_f, val_l)[0]
 # metric_file = training_config["model"]["checkpoint_path"]+"Best_Metrics_" + training_config["country"] + ".txt"

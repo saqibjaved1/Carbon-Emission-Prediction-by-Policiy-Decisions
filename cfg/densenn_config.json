@@ -74,7 +74,8 @@
       "normalize": 1
    },
    "model":{
-      "checkpoint_path":"content/checkpoint/",
+      "checkpoint_path":"./content/checkpoint/",
+      "restore_model": "./content/checkpoint/DNN_Sreetama",
       "learning_rate":0.001,
       "tensorboard_dir":"logs/",
       "layers":[

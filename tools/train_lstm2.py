@@ -44,6 +44,7 @@ print(test_labels.shape)
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
 lstm = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
+print(lstm.model.summary())
 lstm.plot_and_save_model("content/model_arch/LSTM_TAPAN.png")
 losses = []
 val_losses = []

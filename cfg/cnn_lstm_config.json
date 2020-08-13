@@ -76,6 +76,7 @@
    },
    "model":{
       "checkpoint_path":"./content/checkpoint/",
+      "restore_model": "./content/checkpoint/CNN_LSTM_TOAHA",
       "learning_rate":0.001,
       "tensorboard_dir":"./logs",
       "layers":[

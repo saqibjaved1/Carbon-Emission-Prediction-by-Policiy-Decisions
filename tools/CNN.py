@@ -70,6 +70,8 @@ print(n_features)
 
 #Training the model
 Conv = CNN(config, num_features=n_features,num_steps=config['time_steps'])
+print(Conv.model.summary())
+Conv.plot_and_save_model("content/model_arch/PAUL_CNN.png")
 history = Conv.train_with_validation_provided(x_train, y_train, x_val, y_val)
 loss= history.history['loss']
 

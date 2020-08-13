@@ -46,6 +46,7 @@ print(test_labels.shape)
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
 cnn = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
+print(cnn.model.summary())
 cnn.plot_and_save_model("content/model_arch/CNN_TAPAN.png")
 print(cnn.model.summary())
 losses = []

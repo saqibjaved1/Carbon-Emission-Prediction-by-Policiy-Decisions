@@ -62,7 +62,7 @@ class DeepLearningModel(NN_Template):
 
         self.model.compile(loss=self.config['model']['loss'],
                            optimizer=optimizers.Adam(self.config['model']['learning_rate']),
-                           metrics=[self.soft_acc])
+                           metrics=[self.soft_acc, "mae"])
 
     def train_with_validation_provided(self, features, labels, val_features, val_labels):
         """

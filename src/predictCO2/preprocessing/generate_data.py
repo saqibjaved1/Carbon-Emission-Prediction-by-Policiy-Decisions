@@ -161,12 +161,12 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
             self.label_df = self.label_df[self.label_df.columns[0:feat_shape[1]]]
 
         if self.normalize:
-            # self.feature_df = self.feature_df.sub(self.feature_df.min()).div(self.feature_df.max().
-            #                                                                          sub(self.feature_df.min()))
-            self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
-            # self.label_df = self.label_df.sub(self.label_df.min()).div(self.label_df.max().
-            #                                                                    sub(self.label_df.min()))
-            self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
+            self.feature_df = self.feature_df.sub(self.feature_df.min()).div(self.feature_df.max().
+                                                                                     sub(self.feature_df.min()))
+            # self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
+            self.label_df = self.label_df.sub(self.label_df.min()).div(self.label_df.max().
+                                                                               sub(self.label_df.min()))
+            # self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
         return self.feature_df, self.label_df
 
     def split_train_test(self, validation_percentage=None, fill_nan=False):

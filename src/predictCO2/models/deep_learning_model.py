@@ -7,7 +7,7 @@ import tensorflow
 from tensorflow.python.keras.callbacks import TensorBoard
 
 from predictCO2.models.nn_template import NN_Template
-from tensorflow.keras import layers, models, optimizers, backend
+from tensorflow.keras import layers, models, optimizers, backend, utils
 
 tensorflow.get_logger().setLevel('INFO')
 
@@ -90,3 +90,6 @@ class DeepLearningModel(NN_Template):
         :return: normalized accuracy score
         """
         return backend.mean(backend.abs(y_true - y_pred) <= self.prediction_tolerance)
+
+    def plot_and_save_model(self, path_to_file):
+        utils.plot_model(self.model, to_file=path_to_file, show_shapes=True)

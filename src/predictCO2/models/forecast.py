@@ -17,6 +17,8 @@ import predictCO2.preprocessing.utils as utils
 from src.predictCO2.preprocessing import generate_data
 from matplotlib.ticker import ScalarFormatter, FormatStrFormatter
 
+def soft_accuracy(y_true, y_pred, tolerance= 20e-5):
+    return np.mean(np.abs(y_true - y_pred) <= tolerance)
 
 def plot_series(fig, dates, series, title, format="-", start=0, end=None):
     """ Visualize the CO2 data as a time series"""
@@ -102,6 +104,8 @@ def main():
     mae_total = 0
     mavg_mse_total = 0
     mavg_mae_total = 0
+    n_acc_total = 0
+    mavg_acc_total = 0
 
     for country in countries:
         data = generate_data.CountryPolicyCarbonData(config_file, country)
@@ -138,16 +142,20 @@ def main():
         n_forecast = naive_forecast(co2, split_time)
         n_forecast_mse = keras.metrics.mean_squared_error(x_valid, n_forecast).numpy()
         n_forecast_mae = keras.metrics.mean_absolute_error(x_valid, n_forecast).numpy()
+        n_forecast_soft_acc = soft_accuracy(x_valid, n_forecast)
         mse_total += n_forecast_mse
         mae_total += n_forecast_mae
+        n_acc_total += n_forecast_soft_acc
 
         # Moving average forecast
         window_size = config["window_sz"]
         moving_avg = moving_average_forecast(co2, window_size)[split_time - window_size:]
         mavg_forecast_mse = keras.metrics.mean_squared_error(x_valid, moving_avg).numpy()
         mavg_forecast_mae = keras.metrics.mean_absolute_error(x_valid, moving_avg).numpy()
+        mavg_forecast_soft_acc = soft_accuracy(x_valid, moving_avg)
         mavg_mse_total += mavg_forecast_mse
         mavg_mae_total += mavg_forecast_mae
+        mavg_acc_total += mavg_forecast_soft_acc
 
         # Visualize moving average forecast
         if visualize_moving_average_forecast:
@@ -166,8 +174,8 @@ def main():
     print("Mean absolute error for naive forecast = {}".format(mae_total/len(countries)))
     print("Mean squared error for moving average forecast = {}".format(mavg_mse_total/len(countries)))
     print("Mean absolute error for moving average forecast = {}".format(mavg_mae_total/len(countries)))
-
-
+    print("Soft accuracy for naive forecast = {}".format(n_acc_total/len(countries)))
+    print("Soft accuracy for moving average forecast = {}".format(mavg_acc_total/len(countries)))
 
 if __name__ == "__main__":
     main()

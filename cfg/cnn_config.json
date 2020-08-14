@@ -73,7 +73,7 @@
       "epochs":50,
       "batch_size":64,
       "validation_frequency":1,
-      "normalize":1
+      "normalize":0
    },
    "model":{
       "checkpoint_path":"./content/checkpoint/",

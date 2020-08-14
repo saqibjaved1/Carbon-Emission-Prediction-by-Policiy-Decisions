@@ -89,7 +89,7 @@ class DeepLearningModel(NN_Template):
         :param y_pred: Predictions
         :return: normalized accuracy score
         """
-        return backend.mean(backend.abs(y_true - y_pred) <= self.prediction_tolerance)
+        return backend.mean(backend.equal(backend.round(y_true), backend.round(y_pred)))
 
     def plot_and_save_model(self, path_to_file):
         utils.plot_model(self.model, to_file=path_to_file, show_shapes=True)

@@ -30,7 +30,7 @@ norm_data = training_config['training']['normalize']
 # Collect data
 for country in countries:
     countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
-                                                      policy_category=PolicyCategory.ALL,
+                                                      policy_category=PolicyCategory.SOCIAL_INDICATORS,
                                                       normalize=norm_data)
     train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=False)
     train_features = train_features.append(train_x)
@@ -42,6 +42,7 @@ print(train_features.shape)
 print(train_labels.shape)
 print(test_features.shape)
 print(test_labels.shape)
+# print(train_labels.eq(0).all())
 # Train model with 5 fold cross validation
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
@@ -50,7 +51,6 @@ print(cnn.model.summary())
 cnn.plot_and_save_model("content/model_arch/CNN_TAPAN.png")
 print(cnn.model.summary())
 losses = []
-val_losses = []
 start = time.time()
 for train_idx, test_idx in tss.split(train_features):
     X, X_val = train_features.iloc[train_idx], train_features.iloc[test_idx]
@@ -59,7 +59,6 @@ for train_idx, test_idx in tss.split(train_features):
     val_f, val_l = utils.data_sequence_generator(X_val, Y_val, training_config['time_steps'])
     h = cnn.train_with_validation_provided(features, labels, val_f, val_l)
     losses.append(h.history['loss'])
-    val_losses.append(h.history['val_loss'])
 end = time.time()
 print("TRAINING TIME: {}".format(end - start))
 
@@ -69,14 +68,8 @@ for loss_per_fold in losses:
     for j, loss in enumerate(loss_per_fold):
         loss_arr[j] = loss_arr[j] + loss
 loss_arr = loss_arr / 5
-val_loss_arr = np.zeros((50, 1))
-for val_loss_per_fold in val_losses:
-    for j, loss in enumerate(val_loss_per_fold):
-        val_loss_arr[j] = val_loss_arr[j] + loss
-val_loss_arr = loss_arr / 5
 fig1, ax1 = plt.subplots()
 ax1.plot(range(len(loss_arr)), loss_arr, label='Training Loss')
-ax1.plot(range(len(val_loss_arr)), val_loss_arr, label='Validation Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.legend(loc='upper right')
@@ -87,6 +80,8 @@ plt.show()
 test_start = time.time()
 test_f, test_l = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
 model_eval = cnn.model.evaluate(test_f, test_l)
+y = cnn.model.predict(test_f)
+print(y)
 test_end = time.time()
 print("TESTING TIME: {}".format(test_end - test_start))
 print("\n\nTesting Loss: {}\nTesting Accuracy: {}".format(model_eval[0], model_eval[1]))

@@ -57,13 +57,13 @@ if __name__ == '__main__':
     features = features.append(test_x)
     labels = labels.append(test_y)
 
-    # 3. Data Modeling (load pre-trained model for evaluation). Full feature space having all policy indicators is a
-    # 17-D data matrix as a time series.
+    # 3. Data Modeling (load pre-trained model for evaluation). Social Policy indicators is a
+    # 8-D data matrix as a time series.
     print("LOADING MODEL.........................")
-    # cnn = DeepLearningModel(training_config_cnn, num_features=17, num_outputs=1)
-    # cnn.load()
-    # lstm = DeepLearningModel(training_config_lstm, num_features=17, num_outputs=1)
-    # lstm.load()
+    cnn = DeepLearningModel(training_config_cnn, num_features=8, num_outputs=1)
+    cnn.load()
+    lstm = DeepLearningModel(training_config_lstm, num_features=8, num_outputs=1)
+    lstm.load()
     dnn = nn_model(training_config_dnn, num_features=8, num_outputs=1)
     dnn.load()
     print("MODEL LOADED SUCCESSFULLY.........................")
@@ -87,20 +87,23 @@ if __name__ == '__main__':
     print("------------------------------------- DNN MODEL ------------------------------------")
     print(dnn.model.summary())
     print("\n\nPREDICTION LATENCY: {}s".format(test_end - test_start))
-    print("\n\nMSE: {}\nSOFT ACCURACY: {}\nMAE: {}".format(model_eval[0], model_eval[1], model_eval[2]))
-    # test_start = time.time()
-    # model_eval = lstm.model.evaluate(test_f, test_l)
-    # test_end = time.time()
-    # print("------------------------------------- LSTM MODEL ------------------------------------")
-    # print(lstm.model.summary())
-    # print("TESTING TIME: {}".format(test_end - test_start))
-    # print("\n\nTesting MSE: {}\nTesting Soft Accuracy: {}\nTesting MAE: {}".format(model_eval[0], model_eval[1],
-    #                                                                                model_eval[2]))
-    # test_start = time.time()
-    # model_eval = cnn.model.evaluate(test_f, test_l)
-    # test_end = time.time()
-    # print("------------------------------------- CNN MODEL ------------------------------------")
-    # print(cnn.model.summary())
-    # print("TESTING TIME: {}".format(test_end - test_start))
-    # print("\n\nTesting MSE: {}\nTesting Soft Accuracy: {}\nTesting MAE: {}".format(model_eval[0], model_eval[1],
-    #                                                                                model_eval[2]))
+    print("\n\nMSE: {}".format(model_eval[0]))
+
+
+    test_start = time.time()
+    model_eval = lstm.model.evaluate(test_f, test_l)
+    test_end = time.time()
+    print("------------------------------------- LSTM MODEL ------------------------------------")
+    print(lstm.model.summary())
+    print("TESTING TIME: {}".format(test_end - test_start))
+    print("\n\nMSE: {}\nSoft Accuracy: {}\nMAE: {}".format(model_eval[0], model_eval[1],
+                                                                                   model_eval[2]))
+
+    test_start = time.time()
+    model_eval = cnn.model.evaluate(test_f, test_l)
+    test_end = time.time()
+    print("------------------------------------- CNN MODEL ------------------------------------")
+    print(cnn.model.summary())
+    print("TESTING TIME: {}".format(test_end - test_start))
+    print("\n\nMSE: {}\nSoft Accuracy: {}\nMAE: {}".format(model_eval[0], model_eval[1],
+                                                                                   model_eval[2]))

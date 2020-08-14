@@ -28,7 +28,7 @@ norm_data = training_config['training']['normalize']
 # Collect data
 for country in countries:
     countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
-                                                      policy_category=PolicyCategory.ALL,
+                                                      policy_category=PolicyCategory.SOCIAL_INDICATORS,
                                                       normalize=norm_data)
     train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=True)
     train_features = train_features.append(train_x)
@@ -47,7 +47,6 @@ lstm = DeepLearningModel(training_config, num_features=n_features, num_outputs=1
 print(lstm.model.summary())
 lstm.plot_and_save_model("content/model_arch/LSTM_TAPAN.png")
 losses = []
-val_losses = []
 start = time.time()
 for train_idx, test_idx in tss.split(train_features):
     X, X_val = train_features.iloc[train_idx], train_features.iloc[test_idx]
@@ -56,7 +55,6 @@ for train_idx, test_idx in tss.split(train_features):
     val_f, val_l = utils.data_sequence_generator(X_val, Y_val, training_config['time_steps'])
     h = lstm.train_with_validation_provided(features, labels, val_f, val_l)
     losses.append(h.history['loss'])
-    val_losses.append(h.history['val_loss'])
 end = time.time()
 print("TRAINING TIME: {}".format(end - start))
 
@@ -67,14 +65,8 @@ for loss_per_fold in losses:
     for j, loss in enumerate(loss_per_fold):
         loss_arr[j] = loss_arr[j] + loss
 loss_arr = loss_arr / 5
-val_loss_arr = np.zeros((50, 1))
-for val_loss_per_fold in val_losses:
-    for j, loss in enumerate(val_loss_per_fold):
-        val_loss_arr[j] = val_loss_arr[j] + loss
-val_loss_arr = loss_arr / 5
 fig1, ax1 = plt.subplots()
 ax1.plot(range(len(loss_arr)), loss_arr, label='Training Loss')
-ax1.plot(range(len(val_loss_arr)), val_loss_arr, label='Validation Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.legend(loc='upper right')

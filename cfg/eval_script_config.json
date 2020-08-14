@@ -1,0 +1,5 @@
+{
+  "training_config_dnn": "cfg/densenn_config.json",
+  "training_config_cnn": "cfg/cnn_config.json",
+  "training_config_lstm": "cfg/lstm_config.json"
+}

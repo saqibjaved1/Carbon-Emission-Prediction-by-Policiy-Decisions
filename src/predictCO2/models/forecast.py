@@ -18,7 +18,7 @@ from src.predictCO2.preprocessing import generate_data
 from matplotlib.ticker import ScalarFormatter, FormatStrFormatter
 
 def soft_accuracy(y_true, y_pred, tolerance= 20e-5):
-    return np.mean(np.abs(y_true - y_pred) <= tolerance)
+    return np.mean(np.round(y_true) == np.round(y_pred))
 
 def plot_series(fig, dates, series, title, format="-", start=0, end=None):
     """ Visualize the CO2 data as a time series"""
@@ -142,7 +142,7 @@ def main():
         n_forecast = naive_forecast(co2, split_time)
         n_forecast_mse = keras.metrics.mean_squared_error(x_valid, n_forecast).numpy()
         n_forecast_mae = keras.metrics.mean_absolute_error(x_valid, n_forecast).numpy()
-        n_forecast_soft_acc = soft_accuracy(x_valid, n_forecast)
+        n_forecast_soft_acc = soft_accuracy(x_valid.to_numpy(), n_forecast.to_numpy())
         mse_total += n_forecast_mse
         mae_total += n_forecast_mae
         n_acc_total += n_forecast_soft_acc

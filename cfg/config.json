@@ -2,7 +2,7 @@
 {
   "model": {
             "checkpoint_path": "E:\\AMI\\Project\\group07\\checkpoint\\",
-            "restore_model": "...",
+            "restore_model": "./content/checkpoint/LSTM_SAQIB",
             "loss": "mean_squared_error",
             "optimizer": "adam",
             "learning_rate": 0.001,

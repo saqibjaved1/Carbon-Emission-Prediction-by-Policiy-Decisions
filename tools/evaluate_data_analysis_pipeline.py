@@ -87,7 +87,8 @@ if __name__ == '__main__':
     print("------------------------------------- DNN MODEL ------------------------------------")
     print(dnn.model.summary())
     print("\n\nPREDICTION LATENCY: {}s".format(test_end - test_start))
-    print("\n\nMSE: {}".format(model_eval[0]))
+    print("\n\nMSE: {}\nMAE: {}\nR2: {}\nSoft Accuracy: {}".format(model_eval[0], model_eval[1],
+                                                                                   model_eval[2], model_eval[3]))
 
 
     test_start = time.time()

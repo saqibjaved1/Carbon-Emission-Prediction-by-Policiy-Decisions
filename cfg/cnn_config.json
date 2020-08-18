@@ -1,0 +1,138 @@
+{
+  "contributor": "Tapan Sharma",
+   "countries":[
+      "Italy",
+      "South Korea",
+      "Finland",
+      "Brazil",
+      "Kazakhstan",
+      "Vietnam",
+      "Colombia",
+      "France",
+      "Greece",
+      "Chile",
+      "Iraq",
+      "Lithuania",
+      "Qatar",
+      "Iran",
+      "Turkey",
+      "Japan",
+      "Ireland",
+      "Australia",
+      "Norway",
+      "Indonesia",
+      "Denmark",
+      "Philippines",
+      "Canada",
+      "Argentina",
+      "Germany",
+      "Egypt",
+      "Belgium",
+      "Pakistan",
+      "United States",
+      "Saudi Arabia",
+      "Algeria",
+      "Czech Republic",
+      "Venezuela",
+      "Spain",
+      "Malaysia",
+      "United Kingdom",
+      "China",
+      "Uzbekistan",
+      "Morocco",
+      "South Africa",
+      "Ukraine",
+      "Netherlands",
+      "Sweden",
+      "Thailand",
+      "New Zealand",
+      "Nigeria",
+      "Russia",
+      "Austria",
+      "Luxembourg",
+      "Hungary",
+      "Poland",
+      "Romania",
+      "Cyprus",
+      "Bulgaria",
+      "Estonia",
+      "Kuwait",
+      "Slovenia",
+      "Bangladesh",
+      "India",
+      "Turkmenistan",
+      "Croatia",
+      "United Arab Emirates",
+      "Mexico",
+      "Israel",
+      "Oman",
+      "Portugal",
+      "Latvia"
+   ],
+   "training":{
+      "epochs":50,
+      "batch_size":64,
+      "validation_frequency":1,
+      "normalize":0
+   },
+   "model":{
+      "checkpoint_path":"./content/checkpoint/",
+      "restore_model": "./content/checkpoint/CNN_TAPAN",
+      "learning_rate":0.001,
+      "tensorboard_dir":"./logs",
+      "layers":[
+         {
+            "type":"conv1d",
+            "filters":64,
+            "kernel_size":2,
+            "input_timesteps":7
+         },
+        {
+          "type": "leakyrelu",
+          "leak_factor": 0.001
+        },
+         {
+            "type":"max_pool",
+            "pool_size":2
+         },
+        {
+            "type":"conv1d",
+            "filters":32,
+            "kernel_size":2
+         },
+        {
+          "type": "leakyrelu",
+          "leak_factor": 0.001
+        },
+         {
+            "type":"max_pool",
+            "pool_size":2
+         },
+         {
+            "type":"flatten"
+         },
+         {
+            "type":"dense",
+            "neurons":7
+         },
+        {
+          "type": "leakyrelu",
+          "leak_factor": 0.001
+        },
+        {
+          "type": "dropout",
+          "rate": 0.4
+        },
+         {
+            "type":"dense",
+            "neurons":1
+         }
+      ],
+      "loss":"mse",
+      "optimizer":"adam",
+      "save_dir":"models",
+      "prediction_tolerance": 20e-5
+   },
+   "time_steps":7,
+   "validation_split":0.3
+}

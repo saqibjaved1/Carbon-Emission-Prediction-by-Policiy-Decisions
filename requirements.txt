@@ -1,7 +1,6 @@
 numpy
 pandas
 seaborn
-predictCO2
 pylint
 notebook
 tensorflow
@@ -9,3 +8,5 @@ matplotlib
 pyyaml
 xlrd
 country-converter
+scikit-learn
+pydot

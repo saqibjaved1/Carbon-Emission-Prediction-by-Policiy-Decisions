@@ -1,0 +1,18 @@
+
+{
+  "model": {
+            "checkpoint_path": "E:\\AMI\\Project\\group07\\checkpoint\\",
+            "restore_model": "./content/checkpoint/LSTM_SAQIB",
+            "loss": "mean_squared_error",
+            "optimizer": "adam",
+            "learning_rate": 0.001,
+            "epochs": 40,
+            "batch_size": 4,
+            "tensorboard_dir": "./logs",
+            "verbose": 2 
+  },
+  "prediction_tolerance":0.001,
+  "time_steps": 3,
+  "validation_split": 0.3,
+  "country": "Germany"
+}

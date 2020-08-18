@@ -4,11 +4,17 @@ Date: 20/6/2020
 """
 
 import abc
+import math
+from abc import ABC
+import logging
 import Globals
 import pandas as pd
 import predictCO2.preprocessing.utils as utils
 
 from enum import Enum
+
+logging.basicConfig(level=logging.INFO, format='%(message)s')
+logger = logging.getLogger(__name__)
 
 
 class DataType(Enum):
@@ -18,6 +24,13 @@ class DataType(Enum):
     DICT = 1  # For type dictionary
     PANDAS_DF = 2  # For type pandas data frame
 
+
+class PolicyCategory(Enum):
+    ALL = 1
+    SOCIAL_INDICATORS = 2
+    ECONOMIC_INDICATORS = 3
+    HEALTH_INDICATORS = 4
+    STRINGENCY_INDEX = 5
 
 class TrainDataInterface(object):
     """
@@ -67,8 +80,8 @@ class TrainDataInterface(object):
         pass
 
 
-class CountryPolicyCarbonData(TrainDataInterface):
-    def __init__(self, training_cfg, country):
+class CountryPolicyCarbonData(TrainDataInterface, ABC):
+    def __init__(self, training_cfg, country, policy_category=PolicyCategory.ALL, include_flags=True, normalize=0):
         """
         Class to keep Policy and Carbon data by country.
         Uses OXFORD OxCGRT (https://github.com/OxCGRT/covid-policy-tracker) as features/policy
@@ -76,78 +89,118 @@ class CountryPolicyCarbonData(TrainDataInterface):
         :param training_cfg: yaml configuration file where location of data set and other parameters as kept
         :param country: name of country for which data is required.
         """
-
         self.training_cfg = utils.load_cfg_file(training_cfg)
         self.country_name = country
         carbon_csv = Globals.ROOT_DIR + "/" + self.training_cfg['labels']
         self.carbon_emission_data = CarbonEmissionData(carbon_csv, country)
 
         policy_csv = Globals.ROOT_DIR + "/" + self.training_cfg['features']
-        self.policy_data = PolicyData(policy_csv, self.country_name)
+        self.policy_data = PolicyData(policy_csv, self.country_name, policy_category=policy_category,
+                                      include_flags=include_flags)
 
-        self.combined_data_dict = {}
-        self.feature_dict = {}
-        self.label_dict = {}
+        self.combined_data_df = pd.DataFrame()
+        self.feature_df = pd.DataFrame()
+        self.label_df = pd.DataFrame()
         self.num_features = 0
+        self.num_timestamps = 0
+        self.test_feature_df = pd.DataFrame()
+        self.test_label_df = pd.DataFrame()
+        self.normalize = normalize
 
-    def get_features(self, data_type):
+    def get_features(self, data_type, fill_na=True):
         """
         Return features as specified by argument
         :param data_type DataType either DICT or PANDAS_DF
         :rtype: python dictionary or pandas data frame
         """
-        if not self.feature_dict:
-            self.feature_dict = self.policy_data.get_country_policy_data(DataType.DICT)
-        self.num_features = len(next(iter(self.feature_dict.values())))
-        if data_type == DataType.DICT:
-            return self.feature_dict
-        if data_type == DataType.PANDAS_DF:
-            countries = [self.country_name for i in range(self.num_features)]
-            return pd.DataFrame.from_records(self.feature_dict, index=countries)
+        if self.feature_df.empty:
+            self.feature_df, _ = self.__get_conformed_data()
 
-    def get_labels(self, data_type):
+        if fill_na:
+            self.feature_df = self.feature_df.fillna(0)
+
+        if data_type == DataType.DICT:
+            return self.feature_df.to_dict()
+        if data_type == DataType.PANDAS_DF:
+            return self.feature_df
+
+    def get_labels(self, data_type, fill_na=True):
         """
         Return labels as specified by argument
         :param data_type DataType either DICT or PANDAS_DF
         :rtype: python dictionary or pandas data frame
         """
-        if not self.label_dict:
-            self.label_dict = self.carbon_emission_data.get_country_carbon_emission_data(DataType.DICT)
+        if self.label_df.empty:
+            _, self.label_df = self.__get_conformed_data()
+        if fill_na:
+            self.label_df = self.label_df.fillna(0)
         if data_type == DataType.DICT:
-            return self.label_dict
+            return self.label_df.to_dict()
         if data_type == DataType.PANDAS_DF:
-            return pd.DataFrame.from_records(self.label_dict, index=[0])
+            return self.label_df
 
-    def get_augmented_data(self, data_type):
+    def __get_conformed_data(self):
         """
-        Return features as specified by argument
-        :param data_type DataType either DICT or PANDAS_DF
-        :rtype: python dictionary or pandas data frame. For dictionary return type, first argument will be country name
-        followed by dictionary of augmented data.
+        Conforms sizes of features and labels so that they are equal.
+        :rtype: feature and label data frames.
         """
-        if not self.combined_data_dict:
-            if not self.feature_dict:
-                self.get_features(DataType.DICT)
+        if self.feature_df.empty:
+            self.feature_df = self.policy_data.get_country_policy_data(DataType.PANDAS_DF)
+            self.num_features, self.num_timestamps = self.feature_df.shape
 
-            if not self.label_dict:
-                self.get_labels(DataType.DICT)
+        if self.label_df.empty:
+            self.label_df = self.carbon_emission_data.get_country_carbon_emission_data(DataType.PANDAS_DF)
 
-            min_entries = len(self.label_dict) if (len(self.feature_dict) > len(self.label_dict)) else \
-                len(self.feature_dict)
-            iterable_dict = self.label_dict if (min_entries == len(self.label_dict)) else self.feature_dict
+        feat_shape = self.feature_df.shape
+        lab_shape = self.label_df.shape
 
-            for key in iterable_dict:
-                features = self.feature_dict[key]
-                label = self.label_dict[key]
-                features.append(label)
-                self.combined_data_dict[key] = features
+        # Equate sizes
+        if feat_shape[1] > lab_shape[1]:
+            self.feature_df = self.feature_df[self.feature_df.columns[0:lab_shape[1]]]
+        else:
+            self.label_df = self.label_df[self.label_df.columns[0:feat_shape[1]]]
 
-        if data_type == DataType.DICT:
-            return [self.country_name, self.combined_data_dict]
+        if self.normalize:
+            self.feature_df = self.feature_df.sub(self.feature_df.min()).div(self.feature_df.max().
+                                                                                     sub(self.feature_df.min()))
+            # self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
+            self.label_df = self.label_df.sub(self.label_df.min()).div(self.label_df.max().
+                                                                               sub(self.label_df.min()))
+            # self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
+        return self.feature_df, self.label_df
 
-        if data_type == DataType.PANDAS_DF:
-            countries = [self.country_name for i in range(self.num_features + 1)]
-            return pd.DataFrame.from_records(self.combined_data_dict, index=countries)
+    def split_train_test(self, validation_percentage=None, fill_nan=False):
+        """
+        Splits the data set into training and testing. (Learning process can further have a possibility to split data
+        into training and validation. Hence, from this function, test data can be used as a new unseen data for model
+        to be evaluated upon. Otherwise, test set generated can be used as explicit validation set during training.)
+        :param validation_percentage: percentage of validation split
+        :param fill_nan: If true replaces all NaNs with 0.
+        :return: training and testing data sets.
+        """
+        if not validation_percentage:
+            validation_percentage = self.training_cfg['val_pc']
+
+        logger.info("Splitting data set for {} with test percentage: {}".format(self.country_name,
+                                                                                validation_percentage))
+
+        features_raw = self.get_features(DataType.PANDAS_DF)
+        features_raw = features_raw.T
+        labels_raw = self.get_labels(DataType.PANDAS_DF)
+        labels_raw = labels_raw.T
+
+        if fill_nan:
+            features_raw = features_raw.fillna(0)
+            labels_raw = labels_raw.fillna(0)
+
+        samples = features_raw.shape[0]
+        val_samples = math.ceil(samples * validation_percentage)
+        train_features = features_raw.head(samples - val_samples)
+        test_features = features_raw.tail(val_samples)
+        train_labels = labels_raw.head(samples - val_samples)
+        test_labels = labels_raw.tail(val_samples)
+
+        return train_features, train_labels, test_features, test_labels
 
     def save_data_frame_to_csv(self, location):
         """
@@ -191,10 +244,11 @@ class PolicyData:
     H3 = 'H3_Contact tracing'
     H4 = 'H4_Emergency investment in healthcare'
     H5 = 'H5_Investment in vaccines'
+    STRINGENCY_INDEX = 'StringencyIndexForDisplay'
 
     # POLICY_DATA_FRAME_FULL = None
 
-    def __init__(self, policy_csv, country):
+    def __init__(self, policy_csv, country, policy_category=PolicyCategory.ALL, include_flags=True):
         """
         Policy/Feature Data set is available as a merged excel file with each country having it's individual sheet named
         after that country.
@@ -205,6 +259,8 @@ class PolicyData:
         self.__country_name = country
         self.__country_policy_dict = {}
         self.__country_policy_df = pd.read_excel(policy_csv, sheet_name=country)
+        self.__policy_category = policy_category
+        self.__include_flags = include_flags
         self.__set_properties()
 
     def __set_properties(self):
@@ -240,10 +296,35 @@ class PolicyData:
                 h3 = row[PolicyData.H3]
                 h4 = row[PolicyData.H4]
                 h5 = row[PolicyData.H5]
-                self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
-                                                         c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2, e3, e4,
-                                                         h1,
-                                                         h1_flag, h2, h3, h4, h5]
+                stringency = row[PolicyData.STRINGENCY_INDEX]
+
+                if self.__include_flags:
+                    if self.__policy_category == PolicyCategory.ALL:
+                        self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
+                                                                 c5_flag, c6, c6_flag, c7, c7_flag, c8, e1, e1_flag, e2,
+                                                                 e3, e4, h1, h1_flag, h2, h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.SOCIAL_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [c1, c1_flag, c2, c2_flag, c3, c3_flag, c4, c4_flag, c5,
+                                                                 c5_flag, c6, c6_flag, c7, c7_flag, c8]
+                    elif self.__policy_category == PolicyCategory.ECONOMIC_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [e1, e1_flag, e2, e3, e4]
+                    elif self.__policy_category == PolicyCategory.HEALTH_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [h1, h1_flag, h2, h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.STRINGENCY_INDEX:
+                        self.__country_policy_dict[str(date)] = [stringency]
+                else:
+                    if self.__policy_category == PolicyCategory.ALL:
+                        self.__country_policy_dict[str(date)] = [c1, c2, c3, c4, c5, c6, c7, c8, e1, e2, e3, e4, h1, h2,
+                                                                 h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.SOCIAL_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [c1, c2, c3, c4, c5, c6, c7, c8]
+                    elif self.__policy_category == PolicyCategory.ECONOMIC_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [e1, e2, e3, e4]
+                    elif self.__policy_category == PolicyCategory.HEALTH_INDICATORS:
+                        self.__country_policy_dict[str(date)] = [h1, h2, h3, h4, h5]
+                    elif self.__policy_category == PolicyCategory.STRINGENCY_INDEX:
+                        self.__country_policy_dict[str(date)] = [stringency]
+            self.__country_policy_df = pd.DataFrame.from_records(self.__country_policy_dict)
 
     def get_country_policy_data(self, data_type):
         """
@@ -305,7 +386,8 @@ class CarbonEmissionData:
                 if "MTCO2/day" in str(row['TOTAL_CO2_MED']):
                     continue
                 date = utils.conform_date(row['DATE'])
-                self.__carbon_emission_dict[date] = row['TOTAL_CO2_MED']
+                self.__carbon_emission_dict[str(date)] = [row['TOTAL_CO2_MED']]
+        self.__carbon_df = pd.DataFrame.from_records(self.__carbon_emission_dict)
 
     def get_country_carbon_emission_data(self, data_type):
         """

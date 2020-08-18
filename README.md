@@ -36,8 +36,10 @@ specific government policies as features, normalize/standardize data or not,
 fill NaNs if requested, etc. 
 2. Data Modeling: To avoid retraining for this part, one of the previously trained 
 models can be considered. Candidate models can be found in the `content/checkpoint`
-folder. In this script we have used CNN2 for this purpose. 
-(Naming conventions of models as defined in the Milestone 3 report.)
+folder. In this script we have used CNN2, LSTM2, DNN, and NAIVE FORECAST for 
+this purpose (Naming conventions of models as defined in the Milestone 3 
+report). Overall 10 models were considered as documented in the milestone 3 
+report.
 3. Evaluation: In this part, test data fetched from step 1 can be used on the 
 pre-trained model for making prediction and fetch performance metrics i.e. MSE, 
 MAE and Soft Accuracy scores as also defined in the Milestone 3 report. 

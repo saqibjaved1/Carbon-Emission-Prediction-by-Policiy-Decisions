@@ -10,3 +10,4 @@ xlrd
 country-converter
 scikit-learn
 pydot
+PyQt5

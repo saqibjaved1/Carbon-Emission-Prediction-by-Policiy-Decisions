@@ -2,12 +2,13 @@
 # @Time    : 8/20/20 2:39 PM
 # @Author  : Saptarshi
 # @Email   : saptarshi.mitra@tum.de
-# @File    : app.py.py
+# @File    : app.py
 # @Project: group07
 
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+from dash.dependencies import Input, Output
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -70,7 +71,15 @@ app.layout = html.Div([
         # marks={i: 'Label {}'.format(i) if i == 1 else str(i) for i in range(1, 25)},
         value=5,
     ),
-], style={'columnCount': 2})
+    html.Div(id='stringency_index_show')
+], style={'columnCount': 2})#for two column view in HTML page
+
+@app.callback(
+    Output(component_id='stringency_index_show', component_property='children'),
+    [Input(component_id='stringency_index', component_property='value')]
+)
+def update_stringency_index(input_value):
+    return 'Stringency Index: {}'.format(input_value)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

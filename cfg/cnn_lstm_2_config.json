@@ -1,0 +1,60 @@
+{
+   "contributor": "Saptarshi",
+   "countries":[
+      "Italy",
+      "South Korea"
+   ],
+   "training":{
+      "epochs":100,
+      "batch_size":64,
+      "validation_frequency":1,
+      "normalize":0
+   },
+   "model":{
+      "checkpoint_path":"./content/checkpoint/",
+      "restore_model": "./content/checkpoint/CNN_LSTM_2_SAPTARSHI",
+      "learning_rate":1e-5,
+      "tensorboard_dir":"./logs",
+      "layers":[
+         {
+            "type":"conv1d",
+            "filters":64,
+            "kernel_size":2,
+            "input_timesteps":7
+         },
+         {
+            "type":"lstm",
+            "neurons":60,
+            "input_timesteps":7,
+            "return_seq":true
+         },
+        {
+            "type":"lstm",
+            "neurons":60,
+            "input_timesteps":7,
+            "return_seq":false
+         },
+        {
+            "type":"dense",
+            "neurons":30,
+            "activation":"linear"
+         },
+        {
+            "type":"dense",
+            "neurons":10,
+            "activation":"linear"
+         },
+        {
+            "type":"dense",
+            "neurons":1,
+            "activation":"linear"
+         }
+      ],
+      "loss":"mse",
+      "optimizer":"adam",
+      "save_dir":"models",
+      "prediction_tolerance": 20e-5
+   },
+   "time_steps":7,
+   "validation_split":0.3
+}

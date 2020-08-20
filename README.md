@@ -42,4 +42,14 @@ report). Overall 10 models were considered as documented in the milestone 3
 report.
 3. Evaluation: In this part, test data fetched from step 1 can be used on the 
 pre-trained model for making prediction and fetch performance metrics i.e. MSE, 
-MAE and Soft Accuracy scores as also defined in the Milestone 3 report. 
+MAE and Soft Accuracy scores as also defined in the Milestone 3 report.
+
+### Web app Installation
+
+Requires Python 3.5+
+
+```bash
+pip install -r requirements.txt
+python src/controllers/app.py
+open http://127.0.0.1:8050/
+``` 

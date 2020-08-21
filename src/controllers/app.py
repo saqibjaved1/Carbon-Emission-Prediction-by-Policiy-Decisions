@@ -8,8 +8,9 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output
-
+from dash.dependencies import Input, Output, State
+import plotly.express as px
+import pandas as pd
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
@@ -68,7 +69,13 @@ app.layout = html.Div([
         id= 'stringency_index',
         min=0,
         max=100,
-        # marks={i: 'Label {}'.format(i) if i == 1 else str(i) for i in range(1, 25)},
+        marks={
+            0: {'label': '0', 'style': {'color': '#77b0b1'}},
+            25: {'label': '25'},
+            50: {'label': '50'},
+            75: {'label':'75'},
+            100: {'label': '100', 'style': {'color': '#f50'}}
+        },
         value=5,
     ),
     html.Div(id='stringency_index_show')
@@ -80,6 +87,9 @@ app.layout = html.Div([
 )
 def update_stringency_index(input_value):
     return 'Stringency Index: {}'.format(input_value)
+
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

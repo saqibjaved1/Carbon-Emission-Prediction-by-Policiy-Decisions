@@ -40,8 +40,8 @@ app.layout = html.Div(
                 ),
                 html.Div(className='inputarea',
                          children=[
-                            html.Label('Multi-Select Dropdown'),
-                            dcc.Dropdown(
+                            html.Label('Select the countries for analysis:', style={'margin-left': 20, 'color':'white'}),
+                            dcc.Dropdown(className='dropdown',id='country-dropdown',
                                 options=[
                                     {'label': 'Italy', 'value': 'ITA'},
                                     {'label': 'South Korea', 'value': 'KOR'},
@@ -52,30 +52,28 @@ app.layout = html.Div(
                                 multi=True
                             ),
 
-                            html.Label('Radio Items'),
-                            dcc.RadioItems(
+                            html.Label('Social Indicators:', style={'margin-left': 20, 'color':'white'}),
+                            # dcc.RadioItems(
+                            #     options=[
+                            #         {'label': 'Italy', 'value': 'ITA'},
+                            #         {'label': 'South Korea', 'value': 'KOR'},
+                            #         {'label': 'Finland', 'value': 'FIN'},
+                            #         {'label': 'Brazil', 'value': 'BRA'}
+                            #     ],
+                            #     value='ITA'
+                            # ),
+
+                            dcc.Checklist(className='checkboxes',id='social-indicators-checkboxes',
                                 options=[
-                                    {'label': 'Italy', 'value': 'ITA'},
-                                    {'label': 'South Korea', 'value': 'KOR'},
-                                    {'label': 'Finland', 'value': 'FIN'},
-                                    {'label': 'Brazil', 'value': 'BRA'}
+                                    {'label': 'No measures ', 'value': 'l1'},
+                                    {'label': 'Recommend closing', 'value': 'l2'},
+                                    {'label': 'Require closing (on some levels)', 'value': 'l3'}
                                 ],
-                                value='ITA'
+                                value=['l1']
                             ),
 
-                            html.Label('Checkboxes'),
-                            dcc.Checklist(
-                                options=[
-                                    {'label': 'Italy', 'value': 'ITA'},
-                                    {'label': 'South Korea', 'value': 'KOR'},
-                                    {'label': 'Finland', 'value': 'FIN'},
-                                    {'label': 'Brazil', 'value': 'BRA'}
-                                ],
-                                value=['ITA', 'FIN']
-                            ),
-
-                            html.Label('Text Input'),
-                            dcc.Input(value='hi', type='text'),
+                            # html.Label('Text Input'),
+                            # dcc.Input(value='hi', type='text'),
 
                             html.Label('Stringency Index'),
                             dcc.Slider(

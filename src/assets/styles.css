@@ -39,7 +39,7 @@
     z-index: 1002;
 }*/
 
-body { margin: 0; background-color:#8eb2f6;}
+
 /* Grid
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .container {
@@ -134,7 +134,10 @@ html is set to 62.5% so that all the REM measurements throughout Skeleton
 are based on 10px sizing. So basically 1.5rem = 15px :) */
 html {
   font-size: 62.5%; }
+
 body {
+  margin: 0;
+  background-color:#8eb2f6;
   font-size: 1.5em; /* currently ems cause chrome bug misinterpreting rems on body element */
   line-height: 1.6;
   font-weight: 400;
@@ -360,6 +363,19 @@ p,
 ul,
 ol {
   margin-bottom: 0.75rem; }
+
+/* dropdown
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+dropdown,
+.dropdown {
+  margin-left: 20px; }
+
+
+/* checkboxes
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+checkboxes,
+.checkboxes {
+  margin-left: 20px; }
 
 /* Utilities
 –––––––––––––––––––––––––––––––––––––––––––––––––– */

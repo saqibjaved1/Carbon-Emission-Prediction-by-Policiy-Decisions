@@ -11,11 +11,27 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import pandas as pd
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+#external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+
+app = dash.Dash(__name__, meta_tags=[
+    {
+        'name': 'PredictCarbon COVID',
+        'content': 'This is a group project completed for the course Applied Machine Intelligence at the Technical University of Munich'
+    },
+    {
+        'http-equiv': 'X-UA-Compatible',
+        'content': 'IE=edge'
+    },
+    {
+      'name': 'viewport',
+      'content': 'width=device-width, initial-scale=1.0'
+    }
+], title='PredictCarbon COVID', update_title='Calculating')
 
 app.layout = html.Div([
+    #html.Hr(style={'height':20,'border-width':0,'background-color':'#004BA0', 'margin-top':0, 'margin-left':0}),
+    html.H1('Carbon Emissions Prediction by Policy Decisions'),
     html.Label('Dropdown'),
     dcc.Dropdown(
         options=[
@@ -79,7 +95,7 @@ app.layout = html.Div([
         value=5,
     ),
     html.Div(id='stringency_index_show')
-], style={'columnCount': 2})#for two column view in HTML page
+], style={'columnCount': 1})#for one column view in HTML page
 
 @app.callback(
     Output(component_id='stringency_index_show', component_property='children'),

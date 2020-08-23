@@ -29,73 +29,88 @@ app = dash.Dash(__name__, meta_tags=[
     }
 ], title='PredictCarbon COVID', update_title='Calculating')
 
-app.layout = html.Div([
-    #html.Hr(style={'height':20,'border-width':0,'background-color':'#004BA0', 'margin-top':0, 'margin-left':0}),
-    html.H1('Carbon Emissions Prediction by Policy Decisions'),
-    html.Label('Dropdown'),
-    dcc.Dropdown(
-        options=[
-            {'label': 'Italy', 'value': 'ITA'},
-            {'label': 'South Korea', 'value': 'KOR'},
-            {'label': 'Finland', 'value': 'FIN'},
-            {'label': 'Brazil', 'value': 'BRA'}
-        ],
-        value='ITA'
-    ),
+app.layout = html.Div(
+    children=[
+        html.Div(className='appui',
+            children=[
+                html.Div(className='toparea',
+                         children=[
+                            html.H1('Carbon Emissions Prediction by Policy Decisions'),
+                         ]
+                ),
+                html.Div(className='inputarea',
+                         children=[
+                            html.Label('Multi-Select Dropdown'),
+                            dcc.Dropdown(
+                                options=[
+                                    {'label': 'Italy', 'value': 'ITA'},
+                                    {'label': 'South Korea', 'value': 'KOR'},
+                                    {'label': 'Finland', 'value': 'FIN'},
+                                    {'label': 'Brazil', 'value': 'BRA'}
+                                ],
+                                value=['ITA', 'FIN'],
+                                multi=True
+                            ),
 
-    html.Label('Multi-Select Dropdown'),
-    dcc.Dropdown(
-        options=[
-            {'label': 'Italy', 'value': 'ITA'},
-            {'label': 'South Korea', 'value': 'KOR'},
-            {'label': 'Finland', 'value': 'FIN'},
-            {'label': 'Brazil', 'value': 'BRA'}
-        ],
-        value=['ITA', 'FIN'],
-        multi=True
-    ),
+                            html.Label('Radio Items'),
+                            dcc.RadioItems(
+                                options=[
+                                    {'label': 'Italy', 'value': 'ITA'},
+                                    {'label': 'South Korea', 'value': 'KOR'},
+                                    {'label': 'Finland', 'value': 'FIN'},
+                                    {'label': 'Brazil', 'value': 'BRA'}
+                                ],
+                                value='ITA'
+                            ),
 
-    html.Label('Radio Items'),
-    dcc.RadioItems(
-        options=[
-            {'label': 'Italy', 'value': 'ITA'},
-            {'label': 'South Korea', 'value': 'KOR'},
-            {'label': 'Finland', 'value': 'FIN'},
-            {'label': 'Brazil', 'value': 'BRA'}
-        ],
-        value='ITA'
-    ),
+                            html.Label('Checkboxes'),
+                            dcc.Checklist(
+                                options=[
+                                    {'label': 'Italy', 'value': 'ITA'},
+                                    {'label': 'South Korea', 'value': 'KOR'},
+                                    {'label': 'Finland', 'value': 'FIN'},
+                                    {'label': 'Brazil', 'value': 'BRA'}
+                                ],
+                                value=['ITA', 'FIN']
+                            ),
 
-    html.Label('Checkboxes'),
-    dcc.Checklist(
-        options=[
-            {'label': 'Italy', 'value': 'ITA'},
-            {'label': 'South Korea', 'value': 'KOR'},
-            {'label': 'Finland', 'value': 'FIN'},
-            {'label': 'Brazil', 'value': 'BRA'}
-        ],
-        value=['ITA', 'FIN']
-    ),
+                            html.Label('Text Input'),
+                            dcc.Input(value='hi', type='text'),
 
-    html.Label('Text Input'),
-    dcc.Input(value='hi', type='text'),
+                            html.Label('Stringency Index'),
+                            dcc.Slider(
+                                id= 'stringency_index',
+                                min=0,
+                                max=100,
+                                marks={
+                                    0: {'label': '0', 'style': {'color': '#77b0b1'}},
+                                    25: {'label': '25'},
+                                    50: {'label': '50'},
+                                    75: {'label':'75'},
+                                    100: {'label': '100', 'style': {'color': '#f50'}}
+                                },
+                                value=5,
+                            ),
+                            html.Div(className='slider', id='stringency_index_show')
+                        ], style={'columnCount': 2}#for two column view in HTML page
+                )
+            ]
+        )
+    ]
+)
+#, style={'columnCount': 1}
+    # html.Label('Dropdown'),
+    # dcc.Dropdown(
+    #     options=[
+    #         {'label': 'Italy', 'value': 'ITA'},
+    #         {'label': 'South Korea', 'value': 'KOR'},
+    #         {'label': 'Finland', 'value': 'FIN'},
+    #         {'label': 'Brazil', 'value': 'BRA'}
+    #     ],
+    #     value='ITA'
+    # ),
 
-    html.Label('Stringency Index'),
-    dcc.Slider(
-        id= 'stringency_index',
-        min=0,
-        max=100,
-        marks={
-            0: {'label': '0', 'style': {'color': '#77b0b1'}},
-            25: {'label': '25'},
-            50: {'label': '50'},
-            75: {'label':'75'},
-            100: {'label': '100', 'style': {'color': '#f50'}}
-        },
-        value=5,
-    ),
-    html.Div(id='stringency_index_show')
-], style={'columnCount': 1})#for one column view in HTML page
+
 
 @app.callback(
     Output(component_id='stringency_index_show', component_property='children'),

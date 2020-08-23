@@ -62,15 +62,26 @@ app.layout = html.Div(
                             #     ],
                             #     value='ITA'
                             # ),
-
-                            dcc.Checklist(className='checkboxes',id='social-indicators-checkboxes',
+                            html.Label('School Closing:', style={'margin-left': 20, 'color':'white'}),
+                            dcc.Checklist(className='checkboxes',id='school-closing',
                                 options=[
                                     {'label': 'No measures ', 'value': 'l1'},
                                     {'label': 'Recommend closing', 'value': 'l2'},
-                                    {'label': 'Require closing (on some levels)', 'value': 'l3'}
+                                    {'label': 'Require closing (on some levels)', 'value': 'l3'},
+                                    {'label': 'Require closing (on all levels)', 'value': 'l4'}
                                 ],
                                 value=['l1']
                             ),
+                            html.Label('Workplace Closing:', style={'margin-left': 20, 'color':'white'}),
+                             dcc.Checklist(className='checkboxes', id='workplace-closing',
+                                           options=[
+                                               {'label': 'No measures ', 'value': 'l1'},
+                                               {'label': 'Recommend closing', 'value': 'l2'},
+                                               {'label': 'Require closing (on some levels)', 'value': 'l3'},
+                                               {'label': 'Require closing (on all levels)', 'value': 'l4'}
+                                           ],
+                                           value=['l1']
+                                           ),
 
                             # html.Label('Text Input'),
                             # dcc.Input(value='hi', type='text'),
@@ -89,7 +100,8 @@ app.layout = html.Div(
                                 },
                                 value=5,
                             ),
-                            html.Div(className='slider', id='stringency_index_show')
+                            html.Div(className='slider', id='stringency_index_show'),
+                            html.Button('Submit', id='button')
                         ], style={'columnCount': 2}#for two column view in HTML page
                 )
             ]

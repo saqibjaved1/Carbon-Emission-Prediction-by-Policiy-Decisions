@@ -21,28 +21,37 @@ with open('cfg/cnn_config.json') as f:
     training_config = json.load(f)
 
 countries = training_config['countries']
-train_features = pd.DataFrame()
-train_labels = pd.DataFrame()
-test_features = pd.DataFrame()
-test_labels = pd.DataFrame()
+# train_features = pd.DataFrame()
+# train_labels = pd.DataFrame()
+# test_features = pd.DataFrame()
+# test_labels = pd.DataFrame()
 norm_data = training_config['training']['normalize']
 
 # Collect data
-for country in countries:
-    countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
-                                                      policy_category=PolicyCategory.SOCIAL_INDICATORS,
-                                                      normalize=norm_data)
-    train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=False)
-    train_features = train_features.append(train_x)
-    test_features = test_features.append(test_x)
-    train_labels = train_labels.append(train_y)
-    test_labels = test_labels.append(test_y)
+# for country in countries:
+#     countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', country, include_flags=False,
+#                                                       policy_category=PolicyCategory.SOCIAL_INDICATORS,
+#                                                       normalize=norm_data)
+#     train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=False)
+#     train_features = train_features.append(train_x)
+#     test_features = test_features.append(test_x)
+#     train_labels = train_labels.append(train_y)
+#     test_labels = test_labels.append(test_y)
+#
+# train_features.to_pickle('dataset/train/train_features')
+# train_labels.to_pickle('dataset/train/train_labels')
+# test_features.to_pickle('dataset/train/test_features')
+# test_labels.to_pickle('dataset/train/test_labels')
 
+train_features = pd.read_pickle('dataset/train/train_features')
+train_labels = pd.read_pickle('dataset/train/train_labels')
+test_features = pd.read_pickle('dataset/train/test_features')
+test_labels = pd.read_pickle('dataset/train/test_labels')
 print(train_features.shape)
 print(train_labels.shape)
 print(test_features.shape)
 print(test_labels.shape)
-# print(train_labels.eq(0).all())
+
 # Train model with 5 fold cross validation
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
@@ -63,7 +72,7 @@ end = time.time()
 print("TRAINING TIME: {}".format(end - start))
 
 # Plot training loss
-loss_arr = np.zeros((50, 1))
+loss_arr = np.zeros((100, 1))
 for loss_per_fold in losses:
     for j, loss in enumerate(loss_per_fold):
         loss_arr[j] = loss_arr[j] + loss
@@ -80,9 +89,9 @@ plt.show()
 test_start = time.time()
 test_f, test_l = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
 model_eval = cnn.model.evaluate(test_f, test_l)
-y = cnn.model.predict(test_f)
-print(y)
 test_end = time.time()
 print("TESTING TIME: {}".format(test_end - test_start))
+y = cnn.model.predict(test_f)
+print("{}: {}".format(test_l, y))
 print("\n\nTesting Loss: {}\nTesting Accuracy: {}".format(model_eval[0], model_eval[1]))
 cnn.save("CNN_TAPAN")

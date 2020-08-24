@@ -377,6 +377,15 @@ checkboxes,
 .checkboxes {
   margin-left: 20px; }
 
+/* indicators-scroll
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+indicators-scroll,
+.indicators-scroll {
+  background-color:white;
+  font-palette:black;
+  margin-left: 20px; }
+
+
 /* Utilities
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 .u-full-width {

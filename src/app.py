@@ -51,10 +51,10 @@ app.layout = html.Div(
                                     value=['ITA', 'FIN'],
                                     multi=True
                                 ),
-                            html.Div(className='indicators-scroll', style={'margin-left': 20, "maxHeight": "200px", "overflow": "scroll"},
+                            html.Div(className='indicators-scroll', style={"maxHeight": "200px", "overflow": "scroll"},
                                 children=[
-                                    html.Label('Social Indicators:', style={'margin-left': 20, 'color':'white'}),
-                                    html.Label('School Closing:', style={'margin-left': 20, 'color':'white'}),
+                                    html.Label('Social Indicators:', style={'margin-left': 20, 'color':'black'}),
+                                    html.Label('School Closing:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.Checklist(className='checkboxes',id='school-closing',
                                         options=[
                                             {'label': 'No measures ', 'value': 'l1'},
@@ -64,7 +64,7 @@ app.layout = html.Div(
                                         ],
                                         value=['l1']
                                     ),
-                                    html.Label('Workplace Closing:', style={'margin-left': 20, 'color':'white'}),
+                                    html.Label('Workplace Closing:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.Checklist(className='checkboxes', id='workplace-closing',
                                         options=[
                                             {'label': 'No measures ', 'value': 'l1'},

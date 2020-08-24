@@ -39,20 +39,47 @@ app.layout = html.Div(
                          ]
                 ),
                 html.Div(className='inputarea',
-                         children=[
+                        children=[
                             html.Label('Select the countries for analysis:', style={'margin-left': 20, 'color':'white'}),
-                            dcc.Dropdown(className='dropdown',id='country-dropdown',
-                                options=[
-                                    {'label': 'Italy', 'value': 'ITA'},
-                                    {'label': 'South Korea', 'value': 'KOR'},
-                                    {'label': 'Finland', 'value': 'FIN'},
-                                    {'label': 'Brazil', 'value': 'BRA'}
-                                ],
-                                value=['ITA', 'FIN'],
-                                multi=True
+                                dcc.Dropdown(className='dropdown',id='country-dropdown',
+                                    options=[
+                                        {'label': 'Italy', 'value': 'ITA'},
+                                        {'label': 'South Korea', 'value': 'KOR'},
+                                        {'label': 'Finland', 'value': 'FIN'},
+                                        {'label': 'Brazil', 'value': 'BRA'}
+                                    ],
+                                    value=['ITA', 'FIN'],
+                                    multi=True
+                                ),
+                            html.Div(className='indicators-scroll', style={'margin-left': 20, "maxHeight": "200px", "overflow": "scroll"},
+                                children=[
+                                    html.Label('Social Indicators:', style={'margin-left': 20, 'color':'white'}),
+                                    html.Label('School Closing:', style={'margin-left': 20, 'color':'white'}),
+                                    dcc.Checklist(className='checkboxes',id='school-closing',
+                                        options=[
+                                            {'label': 'No measures ', 'value': 'l1'},
+                                            {'label': 'Recommend closing', 'value': 'l2'},
+                                            {'label': 'Require closing (on some levels)', 'value': 'l3'},
+                                            {'label': 'Require closing (on all levels)', 'value': 'l4'}
+                                        ],
+                                        value=['l1']
+                                    ),
+                                    html.Label('Workplace Closing:', style={'margin-left': 20, 'color':'white'}),
+                                    dcc.Checklist(className='checkboxes', id='workplace-closing',
+                                        options=[
+                                            {'label': 'No measures ', 'value': 'l1'},
+                                            {'label': 'Recommend closing', 'value': 'l2'},
+                                            {'label': 'Require closing (on some levels)', 'value': 'l3'},
+                                            {'label': 'Require closing (on all levels)', 'value': 'l4'}
+                                        ],
+                                        value=['l1']
+                                    ),
+
+                                ]
                             ),
 
-                            html.Label('Social Indicators:', style={'margin-left': 20, 'color':'white'}),
+
+
                             # dcc.RadioItems(
                             #     options=[
                             #         {'label': 'Italy', 'value': 'ITA'},
@@ -62,26 +89,7 @@ app.layout = html.Div(
                             #     ],
                             #     value='ITA'
                             # ),
-                            html.Label('School Closing:', style={'margin-left': 20, 'color':'white'}),
-                            dcc.Checklist(className='checkboxes',id='school-closing',
-                                options=[
-                                    {'label': 'No measures ', 'value': 'l1'},
-                                    {'label': 'Recommend closing', 'value': 'l2'},
-                                    {'label': 'Require closing (on some levels)', 'value': 'l3'},
-                                    {'label': 'Require closing (on all levels)', 'value': 'l4'}
-                                ],
-                                value=['l1']
-                            ),
-                            html.Label('Workplace Closing:', style={'margin-left': 20, 'color':'white'}),
-                             dcc.Checklist(className='checkboxes', id='workplace-closing',
-                                           options=[
-                                               {'label': 'No measures ', 'value': 'l1'},
-                                               {'label': 'Recommend closing', 'value': 'l2'},
-                                               {'label': 'Require closing (on some levels)', 'value': 'l3'},
-                                               {'label': 'Require closing (on all levels)', 'value': 'l4'}
-                                           ],
-                                           value=['l1']
-                                           ),
+
 
                             # html.Label('Text Input'),
                             # dcc.Input(value='hi', type='text'),

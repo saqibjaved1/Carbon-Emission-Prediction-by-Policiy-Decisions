@@ -12,3 +12,4 @@ scikit-learn
 pydot
 PyQt5
 dash
+dash_daq

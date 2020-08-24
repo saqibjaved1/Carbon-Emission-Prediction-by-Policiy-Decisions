@@ -368,7 +368,9 @@ ol {
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 dropdown,
 .dropdown {
-  margin-left: 20px; }
+  margin-left: 20px;
+  margin-bottom: 20px;
+  }
 
 
 /* checkboxes
@@ -383,7 +385,8 @@ indicators-scroll,
 .indicators-scroll {
   background-color:white;
   font-palette:black;
-  margin-left: 20px; }
+  margin-left: 20px;
+  margin-top: 20px;}
 
 /* mid-area
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
@@ -399,7 +402,8 @@ mid-area,
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 submit-button,
 .submit-button {
-  color: #1976D2;
+  background-color: #1976D2;
+  color:white;
   }
 
 

@@ -53,7 +53,13 @@ app.layout = html.Div(
                                     value=['ITA', 'FIN'],
                                     multi=True
                                 ),
-                                html.Label('Social Indicators:', style={'margin-left': 20, 'color':'black'}),
+
+                            daq.ToggleSwitch(
+                                id='input-switch',
+                                value=False,
+                                size=70
+                            ),
+                            html.Label('Social Indicators:', style={'margin-left': 20, 'color':'black'}),
                             html.Div(className='indicators-scroll', id='social-indicators-scroll',style={"maxHeight": "200px", "overflow": "scroll",'display': 'block'},#block this div by toggle button
                                 children=[
                                     html.Label('1. School Closing:', style={'margin-left': 20, 'color':'black'}),
@@ -156,7 +162,7 @@ app.layout = html.Div(
                             # html.Label('Text Input'),
                             # dcc.Input(value='hi', type='text'),
 
-                            html.Div(className='slider',
+                            html.Div(className='slider', id='stringency-slider-section',style={'display': 'block'},
                                     children=[
                                         html.Label('Stringency Index'),
                                         dcc.Slider(
@@ -175,16 +181,14 @@ app.layout = html.Div(
                                         html.Div(className='slider-data', id='stringency_index_show'),
                                     ]
                             ),
-
-                            html.Button('Submit', id='button'),
-                            daq.ToggleSwitch(
-                                id='input-switch',
-                                value=False,
-                                size=70
-                            ),
-                            html.Div(id='switch-output')
+                            html.Img(src='assets/map.png', height=300,width=600)
                         ], style={'columnCount': 2}#for two column view in HTML page
-                )
+                ),
+                html.Div(className='mid-area',
+                         children=[
+                            html.Button('Submit', id='button', className='submit-button')
+                         ]
+                ),
             ]
         )
     ]
@@ -219,6 +223,18 @@ def update_output(value):
         return {'maxHeight': '250px', 'overflow': 'scroll','display': 'block'}
     else:
         return {'maxHeight': '250px', 'overflow': 'scroll','display': 'none'}
+
+
+@app.callback(
+    Output('stringency-slider-section', 'style'),
+    [Input('input-switch', 'value')])
+def update_output(value):
+    if value==True:
+        return {'display': 'block'}
+    else:
+        return {'display': 'none'}
+
+
 
 if __name__ == '__main__':
     app.run_server(debug=True)

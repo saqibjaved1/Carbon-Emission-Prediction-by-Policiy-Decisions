@@ -53,9 +53,9 @@ app.layout = html.Div(
                                     value=['ITA', 'FIN'],
                                     multi=True
                                 ),
-                            html.Div(className='indicators-scroll', style={"maxHeight": "200px", "overflow": "scroll"},
+                                html.Label('Social Indicators:', style={'margin-left': 20, 'color':'black'}),
+                            html.Div(className='indicators-scroll', id='social-indicators-scroll',style={"maxHeight": "200px", "overflow": "scroll",'display': 'block'},#block this div by toggle button
                                 children=[
-                                    html.Label('Social Indicators:', style={'margin-left': 20, 'color':'black'}),
                                     html.Label('1. School Closing:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes',id='school-closing',
                                         options=[
@@ -156,27 +156,33 @@ app.layout = html.Div(
                             # html.Label('Text Input'),
                             # dcc.Input(value='hi', type='text'),
 
-                            html.Label('Stringency Index'),
-                            dcc.Slider(
-                                id= 'stringency_index',
-                                min=0,
-                                max=100,
-                                marks={
-                                    0: {'label': '0', 'style': {'color': '#77b0b1'}},
-                                    25: {'label': '25'},
-                                    50: {'label': '50'},
-                                    75: {'label':'75'},
-                                    100: {'label': '100', 'style': {'color': '#f50'}}
-                                },
-                                value=5,
+                            html.Div(className='slider',
+                                    children=[
+                                        html.Label('Stringency Index'),
+                                        dcc.Slider(
+                                            id= 'stringency_index',
+                                            min=0,
+                                            max=100,
+                                            marks={
+                                                0: {'label': '0', 'style': {'color': '#77b0b1'}},
+                                                25: {'label': '25'},
+                                                50: {'label': '50'},
+                                                75: {'label':'75'},
+                                                100: {'label': '100', 'style': {'color': '#f50'}}
+                                            },
+                                            value=5,
+                                        ),
+                                        html.Div(className='slider-data', id='stringency_index_show'),
+                                    ]
                             ),
-                            html.Div(className='slider', id='stringency_index_show'),
+
                             html.Button('Submit', id='button'),
                             daq.ToggleSwitch(
-                                id='my-toggle-switch',
-                                value=False
+                                id='input-switch',
+                                value=False,
+                                size=70
                             ),
-                            html.Div(id='toggle-switch-output')
+                            html.Div(id='switch-output')
                         ], style={'columnCount': 2}#for two column view in HTML page
                 )
             ]
@@ -206,10 +212,13 @@ def update_stringency_index(input_value):
 
 
 @app.callback(
-    dash.dependencies.Output('toggle-switch-output', 'children'),
-    [dash.dependencies.Input('my-toggle-switch', 'value')])
+    Output('social-indicators-scroll', 'style'),
+    [Input('input-switch', 'value')])
 def update_output(value):
-    return 'The switch is {}.'.format(value)
+    if value==False:
+        return {'maxHeight': '250px', 'overflow': 'scroll','display': 'block'}
+    else:
+        return {'maxHeight': '250px', 'overflow': 'scroll','display': 'none'}
 
 if __name__ == '__main__':
     app.run_server(debug=True)

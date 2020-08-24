@@ -59,9 +59,9 @@ app.layout = html.Div(
                                 value=False,
                                 size=70
                             ),
-                            html.Label('Social Indicators:', style={'margin-left': 20, 'color':'black'}),
                             html.Div(className='indicators-scroll', id='social-indicators-scroll',style={"maxHeight": "200px", "overflow": "scroll",'display': 'block'},#block this div by toggle button
                                 children=[
+                                    html.Label('Social Indicators:', style={'margin-left': 20, 'color':'black'}),
                                     html.Label('1. School Closing:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes',id='school-closing',
                                         options=[
@@ -164,7 +164,7 @@ app.layout = html.Div(
 
                             html.Div(className='slider', id='stringency-slider-section',style={'display': 'block'},
                                     children=[
-                                        html.Label('Stringency Index'),
+                                        html.Label('Stringency Index', style={'margin-left':20,'color':'white'}),
                                         dcc.Slider(
                                             id= 'stringency_index',
                                             min=0,
@@ -178,10 +178,10 @@ app.layout = html.Div(
                                             },
                                             value=5,
                                         ),
-                                        html.Div(className='slider-data', id='stringency_index_show'),
+                                        html.Div(className='slider-data', id='stringency_index_show', style={'margin-left':20,'color':'white'}),
                                     ]
                             ),
-                            html.Img(src='assets/map.png', height=300,width=600)
+                            html.Img(src='assets/map.png', height=400,width=700)
                         ], style={'columnCount': 2}#for two column view in HTML page
                 ),
                 html.Div(className='mid-area',

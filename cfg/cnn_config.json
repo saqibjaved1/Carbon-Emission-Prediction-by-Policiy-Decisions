@@ -70,9 +70,9 @@
       "Latvia"
    ],
    "training":{
-      "epochs":50,
+      "epochs":100,
       "batch_size":64,
-      "validation_frequency":1,
+      "validation_frequency":2,
       "normalize":0
    },
    "model":{

@@ -50,6 +50,6 @@ Requires Python 3.5+
 
 ```bash
 pip install -r requirements.txt
-python src/controllers/app.py
+python src/app.py
 open http://127.0.0.1:8050/
 ``` 

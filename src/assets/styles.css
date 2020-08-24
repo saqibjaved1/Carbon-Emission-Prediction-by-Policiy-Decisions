@@ -385,6 +385,23 @@ indicators-scroll,
   font-palette:black;
   margin-left: 20px; }
 
+/* mid-area
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+mid-area,
+.mid-area {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+
+/* submit-button
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+submit-button,
+.submit-button {
+  color: #1976D2;
+  }
+
 
 /* Utilities
 –––––––––––––––––––––––––––––––––––––––––––––––––– */

@@ -8,6 +8,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_daq as daq
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import pandas as pd
@@ -29,16 +30,17 @@ app = dash.Dash(__name__, meta_tags=[
     }
 ], title='PredictCarbon COVID', update_title='Calculating')
 
+
 app.layout = html.Div(
     children=[
-        html.Div(className='appui',
+        html.Div(className='app-ui',
             children=[
-                html.Div(className='toparea',
+                html.Div(className='top-area',
                          children=[
                             html.H1('Carbon Emissions Prediction by Policy Decisions'),
                          ]
                 ),
-                html.Div(className='inputarea',
+                html.Div(className='input-area',
                         children=[
                             html.Label('Select the countries for analysis:', style={'margin-left': 20, 'color':'white'}),
                                 dcc.Dropdown(className='dropdown',id='country-dropdown',
@@ -169,7 +171,12 @@ app.layout = html.Div(
                                 value=5,
                             ),
                             html.Div(className='slider', id='stringency_index_show'),
-                            html.Button('Submit', id='button')
+                            html.Button('Submit', id='button'),
+                            daq.ToggleSwitch(
+                                id='my-toggle-switch',
+                                value=False
+                            ),
+                            html.Div(id='toggle-switch-output')
                         ], style={'columnCount': 2}#for two column view in HTML page
                 )
             ]
@@ -198,7 +205,11 @@ def update_stringency_index(input_value):
     return 'Stringency Index: {}'.format(input_value)
 
 
-
+@app.callback(
+    dash.dependencies.Output('toggle-switch-output', 'children'),
+    [dash.dependencies.Input('my-toggle-switch', 'value')])
+def update_output(value):
+    return 'The switch is {}.'.format(value)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

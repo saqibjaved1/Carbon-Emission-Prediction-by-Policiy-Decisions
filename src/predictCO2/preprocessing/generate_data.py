@@ -10,6 +10,7 @@ import logging
 import Globals
 import pandas as pd
 import predictCO2.preprocessing.utils as utils
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 from enum import Enum
 
@@ -159,14 +160,6 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
             self.feature_df = self.feature_df[self.feature_df.columns[0:lab_shape[1]]]
         else:
             self.label_df = self.label_df[self.label_df.columns[0:feat_shape[1]]]
-
-        if self.normalize:
-            self.feature_df = self.feature_df.sub(self.feature_df.min()).div(self.feature_df.max().
-                                                                                     sub(self.feature_df.min()))
-            # self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
-            self.label_df = self.label_df.sub(self.label_df.min()).div(self.label_df.max().
-                                                                               sub(self.label_df.min()))
-            # self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
         return self.feature_df, self.label_df
 
     def split_train_test(self, validation_percentage=None, fill_nan=False):
@@ -199,6 +192,12 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         test_features = features_raw.tail(val_samples)
         train_labels = labels_raw.head(samples - val_samples)
         test_labels = labels_raw.tail(val_samples)
+        if self.normalize:
+            scaler = MinMaxScaler()
+            train_features = pd.DataFrame(scaler.fit_transform(train_features), columns=train_features.columns)
+            train_labels = pd.DataFrame(scaler.fit_transform(train_labels), columns=train_labels.columns)
+            test_features = pd.DataFrame(scaler.fit_transform(test_features), columns=test_features.columns)
+            test_labels = pd.DataFrame(scaler.fit_transform(test_labels), columns=test_labels.columns)
 
         return train_features, train_labels, test_features, test_labels
 

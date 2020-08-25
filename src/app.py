@@ -4,6 +4,10 @@
 # @Email   : saptarshi.mitra@tum.de
 # @File    : app.py
 # @Project: group07
+#
+# ************************************
+# Write all the callbacks in src/controllers for avoiding merge conflict, don't forget to import here!!
+#*************************************
 
 import dash
 import dash_core_components as dcc
@@ -63,10 +67,10 @@ app.layout = html.Div(
                                     html.Label('1. School Closing:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes',id='school-closing',
                                         options=[
-                                            {'label': 'No measures ', 'value': 'l1'},
-                                            {'label': 'Recommend closing', 'value': 'l2'},
-                                            {'label': 'Require closing (on some levels)', 'value': 'l3'},
-                                            {'label': 'Require closing (on all levels)', 'value': 'l4'}
+                                            {'label': 'No measures ', 'value': '0'},
+                                            {'label': 'Recommend closing', 'value': '1'},
+                                            {'label': 'Require closing (on some levels)', 'value': '2'},
+                                            {'label': 'Require closing (on all levels)', 'value': '3'}
                                         ],
                                         value='l1'
                                     ),

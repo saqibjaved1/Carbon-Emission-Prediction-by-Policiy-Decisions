@@ -12,6 +12,7 @@ import dash_daq as daq
 from dash.dependencies import Input, Output, State
 import plotly.express as px
 import pandas as pd
+import numpy as np
 
 #external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -30,6 +31,8 @@ app = dash.Dash(__name__, meta_tags=[
     }
 ], title='PredictCarbon COVID', update_title='Calculating')
 
+country_names = np.array(pd.ExcelFile('dataset/features/Modified_Stringency_Data.xlsx').sheet_names)
+country_list = [{'label': i, 'value': i[:3]} for i in country_names]
 
 app.layout = html.Div(
     children=[
@@ -44,13 +47,8 @@ app.layout = html.Div(
                         children=[
                             html.Label('Select the countries for analysis:', style={'margin-left': 20, 'color':'white'}),
                                 dcc.Dropdown(className='dropdown',id='country-dropdown',
-                                    options=[
-                                        {'label': 'Italy', 'value': 'ITA'},
-                                        {'label': 'South Korea', 'value': 'KOR'},
-                                        {'label': 'Finland', 'value': 'FIN'},
-                                        {'label': 'Brazil', 'value': 'BRA'}
-                                    ],
-                                    value=['ITA', 'FIN'],
+                                    options=country_list,
+                                    value=['Ita', 'Fin'],
                                     multi=True
                                 ),
 

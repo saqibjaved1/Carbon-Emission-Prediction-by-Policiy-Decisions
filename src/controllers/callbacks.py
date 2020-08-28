@@ -60,6 +60,7 @@ def register_callbacks(app):
         if input_switcher_state:
             parse_model_input = ParseModelInputs(DataAnalysingModels.STRINGENCY_INDEX_MODEL)
             parse_model_input.stringency_idx = float(stringency_idx)
+            # TODO: @Sreetama add stringency model here.
         else:
             parse_model_input = ParseModelInputs(DataAnalysingModels.SOCIAL_POLICY_MODEL)
             parse_model_input.school_closing_score = int(school_closing_score)

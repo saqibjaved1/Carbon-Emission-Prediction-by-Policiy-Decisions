@@ -44,7 +44,7 @@ class DeepLearningModel(NN_Template):
             input_dim = self.n_feats
 
             if layer['type'] == 'dense':
-                self.model.add(layers.Dense(neurons, activation=activation))
+                self.model.add(layers.Dense(neurons, activation=activation, kernel_regularizer='l2'))
             if layer['type'] == 'flatten':
                 self.model.add(layers.Flatten())
             if layer['type'] == 'lstm':

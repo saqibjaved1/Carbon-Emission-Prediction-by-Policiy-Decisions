@@ -116,6 +116,6 @@ class ParseModelInputs:
     def social_policy_values(self):
         return "School Closing: {}\nWorkspace Closing: {}\nPublic Events: {}\nGathering Restrictions: {}\n" \
                "Public Transport: {}\nStay at Home: {}\nInternal Movement: {}\nInternational Travel: {}".format(
-            self.school_closing_score, self.workspace_closing_score, self.public_events_score,
-            self.gathering_restrictions_score, self.public_transport_score, self.stay_home_score,
-            self.internal_movement_score, self.international_travel_score)
+                self.school_closing_score, self.workspace_closing_score, self.public_events_score,
+                self.gathering_restrictions_score, self.public_transport_score, self.stay_home_score,
+                self.internal_movement_score, self.international_travel_score)

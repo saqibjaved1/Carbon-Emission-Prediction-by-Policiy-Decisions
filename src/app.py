@@ -72,76 +72,76 @@ app.layout = html.Div(
                                             {'label': 'Require closing (on some levels)', 'value': '2'},
                                             {'label': 'Require closing (on all levels)', 'value': '3'}
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
                                     html.Label('2. Workplace Closing:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes', id='workplace-closing',
                                         options=[
-                                            {'label': 'No measures ', 'value': 'l1'},
-                                            {'label': 'Recommend closing', 'value': 'l2'},
-                                            {'label': 'Require closing (for some sectors)', 'value': 'l3'},
-                                            {'label': 'Require closing (for all sectors)', 'value': 'l4'}
+                                            {'label': 'No measures ', 'value': '0'},
+                                            {'label': 'Recommend closing', 'value': '1'},
+                                            {'label': 'Require closing (for some sectors)', 'value': '2'},
+                                            {'label': 'Require closing (for all sectors)', 'value': '3'}
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
                                     html.Label('3. Cancel public events:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes', id='public-events',
                                         options=[
-                                            {'label': 'No measures ', 'value': 'l1'},
-                                            {'label': 'Recommend cancelling', 'value': 'l2'},
-                                            {'label': 'Require cancelling', 'value': 'l3'}
+                                            {'label': 'No measures ', 'value': '0'},
+                                            {'label': 'Recommend cancelling', 'value': '1'},
+                                            {'label': 'Require cancelling', 'value': '2'}
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
                                     html.Label('4. Restrictions on gatherings:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes', id='gatherings',
                                         options=[
-                                            {'label': 'No restrictions', 'value': 'l1'},
-                                            {'label': 'Restrictions on very large gatherings (the limit is above 1000 people)', 'value': 'l2'},
-                                            {'label': 'Restrictions on gatherings between 101-1000 people', 'value': 'l3'},
-                                            {'label': 'Restrictions on gatherings between 11-100 people', 'value': 'l4'},
-                                            {'label': 'Restrictions on gatherings of 10 people or less', 'value': 'l5'}
+                                            {'label': 'No restrictions', 'value': '0'},
+                                            {'label': 'Restrictions on very large gatherings (the limit is above 1000 people)', 'value': '1'},
+                                            {'label': 'Restrictions on gatherings between 101-1000 people', 'value': '2'},
+                                            {'label': 'Restrictions on gatherings between 11-100 people', 'value': '3'},
+                                            {'label': 'Restrictions on gatherings of 10 people or less', 'value': '4'}
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
                                     html.Label('5. Close public transport:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes', id='public-transport',
                                         options=[
-                                            {'label': 'No measures ', 'value': 'l1'},
-                                            {'label': 'Recommend closing (or significantly reduce volume/route/means)', 'value': 'l2'},
-                                            {'label': 'Require closing (or prohibit most citizens from using it)', 'value': 'l3'}
+                                            {'label': 'No measures ', 'value': '0'},
+                                            {'label': 'Recommend closing (or significantly reduce volume/route/means)', 'value': '1'},
+                                            {'label': 'Require closing (or prohibit most citizens from using it)', 'value': '2'}
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
                                     html.Label('6. Stay at home requirements:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes', id='stay-home',
                                         options=[
-                                            {'label': 'No measures ', 'value': 'l1'},
-                                            {'label': 'Recommend not leaving house', 'value': 'l2'},
-                                            {'label': 'Require not leaving house with exceptions for daily exercise, grocery shopping, ...', 'value': 'l3'},
-                                            {'label': 'Require not leaving house with minimal exceptions', 'value': 'l4'}
+                                            {'label': 'No measures ', 'value': '0'},
+                                            {'label': 'Recommend not leaving house', 'value': '1'},
+                                            {'label': 'Require not leaving house with exceptions for daily exercise, grocery shopping, ...', 'value': '2'},
+                                            {'label': 'Require not leaving house with minimal exceptions', 'value': '3'}
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
                                     html.Label('7. Restrictions on internal movement:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes', id='internal-movement',
                                         options=[
-                                            {'label': 'No measures ', 'value': 'l1'},
-                                            {'label': 'Recommend not to travel between regions/cities', 'value': 'l2'},
-                                            {'label': 'Internal movement restrictions in place', 'value': 'l3'},
+                                            {'label': 'No measures ', 'value': '0'},
+                                            {'label': 'Recommend not to travel between regions/cities', 'value': '1'},
+                                            {'label': 'Internal movement restrictions in place', 'value': '2'},
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
                                     html.Label('8. International travel controls:', style={'margin-left': 20, 'color':'black'}),
                                     dcc.RadioItems(className='checkboxes', id='international-travel',
                                         options=[
-                                            {'label': 'No measures ', 'value': 'l1'},
-                                            {'label': 'Screening arrivals', 'value': 'l2'},
-                                            {'label': 'Quarantine arrivals from some or all regions', 'value': 'l3'},
-                                            {'label': 'Ban arrivals from some regions', 'value': 'l4'},
-                                            {'label': 'Ban on all regions or total border closure', 'value': 'l5'}
+                                            {'label': 'No measures ', 'value': '0'},
+                                            {'label': 'Screening arrivals', 'value': '1'},
+                                            {'label': 'Quarantine arrivals from some or all regions', 'value': '2'},
+                                            {'label': 'Ban arrivals from some regions', 'value': '3'},
+                                            {'label': 'Ban on all regions or total border closure', 'value': '4'}
                                         ],
-                                        value='l1'
+                                        value='0'
                                     ),
 
 

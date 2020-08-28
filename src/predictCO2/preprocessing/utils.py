@@ -83,12 +83,14 @@ def data_sequence_generator(features, labels, n_steps):
     """
     x, y = list(), list()
     feat_row = list(features.index.values)
+    num_samples = features.shape[0]
     start = 0
-    for _ in range(len(feat_row)):
+    for _ in range(num_samples):
         end = start + n_steps
-        if end < len(feat_row):
+        if end <= num_samples:
             x.append(features.iloc[start:end, :].to_numpy())
-            y.append(labels.iloc[end, :].to_numpy())
+            if labels is not None:
+                y.append(labels.iloc[end, :].to_numpy())
         start += 1
     return np.array(x), np.array(y)
 

@@ -57,7 +57,7 @@ def register_callbacks(app):
                                  internal_movement_score, international_travel_score, countries):
         # 1. Parse Inputs in a required structure.
         dataframe = None
-        if input_switcher_state:
+        if input_switcher_state:#when the toggle button is on right(stringency slider is on display)
             parse_model_input = ParseModelInputs(DataAnalysingModels.STRINGENCY_INDEX_MODEL)
             parse_model_input.stringency_idx = float(stringency_idx)
             # TODO: @Sreetama add stringency model here.

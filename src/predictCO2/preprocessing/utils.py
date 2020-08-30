@@ -113,3 +113,24 @@ def time_series_data_generator(features, labels, n_steps):
             y.append(labels.iloc[end, 0])
         start += 1
     return np.array(x), np.array(y)
+
+
+def generate_time_series_df(features, labels, n_steps):
+    """
+    Concatenates input features with CO2 reductions for the last n time steps
+    :param features: Feature or input matrix
+    :param labels: Labels or output data
+    :param n_steps: number of time steps considered
+    :return: Input data frame containing input features and labels for last n steps
+    """
+    num_samples = features.shape[0]
+    x = []
+    for i in range(num_samples):
+        if i >= n_steps:
+            labels_prev_steps = labels.iloc[i - n_steps:i, :].to_numpy()
+            x.append(labels_prev_steps)
+    df1 = pd.DataFrame(np.squeeze(x))
+    df1.set_index(features.index[n_steps:], inplace=True)
+    in_data = pd.concat([features.iloc[n_steps:, :], df1], axis=1, ignore_index=True)
+    out_data = labels.iloc[n_steps:, :]
+    return in_data, out_data

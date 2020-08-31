@@ -7,7 +7,8 @@ from dash.dependencies import Output, Input, State
 
 from controllers.model_input_parser import ParseModelInputs, DataAnalysingModels
 from predictCO2.models.deep_learning_model import DeepLearningModel
-
+from controllers.model_output_generator import GenerateOutput
+import plotly.express as px
 
 def register_callbacks(app):
     @app.callback(
@@ -73,10 +74,23 @@ def register_callbacks(app):
             parse_model_input.international_travel_score = int(international_travel_score)
             dataframe, _ = parse_model_input.get_social_policy_data()
 
-        print(dataframe.shape)
-        with open('cfg/cnn_config.json') as f:
-            training_config = json.load(f)
-        cnn = DeepLearningModel(training_config, num_features=8, num_outputs=1)
-        cnn.load()
-        y = cnn.model.predict(dataframe)
-        print(y)
+        # print(dataframe.shape)
+        # with open('cfg/cnn_config.json') as f:
+        #     training_config = json.load(f)
+        # cnn = DeepLearningModel(training_config, num_features=8, num_outputs=1)
+        # cnn.load()
+        # y = cnn.model.predict(dataframe)
+        # print(y)
+
+    @app.callback(
+        Output('co2-graph', 'figure'),
+        [Input('submit_policy_selection', 'n_clicks')],
+        [State('stringency_index', 'value'),
+         State('country-dropdown', 'value')])
+    def update_figure(n_clicks, str_index, countries):
+        out = GenerateOutput()
+        df = out.get_dataframe_for_plotting(str_index, countries)
+        fig = px.line(df, x='date', y='co2', color='country')
+
+        fig.update_layout(transition_duration=500)
+        return fig

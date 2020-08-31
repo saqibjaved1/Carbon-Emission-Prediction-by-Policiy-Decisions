@@ -3,5 +3,6 @@
    "policy": "total_stringency",
    "n_steps": 10,
    "prediction steps": 30,
-   "prediction_tolerance": 0.002
+   "prediction_tolerance": 0.002,
+   "val_pc": 0.3
 }

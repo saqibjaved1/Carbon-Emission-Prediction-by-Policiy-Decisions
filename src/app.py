@@ -37,7 +37,7 @@ app = dash.Dash(__name__, meta_tags=[
 ], title='PredictCarbon COVID', update_title='Calculating')
 
 country_names = np.array(pd.ExcelFile('dataset/features/Modified_Stringency_Data.xlsx').sheet_names)
-country_list = [{'label': i, 'value': i[:3]} for i in country_names]
+country_list = [{'label': i, 'value': i} for i in country_names]
 
 app.layout = html.Div(
     children=[
@@ -54,7 +54,7 @@ app.layout = html.Div(
                                              style={'margin-left': 20, 'color': 'white'}),
                                   dcc.Dropdown(className='dropdown', id='country-dropdown',
                                                options=country_list,
-                                               value=['Ita', 'Fin'],
+                                               value=['Italy', 'Finland'],
                                                multi=True
                                                ),
 
@@ -236,7 +236,8 @@ app.layout = html.Div(
                      html.Div(className='output-area',
                               children=[
                                   daq.ToggleSwitch(id='output-mode-selector', value=False, size=70),
-                                  html.Div(className='output_figure', id='div_output_graph')
+                                  html.Div(className='output_figure', id='div_output_graph'),
+                                  dcc.Graph(id='co2-graph'),
                               ],
                               style={'display': 'block'})
                  ]

@@ -76,7 +76,8 @@ class DeepLearningModel(NN_Template):
             epochs=self.config['training']['epochs'],
             validation_data=(val_features, val_labels),
             validation_freq=self.config['training']['validation_frequency'],
-            callbacks=[TensorBoard(log_dir=self.config['model']['tensorboard_dir'])])
+            callbacks=[TensorBoard(log_dir=self.config['model']['tensorboard_dir'])],
+            verbose=0)
         return hist
 
     def train(self, features, labels):

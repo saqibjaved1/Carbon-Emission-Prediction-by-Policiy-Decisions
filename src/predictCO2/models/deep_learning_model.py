@@ -2,11 +2,13 @@
 Created by: Tapan Sharma
 Date: 04/08/20
 """
-
+import numpy as np
+import pandas as pd
 import tensorflow
 from tensorflow.python.keras.callbacks import TensorBoard
 
 from predictCO2.models.nn_template import NN_Template
+from predictCO2.preprocessing import utils as utls
 from tensorflow.keras import layers, models, optimizers, backend, utils
 
 tensorflow.get_logger().setLevel('INFO')

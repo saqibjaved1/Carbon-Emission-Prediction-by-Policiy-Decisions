@@ -92,4 +92,39 @@ class DeepLearningModel(NN_Template):
         return backend.mean(backend.equal(backend.round(y_true), backend.round(y_pred)))
 
     def plot_and_save_model(self, path_to_file):
-        utils.plot_model(self.model, to_file=path_to_file, show_shapes=True)
+        utils.plot_model(self.model, to_file=path_to_file, show_shapes=True)    def generate_future_prediction(self, X_provided, X_previous, Y_previous, future_time_steps):
+        """
+        Generate predictions for future time steps
+        """
+        # begin_time_step = 20200612
+        # indices_list = [str(i) for i in range(begin_time_step, begin_time_step + future_time_steps)]
+        # indices = pd.Series(indices_list)
+        # input_data = np.zeros((1, self.n_feats))
+        # input_data[0, 0:X.shape[1]] = X
+        # X_pred = pd.concat([pd.DataFrame(input_data)] * future_time_steps)
+        # X_pred = X_pred.set_index(indices)
+        # X_pred, _ = utls.data_sequence_generator(X_pred, None, self.config['time_steps'])
+        # Y = self.model.predict(X_pred)
+        # print(Y)
+        output_arr = []
+        idx = 20200612
+        # input_data = X_previous.tail(self.config['time_steps'])
+        provided_features = np.zeros((1, self.n_feats))
+        provided_features[0, 0:X_provided.shape[1]] = X_provided
+        previous_labels = Y_previous.tail(self.config['time_steps'])
+        provided_features[0, X_provided.shape[1]:] = previous_labels[0]
+        input_data = pd.concat([X_previous.tail(self.config['time_steps']),
+                                pd.DataFrame(provided_features, index=[str(idx)])])
+        for i in range(future_time_steps):
+            if i >= self.config['time_steps']:
+                input_data.iloc[-1, self.n_feats - X_provided.shape[1] + 1:] = output_arr[i -
+                                                                                          self.config['time_steps']:]
+            idx += 1
+            next_time_step = input_data.iloc[-1, :]
+            next_time_step.reindex([str(idx)])
+            input_data = input_data.iloc[1:, ]
+            input_data = input_data.append(next_time_step, ignore_index=True)
+            x, _ = utls.data_sequence_generator(input_data, None, self.config['time_steps'])
+            out_data = self.model.predict(x)
+            output_arr.append(out_data)
+        return output_arr

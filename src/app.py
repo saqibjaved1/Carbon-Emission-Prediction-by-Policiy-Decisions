@@ -237,7 +237,7 @@ app.layout = html.Div(
                      html.Div(className='output-area',
                               id='outputs',
                               children=[
-                                  html.Div(className='output_figure', id='div_output_graph'),
+                                  #html.Div(className='output_figure', id='div_output_graph'),
                                   dcc.Store(id='trigger')
                               ],
                               style={'display': 'block'}),

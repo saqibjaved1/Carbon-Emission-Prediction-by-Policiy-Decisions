@@ -13,3 +13,4 @@ pydot
 PyQt5
 dash
 dash_daq
+dash_extensions

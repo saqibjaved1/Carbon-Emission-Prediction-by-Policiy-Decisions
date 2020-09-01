@@ -121,8 +121,8 @@ class GenerateOutput:
             if co2_reductions is None:
                 raise ValueError("Failed to predict data for given settings!!!!")
             df = pd.DataFrame()
-            df['date'] = dates
-            df['co2'] = co2_reductions
-            df['country'] = country
+            df['Date'] = dates
+            df['MtCO2/day'] = co2_reductions
+            df['Country'] = country
             combined_df = pd.concat((combined_df, df))
         return combined_df

@@ -82,12 +82,11 @@ def data_sequence_generator(features, labels, n_steps):
     :return: Modified features and labels matrix
     """
     x, y = list(), list()
-    feat_row = list(features.index.values)
     num_samples = features.shape[0]
     start = 0
     for _ in range(num_samples):
         end = start + n_steps
-        if end <= num_samples:
+        if end < num_samples:
             x.append(features.iloc[start:end, :].to_numpy())
             if labels is not None:
                 y.append(labels.iloc[end, :].to_numpy())
@@ -132,5 +131,7 @@ def generate_time_series_df(features, labels, n_steps):
     df1 = pd.DataFrame(np.squeeze(x))
     df1.set_index(features.index[n_steps:], inplace=True)
     in_data = pd.concat([features.iloc[n_steps:, :], df1], axis=1, ignore_index=True)
-    out_data = labels.iloc[n_steps:, :]
+    out_data = None
+    if labels is not None:
+        out_data = labels.iloc[n_steps:, :]
     return in_data, out_data

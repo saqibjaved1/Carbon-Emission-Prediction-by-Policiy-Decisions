@@ -74,7 +74,8 @@ def register_callbacks(app, dcc):
                 parse_model_input.international_travel_score = int(international_travel_score)
             out = GenerateOutput()
             df = out.get_dataframe_for_plotting(parse_model_input, countries)
-            fig = px.line(df, x='date', y='co2', color='country')
+            # TODO: Add median values.
+            fig = px.line(df, x='Date', y='MtCO2/day', color='Country')
             fig.update_layout(transition_duration=500)
             return "Processing Finished!", dcc.Graph(id='co2-graph', figure=fig), dcc.Store(id='trigger')
         else:

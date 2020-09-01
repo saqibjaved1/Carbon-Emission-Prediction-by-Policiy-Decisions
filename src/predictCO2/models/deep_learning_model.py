@@ -92,7 +92,9 @@ class DeepLearningModel(NN_Template):
         return backend.mean(backend.equal(backend.round(y_true), backend.round(y_pred)))
 
     def plot_and_save_model(self, path_to_file):
-        utils.plot_model(self.model, to_file=path_to_file, show_shapes=True)    def generate_future_prediction(self, X_provided, X_previous, Y_previous, future_time_steps):
+        utils.plot_model(self.model, to_file=path_to_file, show_shapes=True)
+
+    def generate_future_prediction(self, X_provided, X_previous, Y_previous, future_time_steps):
         """
         Generate predictions for future time steps
         """

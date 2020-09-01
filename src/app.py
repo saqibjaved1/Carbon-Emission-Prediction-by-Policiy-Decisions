@@ -18,10 +18,11 @@ import plotly.express as px
 import pandas as pd
 import numpy as np
 from controllers.callbacks import register_callbacks
+from dash_extensions.enrich import Dash
 
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app = dash.Dash(__name__, meta_tags=[
+app = Dash(__name__, meta_tags=[
     {
         'name': 'PredictCarbon COVID',
         'content': 'This is a group project completed for the course Applied Machine Intelligence at the Technical University of Munich'
@@ -234,12 +235,12 @@ app.layout = html.Div(
                               ]
                               ),
                      html.Div(className='output-area',
+                              id='outputs',
                               children=[
-                                  daq.ToggleSwitch(id='output-mode-selector', value=False, size=70),
                                   html.Div(className='output_figure', id='div_output_graph'),
-                                  dcc.Graph(id='co2-graph'),
+                                  dcc.Store(id='trigger')
                               ],
-                              style={'display': 'block'})
+                              style={'display': 'block'}),
                  ]
                  )
     ]
@@ -257,7 +258,7 @@ app.layout = html.Div(
 # ),
 
 
-register_callbacks(app)
+register_callbacks(app, dcc)
 
 if __name__ == '__main__':
     app.run_server(debug=True)

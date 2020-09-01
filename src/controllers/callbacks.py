@@ -80,3 +80,9 @@ def register_callbacks(app, dcc):
         else:
             return "Press submit when ready.", None, dcc.Store(id='trigger')
 
+    @app.callback(Output("submit_policy_selection", "disabled"),
+                  Trigger("submit_policy_selection", "n_clicks"),
+                  Trigger("trigger", "data"))
+    def disable_submit_until_callback_completes():
+        context = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+        return context == 'submit_policy_selection'

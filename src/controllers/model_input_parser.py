@@ -2,10 +2,9 @@
 Created by: Tapan Sharma
 Date: 28/08/20
 """
-import pandas as pd
-
 from enum import Enum
-from predictCO2.preprocessing import utils
+
+import pandas as pd
 
 
 class DataAnalysingModels(Enum):
@@ -14,7 +13,7 @@ class DataAnalysingModels(Enum):
 
 
 class ParseModelInputs:
-    def __init__(self, model):
+    def __init__(self):
         self.model_type = None
         self.stringency_idx = None
         self.school_closing_value = None
@@ -25,21 +24,39 @@ class ParseModelInputs:
         self.stay_home_value = None
         self.internal_movement_value = None
         self.international_travel_value = None
+        self.countries_list = None
+        self.incomplete_flagger_social = None
+        self.incomplete_flagger_stringency = None
 
     def get_social_policy_data(self):
-        incomplete_flagger = (self.school_closing_value >= 0) and (self.workspace_closing_value >= 0) and \
+        self.incomplete_flagger_social = (self.school_closing_value >= 0) and (self.workspace_closing_value >= 0) and \
                              (self.public_events_value >= 0) and (self.gathering_restrictions_value >= 0) and \
                              (self.public_transport_value >= 0) and (self.stay_home_value >= 0) and \
                              (self.internal_movement_value >= 0) and (self.international_travel_value >= 0)
-        if not incomplete_flagger:
+        if not self.incomplete_flagger_social:
             raise ValueError("Social policy values not set: {}".format(self.social_policy_values()))
         else:
-            df = pd.DataFrame([[self.school_closing_score, self.workspace_closing_score, self.public_events_score,
-                                self.gathering_restrictions_score, self.public_transport_score, self.stay_home_score,
-                                self.internal_movement_score, self.international_travel_score]])
-            df = pd.concat([df] * 30)  # Assuming 7 time steps.
-            df = utils.data_sequence_generator(df, None, 7)
-            return df
+            df = pd.DataFrame().from_records({"20200612": [self.school_closing_value, self.workspace_closing_value,
+                                                           self.public_events_value, self.gathering_restrictions_value,
+                                                           self.public_transport_value, self.stay_home_value,
+                                                           self.internal_movement_value,
+                                                           self.international_travel_value]})
+            return df.T
+
+    def get_stringency_data(self):
+        self.incomplete_flagger_stringency = self.stringency_index is not None
+        if not self.incomplete_flagger_stringency:
+            raise ValueError("Stringency Value not set: {}".format(self.stringency_values()))
+        else:
+            return self.stringency_index
+
+    @property
+    def model(self):
+        return self.model_type
+
+    @model.setter
+    def model(self, value):
+        self.model_type = value
 
     @property
     def stringency_index(self):
@@ -113,9 +130,20 @@ class ParseModelInputs:
     def international_travel_score(self, value):
         self.international_travel_value = value
 
+    @property
+    def countries(self):
+        return self.countries_list
+
+    @countries.setter
+    def countries(self, value):
+        self.countries_list = value
+
     def social_policy_values(self):
         return "School Closing: {}\nWorkspace Closing: {}\nPublic Events: {}\nGathering Restrictions: {}\n" \
                "Public Transport: {}\nStay at Home: {}\nInternal Movement: {}\nInternational Travel: {}".format(
                 self.school_closing_score, self.workspace_closing_score, self.public_events_score,
                 self.gathering_restrictions_score, self.public_transport_score, self.stay_home_score,
                 self.internal_movement_score, self.international_travel_score)
+
+    def stringency_values(self):
+        return "Stringency Value: {}".format(self.stringency_index)

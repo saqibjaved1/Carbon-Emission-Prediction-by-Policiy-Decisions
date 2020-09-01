@@ -47,6 +47,10 @@ train_features = pd.read_pickle('dataset/train/train_features')
 train_labels = pd.read_pickle('dataset/train/train_labels')
 test_features = pd.read_pickle('dataset/train/test_features')
 test_labels = pd.read_pickle('dataset/train/test_labels')
+
+train_features, train_labels = utils.generate_time_series_df(train_features, train_labels,
+                                                             training_config['time_steps'])
+test_features, test_labels = utils.generate_time_series_df(test_features, test_labels, training_config['time_steps'])
 print(train_features.shape)
 print(train_labels.shape)
 print(test_features.shape)
@@ -56,10 +60,10 @@ print(test_labels.shape)
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
 cnn = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
-print(cnn.model.summary())
 cnn.plot_and_save_model("content/model_arch/CNN_TAPAN.png")
 print(cnn.model.summary())
 losses = []
+val_losses = []
 start = time.time()
 for train_idx, test_idx in tss.split(train_features):
     X, X_val = train_features.iloc[train_idx], train_features.iloc[test_idx]
@@ -68,17 +72,24 @@ for train_idx, test_idx in tss.split(train_features):
     val_f, val_l = utils.data_sequence_generator(X_val, Y_val, training_config['time_steps'])
     h = cnn.train_with_validation_provided(features, labels, val_f, val_l)
     losses.append(h.history['loss'])
+    val_losses.append(h.history['val_loss'])
 end = time.time()
 print("TRAINING TIME: {}".format(end - start))
 
-# Plot training loss
+# # Plot training loss
 loss_arr = np.zeros((100, 1))
 for loss_per_fold in losses:
     for j, loss in enumerate(loss_per_fold):
         loss_arr[j] = loss_arr[j] + loss
 loss_arr = loss_arr / 5
+val_loss_arr = np.zeros((50, 1))
+for loss_per_fold in val_losses:
+    for j, loss in enumerate(loss_per_fold):
+        val_loss_arr[j] = val_loss_arr[j] + loss
+loss_arr = loss_arr / 5
 fig1, ax1 = plt.subplots()
 ax1.plot(range(len(loss_arr)), loss_arr, label='Training Loss')
+# ax1.plot(range(0, len(loss_arr), 2), val_loss_arr, '-.', label='Validation Loss')
 plt.xlabel('Epoch')
 plt.ylabel('Loss')
 plt.legend(loc='upper right')
@@ -92,6 +103,7 @@ model_eval = cnn.model.evaluate(test_f, test_l)
 test_end = time.time()
 print("TESTING TIME: {}".format(test_end - test_start))
 y = cnn.model.predict(test_f)
+print("FORMAT: {}".format(type(y)))
 print("{}: {}".format(test_l, y))
 print("\n\nTesting Loss: {}\nTesting Accuracy: {}".format(model_eval[0], model_eval[1]))
 cnn.save("CNN_TAPAN")

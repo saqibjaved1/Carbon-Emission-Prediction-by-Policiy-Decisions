@@ -7,6 +7,7 @@ import time
 
 import numpy as np
 import pandas as pd
+import pickle
 from sklearn.model_selection import TimeSeriesSplit
 
 from controllers.model_input_parser import DataAnalysingModels
@@ -25,6 +26,7 @@ class GenerateOutput:
         self.test_features = None
         self.test_labels = None
         self.model_type = None
+        self.mean_co2_values_dict = pickle.load(open('dataset/mean_value_dict', 'rb'))
 
     def get_data_avlbl(self, country, model_type):
         """
@@ -52,8 +54,7 @@ class GenerateOutput:
         :param country: One of the selected countries in UI
         :return: Dates for whole duration as a pandas.DateTimeIndex object
         """
-        if self.co2_data_avlbl is None:
-            self.get_data_avlbl(country, model_type)
+        self.get_data_avlbl(country, model_type)
         avlbl_dates = pd.to_datetime(self.co2_data_avlbl.columns)
         next_dates = pd.date_range(avlbl_dates[-1], periods=self.pred_steps + 1)
         dates = avlbl_dates.union(next_dates)
@@ -103,6 +104,7 @@ class GenerateOutput:
         """
         combined_df = pd.DataFrame()
         for country in countries:
+            previous_year_co2 = float(self.mean_co2_values_dict[country])
             self.model_type = parsed_model_input.model
             dates = self.get_dates_whole_duration(country, parsed_model_input.model)
             if self.model_type == DataAnalysingModels.STRINGENCY_INDEX_MODEL:
@@ -120,6 +122,7 @@ class GenerateOutput:
                 raise NotImplementedError("ONLY STRINGENCY AND SOCIAL POLICY DATA ANALYSIS SUPPORTED!!!!")
             if co2_reductions is None:
                 raise ValueError("Failed to predict data for given settings!!!!")
+            co2_reductions = co2_reductions + previous_year_co2
             df = pd.DataFrame()
             df['Date'] = dates
             df['MtCO2/day'] = co2_reductions

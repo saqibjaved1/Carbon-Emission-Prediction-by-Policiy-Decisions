@@ -44,8 +44,7 @@ country_list = [{'label': i, 'value': i} for i in country_names]
 
 app.scripts.config.serve_locally = True
 
-app.layout = dcc.Loading(id='homeload',
-    children =[html.Div(
+app.layout = html.Div(
     children=[
         html.Div(className='app-ui',
                  children=[
@@ -257,7 +256,7 @@ app.layout = dcc.Loading(id='homeload',
                  ]
                  )
     ]
-)],type='default', fullscreen=True)
+)
 # , style={'columnCount': 1}
 # html.Label('Dropdown'),
 # dcc.Dropdown(

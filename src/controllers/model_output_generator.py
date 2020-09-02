@@ -54,8 +54,7 @@ class GenerateOutput:
         :param country: One of the selected countries in UI
         :return: Dates for whole duration as a pandas.DateTimeIndex object
         """
-        if self.co2_data_avlbl is None:
-            self.get_data_avlbl(country, model_type)
+        self.get_data_avlbl(country, model_type)
         avlbl_dates = pd.to_datetime(self.co2_data_avlbl.columns)
         next_dates = pd.date_range(avlbl_dates[-1], periods=self.pred_steps + 1)
         dates = avlbl_dates.union(next_dates)

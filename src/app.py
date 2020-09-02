@@ -66,7 +66,9 @@ app.layout = html.Div(
                                   daq.ToggleSwitch(
                                       id='input-switch',
                                       value=False,
-                                      size=70
+                                      size=50,
+                                      label={'style':{'color': 'white'} , 'label': 'click here to toggle between Social Indicators and Stringency Index'},
+                                      labelPosition= 'top'
                                   ),
                                   html.Div(className='indicators-scroll', id='social-indicators-scroll',
                                            style={"maxHeight": "200px", "overflow": "scroll", 'display': 'block'},

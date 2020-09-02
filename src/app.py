@@ -42,7 +42,10 @@ app = Dash(__name__, external_stylesheets=external_stylesheets, meta_tags=[
 country_names = np.array(pd.ExcelFile('dataset/features/Modified_Stringency_Data.xlsx').sheet_names)
 country_list = [{'label': i, 'value': i} for i in country_names]
 
-app.layout = html.Div(
+app.scripts.config.serve_locally = True
+
+app.layout = dcc.Loading(id='homeload',
+    children =[html.Div(
     children=[
         html.Div(className='app-ui',
                  children=[
@@ -254,7 +257,7 @@ app.layout = html.Div(
                  ]
                  )
     ]
-)
+)],type='default', fullscreen=True)
 # , style={'columnCount': 1}
 # html.Label('Dropdown'),
 # dcc.Dropdown(

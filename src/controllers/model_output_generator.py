@@ -105,6 +105,7 @@ class GenerateOutput:
         """
         combined_df = pd.DataFrame()
         for country in countries:
+            previous_year_co2 = float(self.mean_co2_values_dict[country])
             self.model_type = parsed_model_input.model
             dates = self.get_dates_whole_duration(country, parsed_model_input.model)
             if self.model_type == DataAnalysingModels.STRINGENCY_INDEX_MODEL:
@@ -122,6 +123,7 @@ class GenerateOutput:
                 raise NotImplementedError("ONLY STRINGENCY AND SOCIAL POLICY DATA ANALYSIS SUPPORTED!!!!")
             if co2_reductions is None:
                 raise ValueError("Failed to predict data for given settings!!!!")
+            co2_reductions = co2_reductions + previous_year_co2
             df = pd.DataFrame()
             df['Date'] = dates
             df['MtCO2/day'] = co2_reductions

@@ -19,6 +19,7 @@ import pandas as pd
 import numpy as np
 from controllers.callbacks import register_callbacks
 from dash_extensions.enrich import Dash
+import pickle
 
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 external_stylesheets = [
@@ -41,6 +42,12 @@ app = Dash(__name__, external_stylesheets=external_stylesheets, meta_tags=[
 
 country_names = np.array(pd.ExcelFile('dataset/features/Modified_Stringency_Data.xlsx').sheet_names)
 country_list = [{'label': i, 'value': i} for i in country_names]
+
+# Pie Diagram
+# df = pickle.load(open('/dataset/Country_population_co2.pkl', 'rb'))
+# df.loc[df['co2_percent'] < 1, 'Country'] = 'Other countries'
+# fig = px.pie(df, values='co2_percent', names='Country', title='CO2 percent contribution of different Countries')
+# fig.update_layout(height=400, width=700, margin=dict(l=50, r=50, b=100, t=100, pad=4))
 
 app.scripts.config.serve_locally = True
 
@@ -234,6 +241,7 @@ app.layout = html.Div(
                                            ]
                                   ),
                                   html.Img(src='assets/map.png', height=400, width=700)
+                                  # dcc.Graph(id='co2-percent-graph', figure=fig)
                               ], style={'columnCount': 2}  # for two column view in HTML page
                               ),
                      html.Div(className='mid-area',style={'marginBottom': 50},

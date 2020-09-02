@@ -78,9 +78,9 @@ def register_callbacks(app, dcc):
             # TODO: Add median values.
             fig = px.line(df, x='Date', y='MtCO2/day', color='Country')
             fig.update_layout(transition_duration=500)
-            return "Processing Finished!", dcc.Graph(id='co2-graph', figure=fig), dcc.Store(id='trigger')
+            return dcc.Graph(id='co2-graph', figure=fig), dcc.Store(id='trigger')
         else:
-            return "Press submit when ready.", None, dcc.Store(id='trigger')
+            return None, dcc.Store(id='trigger')
 
     # @app.callback(Output("submit_policy_selection", "disabled"),
     #               Trigger("submit_policy_selection", "n_clicks"),

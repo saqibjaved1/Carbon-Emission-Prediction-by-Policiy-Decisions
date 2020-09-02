@@ -273,7 +273,8 @@ app.layout = html.Div(
                                   ),
                                   html.Div(className='right',
                                            children=[
-                                                dcc.Graph(id="my-graph", figure=fig)
+                                                #dcc.Graph(id="my-graph", figure=fig)
+                                                html.Img(src='assets/map.png', height=400, width=700)
                                            ]
                                   )
                                   #html.Img(src='assets/map.png', height=400, width=700)

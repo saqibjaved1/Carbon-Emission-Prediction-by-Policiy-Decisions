@@ -232,7 +232,7 @@ app.layout = html.Div(
                                   html.Img(src='assets/map.png', height=400, width=700)
                               ], style={'columnCount': 2}  # for two column view in HTML page
                               ),
-                     html.Div(className='mid-area',
+                     html.Div(className='mid-area',style={'marginBottom': 50},
                               children=[
                                   html.Button('Submit', id='submit_policy_selection', n_clicks=0,
                                               className='pure-material-button-contained')

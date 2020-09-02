@@ -235,7 +235,7 @@ app.layout = html.Div(
                      html.Div(className='mid-area',
                               children=[
                                   html.Button('Submit', id='submit_policy_selection', n_clicks=0,
-                                              className='submit-button')
+                                              className='pure-material-button-contained')
                               ]
                               ),
                      html.Div(className='output-area',

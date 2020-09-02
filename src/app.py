@@ -89,187 +89,195 @@ app.layout = html.Div(
                               ),
                      html.Div(className='input-area',
                               children=[
-                                  html.Label('Select the countries for analysis:',
-                                             style={'margin-left': 20, 'color': 'white'}),
-                                  dcc.Dropdown(className='dropdown', id='country-dropdown',
-                                               options=country_list,
-                                               value=['Italy', 'Finland'],
-                                               multi=True
-                                               ),
-
-                                  daq.ToggleSwitch(
-                                      id='input-switch',
-                                      value=False,
-                                      size=50,
-                                      label={'style':{'color': 'white'} , 'label': 'click here to toggle between Social Indicators and Stringency Index'},
-                                      labelPosition= 'top'
-                                  ),
-                                  html.Div(className='indicators-scroll', id='social-indicators-scroll',
-                                           style={"maxHeight": "250px", "overflow": "scroll", 'display': 'block'},
-                                           # block this div by toggle button
+                                  html.Div(className='left',
                                            children=[
-                                               html.Label('Social Indicators:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               html.Label('1. School Closing:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='school-closing',
-                                                              options=[
-                                                                  {'label': 'No measures ', 'value': '0'},
-                                                                  {'label': 'Recommend closing', 'value': '1'},
-                                                                  {'label': 'Require closing (on some levels)',
-                                                                   'value': '2'},
-                                                                  {'label': 'Require closing (on all levels)',
-                                                                   'value': '3'}
-                                                              ],
-                                                              value='0'
-                                                              ),
-                                               html.Label('2. Workplace Closing:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='workplace-closing',
-                                                              options=[
-                                                                  {'label': 'No measures ', 'value': '0'},
-                                                                  {'label': 'Recommend closing', 'value': '1'},
-                                                                  {'label': 'Require closing (for some sectors)',
-                                                                   'value': '2'},
-                                                                  {'label': 'Require closing (for all sectors)',
-                                                                   'value': '3'}
-                                                              ],
-                                                              value='0'
-                                                              ),
-                                               html.Label('3. Cancel public events:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='public-events',
-                                                              options=[
-                                                                  {'label': 'No measures ', 'value': '0'},
-                                                                  {'label': 'Recommend cancelling', 'value': '1'},
-                                                                  {'label': 'Require cancelling', 'value': '2'}
-                                                              ],
-                                                              value='0'
-                                                              ),
-                                               html.Label('4. Restrictions on gatherings:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='gatherings',
-                                                              options=[
-                                                                  {'label': 'No restrictions', 'value': '0'},
-                                                                  {
-                                                                      'label': 'Restrictions on very large gatherings (the limit is above 1000 people)',
-                                                                      'value': '1'},
-                                                                  {
-                                                                      'label': 'Restrictions on gatherings between 101-1000 people',
-                                                                      'value': '2'},
-                                                                  {
-                                                                      'label': 'Restrictions on gatherings between 11-100 people',
-                                                                      'value': '3'},
-                                                                  {
-                                                                      'label': 'Restrictions on gatherings of 10 people or less',
-                                                                      'value': '4'}
-                                                              ],
-                                                              value='0'
-                                                              ),
-                                               html.Label('5. Close public transport:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='public-transport',
-                                                              options=[
-                                                                  {'label': 'No measures ', 'value': '0'},
-                                                                  {
-                                                                      'label': 'Recommend closing (or significantly reduce volume/route/means)',
-                                                                      'value': '1'},
-                                                                  {
-                                                                      'label': 'Require closing (or prohibit most citizens from using it)',
-                                                                      'value': '2'}
-                                                              ],
-                                                              value='0'
-                                                              ),
-                                               html.Label('6. Stay at home requirements:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='stay-home',
-                                                              options=[
-                                                                  {'label': 'No measures ', 'value': '0'},
-                                                                  {'label': 'Recommend not leaving house',
-                                                                   'value': '1'},
-                                                                  {
-                                                                      'label': 'Require not leaving house with exceptions for daily exercise, grocery shopping, ...',
-                                                                      'value': '2'},
-                                                                  {
-                                                                      'label': 'Require not leaving house with minimal exceptions',
-                                                                      'value': '3'}
-                                                              ],
-                                                              value='0'
-                                                              ),
-                                               html.Label('7. Restrictions on internal movement:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='internal-movement',
-                                                              options=[
-                                                                  {'label': 'No measures ', 'value': '0'},
-                                                                  {
-                                                                      'label': 'Recommend not to travel between regions/cities',
-                                                                      'value': '1'},
-                                                                  {'label': 'Internal movement restrictions in place',
-                                                                   'value': '2'},
-                                                              ],
-                                                              value='0'
-                                                              ),
-                                               html.Label('8. International travel controls:',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                               dcc.RadioItems(className='checkboxes', id='international-travel',
-                                                              options=[
-                                                                  {'label': 'No measures ', 'value': '0'},
-                                                                  {'label': 'Screening arrivals', 'value': '1'},
-                                                                  {
-                                                                      'label': 'Quarantine arrivals from some or all regions',
-                                                                      'value': '2'},
-                                                                  {'label': 'Ban arrivals from some regions',
-                                                                   'value': '3'},
-                                                                  {
-                                                                      'label': 'Ban on all regions or total border closure',
-                                                                      'value': '4'}
-                                                              ],
-                                                              value='0'
-                                                              ),
+                                              html.Label('Select the countries for analysis:',
+                                                         style={'margin-left': 20, 'color': 'white'}),
+                                              dcc.Dropdown(className='dropdown', id='country-dropdown',
+                                                           options=country_list,
+                                                           value=['Italy', 'Finland'],
+                                                           multi=True
+                                                           ),
 
-                                           ]
-                                           ),
+                                              daq.ToggleSwitch(
+                                                  id='input-switch',
+                                                  value=False,
+                                                  size=50,
+                                                  label={'style':{'color': 'white'} , 'label': 'click here to toggle between Social Indicators and Stringency Index'},
+                                                  labelPosition= 'top'
+                                              ),
+                                              html.Div(className='indicators-scroll', id='social-indicators-scroll',
+                                                       style={"maxHeight": "250px", "overflow": "scroll", 'display': 'block'},
+                                                       # block this div by toggle button
+                                                       children=[
+                                                           html.Label('Social Indicators:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           html.Label('1. School Closing:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='school-closing',
+                                                                          options=[
+                                                                              {'label': 'No measures ', 'value': '0'},
+                                                                              {'label': 'Recommend closing', 'value': '1'},
+                                                                              {'label': 'Require closing (on some levels)',
+                                                                               'value': '2'},
+                                                                              {'label': 'Require closing (on all levels)',
+                                                                               'value': '3'}
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
+                                                           html.Label('2. Workplace Closing:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='workplace-closing',
+                                                                          options=[
+                                                                              {'label': 'No measures ', 'value': '0'},
+                                                                              {'label': 'Recommend closing', 'value': '1'},
+                                                                              {'label': 'Require closing (for some sectors)',
+                                                                               'value': '2'},
+                                                                              {'label': 'Require closing (for all sectors)',
+                                                                               'value': '3'}
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
+                                                           html.Label('3. Cancel public events:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='public-events',
+                                                                          options=[
+                                                                              {'label': 'No measures ', 'value': '0'},
+                                                                              {'label': 'Recommend cancelling', 'value': '1'},
+                                                                              {'label': 'Require cancelling', 'value': '2'}
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
+                                                           html.Label('4. Restrictions on gatherings:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='gatherings',
+                                                                          options=[
+                                                                              {'label': 'No restrictions', 'value': '0'},
+                                                                              {
+                                                                                  'label': 'Restrictions on very large gatherings (the limit is above 1000 people)',
+                                                                                  'value': '1'},
+                                                                              {
+                                                                                  'label': 'Restrictions on gatherings between 101-1000 people',
+                                                                                  'value': '2'},
+                                                                              {
+                                                                                  'label': 'Restrictions on gatherings between 11-100 people',
+                                                                                  'value': '3'},
+                                                                              {
+                                                                                  'label': 'Restrictions on gatherings of 10 people or less',
+                                                                                  'value': '4'}
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
+                                                           html.Label('5. Close public transport:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='public-transport',
+                                                                          options=[
+                                                                              {'label': 'No measures ', 'value': '0'},
+                                                                              {
+                                                                                  'label': 'Recommend closing (or significantly reduce volume/route/means)',
+                                                                                  'value': '1'},
+                                                                              {
+                                                                                  'label': 'Require closing (or prohibit most citizens from using it)',
+                                                                                  'value': '2'}
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
+                                                           html.Label('6. Stay at home requirements:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='stay-home',
+                                                                          options=[
+                                                                              {'label': 'No measures ', 'value': '0'},
+                                                                              {'label': 'Recommend not leaving house',
+                                                                               'value': '1'},
+                                                                              {
+                                                                                  'label': 'Require not leaving house with exceptions for daily exercise, grocery shopping, ...',
+                                                                                  'value': '2'},
+                                                                              {
+                                                                                  'label': 'Require not leaving house with minimal exceptions',
+                                                                                  'value': '3'}
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
+                                                           html.Label('7. Restrictions on internal movement:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='internal-movement',
+                                                                          options=[
+                                                                              {'label': 'No measures ', 'value': '0'},
+                                                                              {
+                                                                                  'label': 'Recommend not to travel between regions/cities',
+                                                                                  'value': '1'},
+                                                                              {'label': 'Internal movement restrictions in place',
+                                                                               'value': '2'},
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
+                                                           html.Label('8. International travel controls:',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                           dcc.RadioItems(className='checkboxes', id='international-travel',
+                                                                          options=[
+                                                                              {'label': 'No measures ', 'value': '0'},
+                                                                              {'label': 'Screening arrivals', 'value': '1'},
+                                                                              {
+                                                                                  'label': 'Quarantine arrivals from some or all regions',
+                                                                                  'value': '2'},
+                                                                              {'label': 'Ban arrivals from some regions',
+                                                                               'value': '3'},
+                                                                              {
+                                                                                  'label': 'Ban on all regions or total border closure',
+                                                                                  'value': '4'}
+                                                                          ],
+                                                                          value='0'
+                                                                          ),
 
-                                  # dcc.RadioItems(
-                                  #     options=[
-                                  #         {'label': 'Italy', 'value': 'ITA'},
-                                  #         {'label': 'South Korea', 'value': 'KOR'},
-                                  #         {'label': 'Finland', 'value': 'FIN'},
-                                  #         {'label': 'Brazil', 'value': 'BRA'}
-                                  #     ],
-                                  #     value='ITA'
-                                  # ),
+                                                       ]
+                                                       ),
 
-                                  # html.Label('Text Input'),
-                                  # dcc.Input(value='hi', type='text'),
-                                  html.Div(className='slider-container', id='stringency-slider-container',
-                                            style={'display': 'block'},
-                                           # block this div by toggle button
-                                           children=[
+                                              # dcc.RadioItems(
+                                              #     options=[
+                                              #         {'label': 'Italy', 'value': 'ITA'},
+                                              #         {'label': 'South Korea', 'value': 'KOR'},
+                                              #         {'label': 'Finland', 'value': 'FIN'},
+                                              #         {'label': 'Brazil', 'value': 'BRA'}
+                                              #     ],
+                                              #     value='ITA'
+                                              # ),
 
-                                                html.Label('Stringency Index',
-                                                          style={'margin-left': 20, 'color': 'black'}),
-                                                dcc.Slider(
-                                                   id='stringency_index',
-                                                   min=0,
-                                                   max=100,
-                                                   marks={
-                                                       0: {'label': '0', 'style': {'color': '#77b0b1'}},
-                                                       25: {'label': '25'},
-                                                       50: {'label': '50'},
-                                                       75: {'label': '75'},
-                                                       100: {'label': '100', 'style': {'color': '#f50'}}
-                                                   },
-                                                   value=5,
-                                               ),
-                                               html.Div(className='slider-data', id='stringency_index_show',
-                                                        style={'margin-left': 20, 'color': 'black'}),
+                                              # html.Label('Text Input'),
+                                              # dcc.Input(value='hi', type='text'),
+                                              html.Div(className='slider-container', id='stringency-slider-container',
+                                                        style={'display': 'block'},
+                                                       # block this div by toggle button
+                                                       children=[
 
+                                                            html.Label('Stringency Index',
+                                                                      style={'margin-left': 20, 'color': 'black'}),
+                                                            dcc.Slider(
+                                                               id='stringency_index',
+                                                               min=0,
+                                                               max=100,
+                                                               marks={
+                                                                   0: {'label': '0', 'style': {'color': '#77b0b1'}},
+                                                                   25: {'label': '25'},
+                                                                   50: {'label': '50'},
+                                                                   75: {'label': '75'},
+                                                                   100: {'label': '100', 'style': {'color': '#f50'}}
+                                                               },
+                                                               value=5,
+                                                           ),
+                                                           html.Div(className='slider-data', id='stringency_index_show',
+                                                                    style={'margin-left': 20, 'color': 'black'}),
+
+                                                       ]
+                                              ),
                                            ]
                                   ),
-                                  #dcc.Graph(id="my-graph", figure=fig)
-                                   html.Img(src='assets/map.png', height=400, width=700)
-                              ], style={'columnCount': 2}  # for two column view in HTML page
+                                  html.Div(className='right',
+                                           children=[
+                                                dcc.Graph(id="my-graph", figure=fig)
+                                           ]
+                                  )
+                                  #html.Img(src='assets/map.png', height=400, width=700)
+                              ]#, style={'columnCount': 1}  # for two column view in HTML page
                               ),
                      html.Div(className='mid-area',style={'marginBottom': 50},
                               children=[

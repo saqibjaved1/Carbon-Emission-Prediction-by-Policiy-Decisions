@@ -21,8 +21,10 @@ from controllers.callbacks import register_callbacks
 from dash_extensions.enrich import Dash
 
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+external_stylesheets = [
+    "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"]
 
-app = Dash(__name__, meta_tags=[
+app = Dash(__name__, external_stylesheets=external_stylesheets, meta_tags=[
     {
         'name': 'PredictCarbon COVID',
         'content': 'This is a group project completed for the course Applied Machine Intelligence at the Technical University of Munich'
@@ -238,9 +240,17 @@ app.layout = html.Div(
                               id='outputs',
                               children=[
                                   #html.Div(className='output_figure', id='div_output_graph'),
+                                  html.Div(id='graph_dash-loading-callback'),
                                   dcc.Store(id='trigger')
                               ],
                               style={'display': 'block'}),
+                     # dcc.Input(id="loading-input-1", value='Input triggers local spinner'),
+                     # dcc.Loading(
+                     #        id="loading-1",
+                     #        type="default",
+                     #        fullscreen=True,
+                     #        children=html.Div(id="loading-output-1")
+                     #        )
                  ]
                  )
     ]

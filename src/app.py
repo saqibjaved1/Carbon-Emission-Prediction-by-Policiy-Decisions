@@ -214,7 +214,7 @@ app.layout = html.Div(
                                            children=[
 
                                                 html.Label('Stringency Index',
-                                                          style={'margin-left': 20, 'color': 'white'}),
+                                                          style={'margin-left': 20, 'color': 'black'}),
                                                 dcc.Slider(
                                                    id='stringency_index',
                                                    min=0,

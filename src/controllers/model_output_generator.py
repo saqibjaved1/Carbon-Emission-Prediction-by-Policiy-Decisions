@@ -7,6 +7,7 @@ import time
 
 import numpy as np
 import pandas as pd
+import pickle
 from sklearn.model_selection import TimeSeriesSplit
 
 from controllers.model_input_parser import DataAnalysingModels
@@ -25,6 +26,7 @@ class GenerateOutput:
         self.test_features = None
         self.test_labels = None
         self.model_type = None
+        self.mean_co2_values_dict = pickle.load(open('dataset/mean_value_dict', 'rb'))
 
     def get_data_avlbl(self, country, model_type):
         """

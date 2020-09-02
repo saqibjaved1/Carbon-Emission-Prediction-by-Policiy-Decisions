@@ -433,8 +433,7 @@ indicators-scroll,
 slider-container,
 .slider-container {
   background-color:white;
-    height: 200px;
-    align-items: center;
+
   font-palette:black;
   margin-left: 20px;
   margin-top: 20px;}

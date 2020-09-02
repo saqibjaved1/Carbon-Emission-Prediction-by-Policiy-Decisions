@@ -399,6 +399,10 @@ dropdown,
 
   opacity: 0;
   background-color: rgb(250, 250, 250);
+  background-image: url('/assets/bubble.gif');
+  background-size: auto;
+  background-repeat: no-repeat;
+  background-position: center;
   /* Delay animation by 1s to prevent flashing
      and smoothly transition the animation over 0.5s
    */

@@ -8,7 +8,8 @@ from dash_extensions.enrich import State, Output, Input, Trigger
 
 from controllers.model_input_parser import ParseModelInputs, DataAnalysingModels
 from controllers.model_output_generator import GenerateOutput
-
+import plotly.graph_objs as go
+import time
 
 def register_callbacks(app, dcc):
     @app.callback(
@@ -81,9 +82,32 @@ def register_callbacks(app, dcc):
         else:
             return "Press submit when ready.", None, dcc.Store(id='trigger')
 
-    @app.callback(Output("submit_policy_selection", "disabled"),
-                  Trigger("submit_policy_selection", "n_clicks"),
-                  Trigger("trigger", "data"))
-    def disable_submit_until_callback_completes():
-        context = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
-        return context == 'submit_policy_selection'
+    # @app.callback(Output("submit_policy_selection", "disabled"),
+    #               Trigger("submit_policy_selection", "n_clicks"),
+    #               Trigger("trigger", "data"))
+    # def disable_submit_until_callback_completes():
+    #     context = dash.callback_context.triggered[0]['prop_id'].split('.')[0]
+    #     return context == 'submit_policy_selection'
+
+    # @app.callback(
+    #     Output('submit_policy_selection', 'className'),
+    #     [
+    #         Input('co2-graph', 'figure')
+    #     ],
+    # )
+    # def set_trend_enter_button_loading(figure_changed):
+    #     return "button is-large is-primary is-outlined"
+    #
+    # @app.callback(
+    #     Output('submit_policy_selection', 'className'),
+    #     [
+    #         Input('submit_policy_selection', 'n_clicks')
+    #     ],
+    # )
+    # def set_trend_enter_button_loading(n_clicks):
+    #     return "button is-large is-primary is-outlined is-loading"
+
+    # @app.callback(Output("loading-output-1", "children"), [Input("loading-input-1", "value")])
+    # def input_triggers_spinner(value):
+    #     time.sleep(1)
+    #     return value

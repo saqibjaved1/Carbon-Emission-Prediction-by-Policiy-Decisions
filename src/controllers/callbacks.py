@@ -29,7 +29,7 @@ def register_callbacks(app, dcc):
             return {'maxHeight': '250px', 'overflow': 'scroll', 'display': 'none'}
 
     @app.callback(
-        Output('stringency-slider-section', 'style'),
+        Output('stringency-slider-container', 'style'),
         [Input('input-switch', 'value')])
     def update_output(value):
         if value:

@@ -209,12 +209,10 @@ app.layout = html.Div(
                                   # html.Label('Text Input'),
                                   # dcc.Input(value='hi', type='text'),
                                   html.Div(className='slider-container', id='stringency-slider-container',
-
+                                            style={'display': 'block'},
                                            # block this div by toggle button
                                            children=[
-                                                html.Div(className='slider', id='stringency-slider-section',
-                                                style={'display': 'block'},
-                                                children=[
+
                                                 html.Label('Stringency Index',
                                                           style={'margin-left': 20, 'color': 'white'}),
                                                 dcc.Slider(
@@ -232,8 +230,7 @@ app.layout = html.Div(
                                                ),
                                                html.Div(className='slider-data', id='stringency_index_show',
                                                         style={'margin-left': 20, 'color': 'black'}),
-                                               ]
-                                               ),
+
                                            ]
                                   ),
                                   html.Img(src='assets/map.png', height=400, width=700)

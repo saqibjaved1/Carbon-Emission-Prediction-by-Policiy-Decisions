@@ -427,6 +427,17 @@ indicators-scroll,
   margin-left: 20px;
   margin-top: 20px;}
 
+
+/* slider-container
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+slider-container,
+.slider-container {
+  background-color:white;
+  font-palette:black;
+  margin-left: 20px;
+  margin-top: 20px;}
+
+
 /* mid-area
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 mid-area,

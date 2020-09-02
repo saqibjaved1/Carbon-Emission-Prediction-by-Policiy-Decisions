@@ -20,11 +20,11 @@ class stringency_model():
     def __init__(self, country = 'India', stringency = 5, pred_steps = 30):
         self.country = country
         self.input_stringency = stringency
-        self.pred_steps = pred_steps
         with open('cfg/strindex_model_config.json') as f:
             self.training_config = json.load(f)
         self.n_steps = self.training_config["n_steps"]
         self.policy = self.training_config['policy']
+        self.pred_steps = self.training_config['prediction steps']
 
     def get_train_data(self):
         """
@@ -43,7 +43,7 @@ class stringency_model():
         countryPolicyCarbonData = CountryPolicyCarbonData('training_data.yaml', self.country, include_flags=False,
                                                           policy_category=policy,
                                                           normalize=0)
-
+        self.co2_data_avlbl = countryPolicyCarbonData.get_labels(DataType.PANDAS_DF)
         train_x, train_y, test_x, test_y = countryPolicyCarbonData.split_train_test(fill_nan=False,
                                                                                     validation_percentage=self.training_config['val_pc'])
 
@@ -77,6 +77,7 @@ class stringency_model():
         output_arr = []
         input_data = np.zeros((1, self.train_features.shape[1]))
         input_data[0, 0] = self.input_stringency
+        input_data[0, 1:] = self.co2_data_avlbl.iloc[0, -self.n_steps:]
         for i in range(self.pred_steps):
             if i >= self.n_steps:
                 input_data[0, 1:] = output_arr[i - self.n_steps:]
@@ -154,6 +155,6 @@ class stringency_model():
 
 
 # Test
-# str_model = stringency_model(country = 'Brazil', stringency= 98)
+# str_model = stringency_model(country = 'Italy', stringency= 98)
 # str_model.visualize_predicted_vs_original()
 # str_model.visualize_future_predictions()

@@ -19,6 +19,40 @@ import pandas as pd
 import numpy as np
 from controllers.callbacks import register_callbacks
 from dash_extensions.enrich import Dash
+import plotly.graph_objects as go
+
+df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv')
+fig = go.Figure(data=go.Choropleth(
+    locations = df['CODE'],
+    z = df['GDP (BILLIONS)'],
+    text = df['COUNTRY'],
+    colorscale = 'Blues',
+    autocolorscale=False,
+    reversescale=True,
+    marker_line_color='darkgray',
+    marker_line_width=0.5,
+    colorbar_tickprefix = '$',
+    colorbar_title = 'GDP<br>Billions US$',
+))
+
+fig.update_layout(
+    title_text='2014 Global GDP',
+    autosize=True,
+    geo=dict(
+        showframe=False,
+        showcoastlines=False,
+        projection_type='equirectangular'
+    ),
+    annotations = [dict(
+        x=0.55,
+        y=0.1,
+        xref='paper',
+        yref='paper',
+        text='Source: <a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">\
+            CIA World Factbook</a>',
+        showarrow = False
+    )]
+)
 
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 external_stylesheets = [
@@ -42,7 +76,7 @@ app = Dash(__name__, external_stylesheets=external_stylesheets, meta_tags=[
 country_names = np.array(pd.ExcelFile('dataset/features/Modified_Stringency_Data.xlsx').sheet_names)
 country_list = [{'label': i, 'value': i} for i in country_names]
 
-app.scripts.config.serve_locally = True
+#app.scripts.config.serve_locally = True
 
 app.layout = html.Div(
     children=[
@@ -71,7 +105,7 @@ app.layout = html.Div(
                                       labelPosition= 'top'
                                   ),
                                   html.Div(className='indicators-scroll', id='social-indicators-scroll',
-                                           style={"maxHeight": "200px", "overflow": "scroll", 'display': 'block'},
+                                           style={"maxHeight": "250px", "overflow": "scroll", 'display': 'block'},
                                            # block this div by toggle button
                                            children=[
                                                html.Label('Social Indicators:',
@@ -233,7 +267,8 @@ app.layout = html.Div(
 
                                            ]
                                   ),
-                                  html.Img(src='assets/map.png', height=400, width=700)
+                                  #dcc.Graph(id="my-graph", figure=fig)
+                                   html.Img(src='assets/map.png', height=400, width=700)
                               ], style={'columnCount': 2}  # for two column view in HTML page
                               ),
                      html.Div(className='mid-area',style={'marginBottom': 50},

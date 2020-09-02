@@ -10,6 +10,7 @@ from controllers.model_input_parser import ParseModelInputs, DataAnalysingModels
 from controllers.model_output_generator import GenerateOutput
 import plotly.graph_objs as go
 import time
+import pandas as pd
 
 def register_callbacks(app, dcc):
     @app.callback(
@@ -77,7 +78,14 @@ def register_callbacks(app, dcc):
             df = out.get_dataframe_for_plotting(parse_model_input, countries)
             # TODO: Add median values.
             fig = px.line(df, x='Date', y='MtCO2/day', color='Country')
-            fig.update_layout(transition_duration=500)
+            fig.update_layout(shapes=[dict(type= 'line',
+                                            yref= 'paper', y0= 0, y1= 1,
+                                            xref= 'x', x0= pd.to_datetime('2020-06-11'), x1= pd.to_datetime('2020-06-11'),
+                                            line = dict(
+                                                    # color="Red",
+                                                    # width=4,
+                                                    dash="dot"))],
+                              transition_duration=500)
             return dcc.Graph(id='co2-graph', figure=fig), dcc.Store(id='trigger')
         else:
             return None, dcc.Store(id='trigger')

@@ -208,13 +208,16 @@ app.layout = html.Div(
 
                                   # html.Label('Text Input'),
                                   # dcc.Input(value='hi', type='text'),
+                                  html.Div(className='slider-container', id='stringency-slider-container',
 
-                                  html.Div(className='slider', id='stringency-slider-section',
-                                           style={'display': 'block'},
+                                           # block this div by toggle button
                                            children=[
-                                               html.Label('Stringency Index',
+                                                html.Div(className='slider', id='stringency-slider-section',
+                                                style={'display': 'block'},
+                                                children=[
+                                                html.Label('Stringency Index',
                                                           style={'margin-left': 20, 'color': 'white'}),
-                                               dcc.Slider(
+                                                dcc.Slider(
                                                    id='stringency_index',
                                                    min=0,
                                                    max=100,
@@ -228,9 +231,11 @@ app.layout = html.Div(
                                                    value=5,
                                                ),
                                                html.Div(className='slider-data', id='stringency_index_show',
-                                                        style={'margin-left': 20, 'color': 'white'}),
+                                                        style={'margin-left': 20, 'color': 'black'}),
+                                               ]
+                                               ),
                                            ]
-                                           ),
+                                  ),
                                   html.Img(src='assets/map.png', height=400, width=700)
                               ], style={'columnCount': 2}  # for two column view in HTML page
                               ),

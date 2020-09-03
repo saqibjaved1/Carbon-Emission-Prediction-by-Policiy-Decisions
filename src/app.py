@@ -297,8 +297,8 @@ app.layout = html.Div(
                      html.Div(className='output-area',
                               id='outputs',
                               children=[
-                                  #html.Div(className='output_figure', id='div_output_graph'),
-                                  html.Div(id='graph_dash-loading-callback'),
+                                  html.Div(id='co2-graph'),
+                                  html.Div(id='co2-reduction-graph'),
                                   dcc.Store(id='trigger')
                               ],
                               style={'display': 'block'}),

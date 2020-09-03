@@ -73,7 +73,7 @@ def register_callbacks(app, dcc):
                 parse_model_input.stay_home_score = int(stay_home_score)
                 parse_model_input.internal_movement_score = int(internal_movement_score)
                 parse_model_input.international_travel_score = int(international_travel_score)
-            out = GenerateOutput()
+            out = GenerateOutput(pred_steps=142)
             df = out.get_dataframe_for_plotting(parse_model_input, countries)
             fig1 = px.line(df, x='Date', y='MtCO2/day', color='Country', title="CO<sub>2</sub> Emission per day")
             fig1.update_layout(annotations=[dict(yref='paper', y=1,

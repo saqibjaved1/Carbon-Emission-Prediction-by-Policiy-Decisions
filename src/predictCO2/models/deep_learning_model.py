@@ -10,7 +10,6 @@ from tensorflow.python.keras.callbacks import TensorBoard
 from predictCO2.models.nn_template import NN_Template
 from predictCO2.preprocessing import utils as utls
 from tensorflow.keras import layers, models, optimizers, backend, utils
-
 tensorflow.get_logger().setLevel('INFO')
 
 

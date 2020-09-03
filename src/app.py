@@ -250,7 +250,7 @@ app.layout = html.Div(
 
                                               # html.Label('Text Input'),
                                               # dcc.Input(value='hi', type='text'),
-                                              html.Div(className='slider-container', id='stringency-slider-container',
+                                              html.Div(className='slider-container slider-container-1', id='stringency-slider-container',
                                                         style={'display': 'block'},
                                                        # block this div by toggle button
                                                        children=[

@@ -1,5 +1,3 @@
-This is our git repo!
-
 # Development Section
 
 ## Create and activate environment
@@ -14,9 +12,6 @@ This is our git repo!
 
 ## Run tests
 ```pytest ./tests```
-
-## Run linter
-```pylint src```
 
 ## Run Data Analysis Pipeline
 To run evaluation on a pretrained model for some test data set, 
@@ -44,12 +39,12 @@ report.
 pre-trained model for making prediction and fetch performance metrics i.e. MSE, 
 MAE and Soft Accuracy scores as also defined in the Milestone 3 report.
 
-### Web app Installation
+# Web Application
 
 Requires Python 3.5+
 
-```bash
-pip install -r requirements.txt
-python src/app.py
-open http://127.0.0.1:8050/
-``` 
+## Start server: 
+```python src/app.py``` 
+
+## Open web app:
+```http://127.0.0.1:8050/```

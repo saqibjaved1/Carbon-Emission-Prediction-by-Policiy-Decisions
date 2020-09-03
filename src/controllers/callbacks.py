@@ -2,15 +2,12 @@
 Created by: Tapan Sharma
 Date: 28/08/20
 """
-import dash
+import pandas as pd
 import plotly.express as px
 from dash_extensions.enrich import State, Output, Input
 
 from controllers.model_input_parser import ParseModelInputs, DataAnalysingModels
 from controllers.model_output_generator import GenerateOutput
-import plotly.graph_objs as go
-import time
-import pandas as pd
 
 def register_callbacks(app, dcc):
     @app.callback(

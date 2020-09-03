@@ -11,6 +11,7 @@ import numpy as np
 import pandas as pd
 import time
 from predictCO2.models.deep_learning_model import DeepLearningModel
+from predictCO2.models.tune_cnn2 import CNN2
 from predictCO2.preprocessing import utils
 from predictCO2.preprocessing.generate_data import CountryPolicyCarbonData, PolicyCategory
 from sklearn.model_selection import TimeSeriesSplit
@@ -59,6 +60,12 @@ print(test_labels.shape)
 # Train model with 5 fold cross validation
 tss = TimeSeriesSplit()
 _, n_features = train_features.shape
+# cnns = CNN2(training_config, num_features=n_features, num_outputs=1)
+# tuner = cnns.tuning(method="hyperband")
+# X, Y = utils.data_sequence_generator(train_features, train_labels, training_config['time_steps'])
+# X_val, Y_val = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
+# tuner.search(X, Y, epochs=20, validation_data=(X_val, Y_val))
+# tuner.results_summary()
 cnn = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
 cnn.plot_and_save_model("content/model_arch/CNN_TAPAN.png")
 print(cnn.model.summary())

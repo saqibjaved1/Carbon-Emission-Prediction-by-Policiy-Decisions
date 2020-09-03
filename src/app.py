@@ -51,8 +51,8 @@ fig.update_layout(
         y=0.1,
         xref='paper',
         yref='paper',
-        text='Source: <a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">\
-            CIA World Factbook</a>',
+        text='Source: <a href="https://en.wikipedia.org/wiki/List_of_countries_by_carbon_dioxide_emissions">\
+            Wiki </a>',
         showarrow = False
     )],
     height=400, width=650, margin=dict(l=50, r=50, b=50, t=50, pad=4)

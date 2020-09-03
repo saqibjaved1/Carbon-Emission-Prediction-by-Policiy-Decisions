@@ -4,7 +4,7 @@ Date: 28/08/20
 """
 import dash
 import plotly.express as px
-from dash_extensions.enrich import State, Output, Input, Trigger
+from dash_extensions.enrich import State, Output, Input
 
 from controllers.model_input_parser import ParseModelInputs, DataAnalysingModels
 from controllers.model_output_generator import GenerateOutput

@@ -24,7 +24,7 @@ class stringency_model():
             self.training_config = json.load(f)
         self.n_steps = self.training_config["n_steps"]
         self.policy = self.training_config['policy']
-        self.pred_steps = self.training_config['prediction steps']
+        self.pred_steps = pred_steps
 
     def get_train_data(self):
         """

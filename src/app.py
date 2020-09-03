@@ -109,6 +109,7 @@ app.layout = html.Div(
                                                   id='input-switch',
                                                   value=False,
                                                   size=50,
+                                                  color='#004BA0',
                                                   label={'style':{'color': 'white'} , 'label': 'click here to toggle between Social Indicators and Stringency Index'},
                                                   labelPosition= 'top'
                                               ),

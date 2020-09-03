@@ -9,6 +9,7 @@ from dash_extensions.enrich import State, Output, Input
 from controllers.model_input_parser import ParseModelInputs, DataAnalysingModels
 from controllers.model_output_generator import GenerateOutput
 
+
 def register_callbacks(app, dcc):
     @app.callback(
         Output(component_id='stringency_index_show', component_property='children'),
@@ -73,19 +74,30 @@ def register_callbacks(app, dcc):
                 parse_model_input.international_travel_score = int(international_travel_score)
             out = GenerateOutput()
             df = out.get_dataframe_for_plotting(parse_model_input, countries)
-            # TODO: Add median values.
-            fig = px.line(df, x='Date', y='MtCO2/day', color='Country')
-            fig.update_layout(shapes=[dict(type= 'line',
-                                            yref= 'paper', y0= 0, y1= 1,
-                                            xref= 'x', x0= pd.to_datetime('2020-06-11'), x1= pd.to_datetime('2020-06-11'),
-                                            line = dict(
-                                                    # color="Red",
-                                                    # width=4,
-                                                    dash="dot"))],
+            fig1 = px.line(df, x='Date', y='MtCO2/day', color='Country', title="Mt CO<sub>2</sub> Emission per day")
+            fig1.update_layout(annotations=[dict(yref='paper', y=1,
+                                                 xref='x', x=pd.to_datetime('2020-06-11'),
+                                                 text='Forecasting from here')],
+                               shapes=[dict(type='line',
+                                           yref='paper', y0=0, y1=1,
+                                           xref='x', x0=pd.to_datetime('2020-06-11'), x1=pd.to_datetime('2020-06-11'),
+                                           line=dict(dash="dot"))],
                               transition_duration=500)
-            return dcc.Graph(id='co2-graph', figure=fig), dcc.Store(id='trigger')
+
+            fig2 = px.line(df, x='Date', y='MtCO2 reduced/day', color='Country', title='Mt Reduction in CO<sub>2</sub> '
+                                                                                       'emission per day')
+            fig2.update_layout(annotations=[dict(yref='paper', y=1,
+                                                 xref='x', x=pd.to_datetime('2020-06-11'),
+                                                 text='Forecasting from here')],
+                               shapes=[dict(type='line',
+                                            yref='paper', y0=0, y1=1,
+                                            xref='x', x0=pd.to_datetime('2020-06-11'), x1=pd.to_datetime('2020-06-11'),
+                                            line=dict(dash="dot"))],
+                               transition_duration=500)
+            return dcc.Graph(id='co2-graph', figure=fig1), dcc.Graph(id='co2-reduction-graph', figure=fig2), \
+                   dcc.Store(id='trigger')
         else:
-            return None, dcc.Store(id='trigger')
+            return None, None, dcc.Store(id='trigger')
 
     # @app.callback(Output("submit_policy_selection", "disabled"),
     #               Trigger("submit_policy_selection", "n_clicks"),

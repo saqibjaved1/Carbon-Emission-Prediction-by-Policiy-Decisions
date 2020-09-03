@@ -112,7 +112,7 @@ app.layout = html.Div(
                                                   label={'style':{'color': 'white'} , 'label': 'click here to toggle between Social Indicators and Stringency Index'},
                                                   labelPosition= 'top'
                                               ),
-                                              html.Div(className='indicators-scroll', id='social-indicators-scroll',
+                                              html.Div(className='card card-1', id='social-indicators-scroll',
                                                        style={"maxHeight": "250px", "overflow": "scroll", 'display': 'block'},
                                                        # block this div by toggle button
                                                        children=[

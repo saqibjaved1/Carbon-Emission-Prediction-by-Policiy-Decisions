@@ -101,19 +101,8 @@ class DeepLearningModel(NN_Template):
         """
         Generate predictions for future time steps
         """
-        # begin_time_step = 20200612
-        # indices_list = [str(i) for i in range(begin_time_step, begin_time_step + future_time_steps)]
-        # indices = pd.Series(indices_list)
-        # input_data = np.zeros((1, self.n_feats))
-        # input_data[0, 0:X.shape[1]] = X
-        # X_pred = pd.concat([pd.DataFrame(input_data)] * future_time_steps)
-        # X_pred = X_pred.set_index(indices)
-        # X_pred, _ = utls.data_sequence_generator(X_pred, None, self.config['time_steps'])
-        # Y = self.model.predict(X_pred)
-        # print(Y)
         output_arr = []
         idx = 20200612
-        # input_data = X_previous.tail(self.config['time_steps'])
         provided_features = np.zeros((1, self.n_feats))
         provided_features[0, 0:X_provided.shape[1]] = X_provided
         previous_labels = Y_previous.tail(self.config['time_steps'])

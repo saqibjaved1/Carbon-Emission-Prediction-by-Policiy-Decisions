@@ -476,7 +476,7 @@ indicators-scroll,
 .input-area {
 
   width: 90%;
-  height: 500px;
+  height: 420px;
   margin: auto;
   }
 
@@ -559,6 +559,31 @@ submit-button,
   cursor: pointer;
   font-size:24px;
   margin: 0 0 0 100px;
+  }
+
+/* output-area
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+ output-area,
+.output-area {
+
+  width: 90%;
+  height: 500px;
+  margin: auto;
+  }
+
+/* left-graph(output area)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+ left-graph,
+.left-graph {
+  width: 50%;
+  height: 200px;
+  float: left;}
+/* right(output area)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+right-graph,
+.right-graph {
+  margin-left: 55%;
+  height: 200px;
   }
 
 

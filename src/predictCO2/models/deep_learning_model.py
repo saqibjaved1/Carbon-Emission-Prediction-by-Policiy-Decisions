@@ -110,15 +110,15 @@ class DeepLearningModel(NN_Template):
         input_data = pd.concat([X_previous.tail(self.config['time_steps']),
                                 pd.DataFrame(provided_features, index=[str(idx)])])
         for i in range(future_time_steps):
-            if i >= self.config['time_steps']:
-                input_data.iloc[-1, self.n_feats - X_provided.shape[1] + 1:] = output_arr[i -
-                                                                                          self.config['time_steps']:]
-            idx += 1
-            next_time_step = input_data.iloc[-1, :]
-            next_time_step.reindex([str(idx)])
-            input_data = input_data.iloc[1:, ]
-            input_data = input_data.append(next_time_step, ignore_index=True)
             x, _ = utls.data_sequence_generator(input_data, None, self.config['time_steps'])
             out_data = self.model.predict(x)
             output_arr.append(out_data)
+            previous_labels = previous_labels.iloc[1:, ]
+            previous_labels = previous_labels.append(pd.DataFrame(np.array(out_data[0]), index=[str(idx)]))
+            idx += 1
+            next_time_step = np.zeros((1, self.n_feats))
+            next_time_step[0, 0:X_provided.shape[1]] = X_provided
+            next_time_step[0, X_provided.shape[1]:] = previous_labels[0]
+            input_data = input_data.iloc[1:, ]
+            input_data = input_data.append(pd.DataFrame(next_time_step, index=[str(idx)]))
         return output_arr

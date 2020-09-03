@@ -83,7 +83,7 @@
       "layers":[
          {
             "type":"conv1d",
-            "filters":64,
+            "filters":68,
             "kernel_size":2,
             "input_timesteps":7
          },
@@ -97,7 +97,7 @@
          },
         {
             "type":"conv1d",
-            "filters":32,
+            "filters":72,
             "kernel_size":2
          },
         {
@@ -113,7 +113,7 @@
          },
          {
             "type":"dense",
-            "neurons":7
+            "neurons":84
          },
         {
           "type": "leakyrelu",
@@ -121,14 +121,14 @@
         },
         {
           "type": "dropout",
-          "rate": 0.4
+          "rate": 0.01
         },
          {
             "type":"dense",
             "neurons":1
          }
       ],
-      "loss":"mse",
+      "loss":"huber",
       "optimizer":"adam",
       "save_dir":"models",
       "prediction_tolerance": 20e-5

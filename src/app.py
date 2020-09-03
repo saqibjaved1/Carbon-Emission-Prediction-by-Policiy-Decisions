@@ -24,13 +24,14 @@ import plotly.graph_objects as go
 
 # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv')
 df = pickle.load(open('dataset/Country_population_co2.pkl', 'rb'))
+df['hover_text'] = df["Country"] + ": " + df['co2_percent'].apply(str)
 fig = go.Figure(data=go.Choropleth(
     locations = df['CODE'],
-    z = df['co2_percent'],
-    text = df['Country'],
-    # colorscale = 'Blues',
-    # autocolorscale=False,
-    reversescale=True,
+    z = np.log(df['co2_percent']),
+    text = df['hover_text'],
+    colorscale = 'Reds',
+    autocolorscale=False,
+    reversescale=False,
     marker_line_color='darkgray',
     marker_line_width=0.5,
     # colorbar_tickprefix = '$',
@@ -41,7 +42,7 @@ fig.update_layout(
     title_text='CO2 Emissions 2017(% of world)',
     autosize=True,
     geo=dict(
-        showframe=False,
+        showframe=True,
         showcoastlines=False,
         projection_type='equirectangular'
     ),

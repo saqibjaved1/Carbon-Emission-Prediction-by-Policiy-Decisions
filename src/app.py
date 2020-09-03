@@ -29,13 +29,14 @@ fig = go.Figure(data=go.Choropleth(
     locations = df['CODE'],
     z = np.log(df['co2_percent']),
     text = df['hover_text'],
-    colorscale = 'Reds',
+    hoverinfo="text",
+    colorscale="Reds",marker={'line': {'color': 'rgb(180,180,180)','width': 0.5}},
+    #colorbar={"thickness": 20, 'tickvals': [ 2, 10],'ticktext': ['100', '100,000']},
     autocolorscale=False,
     reversescale=False,
-    marker_line_color='darkgray',
-    marker_line_width=0.5,
+    showscale=False,
     # colorbar_tickprefix = '$',
-    colorbar_title = 'CO2 Percent<br>Contribution',
+    #colorbar_title = 'CO2 Percent<br>Contribution',
 ))
 
 fig.update_layout(
@@ -51,8 +52,6 @@ fig.update_layout(
         y=0.1,
         xref='paper',
         yref='paper',
-        text='Source: <a href="https://en.wikipedia.org/wiki/List_of_countries_by_carbon_dioxide_emissions">\
-            Wiki </a>',
         showarrow = False
     )],
     height=400, width=650, margin=dict(l=50, r=50, b=50, t=50, pad=4)
@@ -304,6 +303,14 @@ app.layout = html.Div(
                      html.Div(className='output-area',
                               id='outputs',
                               children=[
+                                  html.Div(className='left-graph',
+                                           children=[
+                                                dcc.Graph(id='absolute-graph')
+                                           ]),
+                                  html.Div(className='right-graph',
+                                           children=[
+                                                dcc.Graph(id='reduction-graph')
+                                           ]),
                                   #html.Div(className='output_figure', id='div_output_graph'),
                                   html.Div(id='graph_dash-loading-callback'),
                                   dcc.Store(id='trigger')

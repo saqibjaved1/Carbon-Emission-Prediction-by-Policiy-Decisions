@@ -75,9 +75,23 @@ for index, row in df.iterrows():
         df.loc[index, 'co2_percent'] = co2_percentage[row['Country']]
     else:
         df.drop(index, inplace=True)
-# df.reset_index(inplace=True)
-print(df.info())
 
+# cc_codes = pd.read_csv('https://gist.githubusercontent.com/tadast/8827699/raw/3cd639fa34eec5067080a61c69e3ae25e3076abb/countries_codes_and_coordinates.csv')
+cc_codes = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv')
+for index, row in cc_codes.iterrows():
+    if row['COUNTRY'] == "Korea, South":
+        cc_codes.loc[index, 'COUNTRY'] = 'South Korea'
 
-df.to_pickle('/dataset/Country_population_co2.pkl')
+# country_code = []
+# for country in df['Country'].values:
+#      country_code.append(country[:3])
+
+df['CODE'] = 'aaa'
+for index, row in df.iterrows():
+    if row['Country'] in cc_codes['COUNTRY'].values:
+        df.loc[index, 'CODE'] = cc_codes[cc_codes['COUNTRY'] == row['Country']]['CODE'].values[0]
+    else:
+        print(row['Country'])
+
+df.to_pickle('dataset/Country_population_co2.pkl')
 

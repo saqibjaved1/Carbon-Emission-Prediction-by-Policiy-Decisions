@@ -23,37 +23,39 @@ import pickle
 import plotly.graph_objects as go
 
 # df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv')
-# fig = go.Figure(data=go.Choropleth(
-#     locations = df['CODE'],
-#     z = df['GDP (BILLIONS)'],
-#     text = df['COUNTRY'],
-#     colorscale = 'Blues',
-#     autocolorscale=False,
-#     reversescale=True,
-#     marker_line_color='darkgray',
-#     marker_line_width=0.5,
-#     colorbar_tickprefix = '$',
-#     colorbar_title = 'GDP<br>Billions US$',
-# ))
-#
-# fig.update_layout(
-#     title_text='2014 Global GDP',
-#     autosize=True,
-#     geo=dict(
-#         showframe=False,
-#         showcoastlines=False,
-#         projection_type='equirectangular'
-#     ),
-#     annotations = [dict(
-#         x=0.55,
-#         y=0.1,
-#         xref='paper',
-#         yref='paper',
-#         text='Source: <a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">\
-#             CIA World Factbook</a>',
-#         showarrow = False
-#     )]
-# )
+df = pickle.load(open('dataset/Country_population_co2.pkl', 'rb'))
+fig = go.Figure(data=go.Choropleth(
+    locations = df['CODE'],
+    z = df['co2_percent'],
+    text = df['Country'],
+    # colorscale = 'Blues',
+    # autocolorscale=False,
+    reversescale=True,
+    marker_line_color='darkgray',
+    marker_line_width=0.5,
+    # colorbar_tickprefix = '$',
+    colorbar_title = 'CO2 Percent<br>Contribution',
+))
+
+fig.update_layout(
+    title_text='CO2 Emissions 2017(% of world)',
+    autosize=True,
+    geo=dict(
+        showframe=False,
+        showcoastlines=False,
+        projection_type='equirectangular'
+    ),
+    annotations = [dict(
+        x=0.55,
+        y=0.1,
+        xref='paper',
+        yref='paper',
+        text='Source: <a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">\
+            CIA World Factbook</a>',
+        showarrow = False
+    )],
+    height=400, width=650, margin=dict(l=50, r=50, b=50, t=50, pad=4)
+)
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 external_stylesheets = [
     "https://unpkg.com/tachyons@4.10.0/css/tachyons.min.css"]
@@ -110,7 +112,7 @@ app.layout = html.Div(
                                                   value=False,
                                                   size=50,
                                                   color='#004BA0',
-                                                  label={'style':{'color': 'white'} , 'label': 'click here to toggle between Social Indicators and Stringency Index'},
+                                                  label={'style':{'color': 'white'} , 'label': 'Click here to toggle between Social Indicators and Stringency Index'},
                                                   labelPosition= 'top'
                                               ),
                                               html.Div(className='card card-1', id='social-indicators-scroll',
@@ -280,9 +282,9 @@ app.layout = html.Div(
                                   ),
                                   html.Div(className='right',
                                            children=[
-                                                #dcc.Graph(id="my-graph", figure=fig)
+                                                dcc.Graph(id="my-graph", figure=fig)
                                                 # dcc.Graph(id='co2-percent-graph', figure=fig)
-                                                html.Img(src='assets/map.png', height=400, width=700)
+                                                #html.Img(src='assets/map.png', height=400, width=700)
                                            ]
                                   )
                                   #html.Img(src='assets/map.png', height=400, width=700)
@@ -297,8 +299,8 @@ app.layout = html.Div(
                      html.Div(className='output-area',
                               id='outputs',
                               children=[
-                                  html.Div(id='co2-graph'),
-                                  html.Div(id='co2-reduction-graph'),
+                                  #html.Div(className='output_figure', id='div_output_graph'),
+                                  html.Div(id='graph_dash-loading-callback'),
                                   dcc.Store(id='trigger')
                               ],
                               style={'display': 'block'}),

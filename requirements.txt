@@ -16,3 +16,4 @@ dash
 dash_daq
 dash_extensions
 keras-tuner
+lxml

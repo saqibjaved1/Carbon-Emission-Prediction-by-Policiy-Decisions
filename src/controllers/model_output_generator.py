@@ -80,7 +80,6 @@ class GenerateOutput:
                                                          training_config['time_steps'])
         test_x, test_y = utils.generate_time_series_df(self.test_features, self.test_labels,
                                                          training_config['time_steps'])
-        print("Training X: {}\nTraining Y: {}".format(train_x.shape, train_y.shape))
         tss = TimeSeriesSplit()
         _, n_features = train_x.shape
         model = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)

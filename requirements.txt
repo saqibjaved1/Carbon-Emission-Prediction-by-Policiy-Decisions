@@ -4,6 +4,7 @@ seaborn
 pylint
 notebook
 tensorflow
+tensorflow-gpu
 matplotlib
 pyyaml
 xlrd
@@ -14,3 +15,4 @@ PyQt5
 dash
 dash_daq
 dash_extensions
+keras-tuner

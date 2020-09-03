@@ -428,6 +428,31 @@ indicators-scroll,
   margin-top: 20px;}
 
 
+/* input-area
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+ input-area,
+.input-area {
+
+  width: 90%;
+  height: 500px;
+  margin: auto;
+  }
+
+/* left(input area)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+ left,
+.left {
+  width: 45%;
+  height: 200px;
+  float: left;}
+/* right(input area)
+–––––––––––––––––––––––––––––––––––––––––––––––––– */
+right,
+.right {
+  margin-left: 55%;
+  height: 200px;
+  }
+
 /* slider-container
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 slider-container,
@@ -443,6 +468,7 @@ slider-container,
 –––––––––––––––––––––––––––––––––––––––––––––––––– */
 mid-area,
 .mid-area {
+
   margin-top: 20px;
   display: flex;
   justify-content: center;

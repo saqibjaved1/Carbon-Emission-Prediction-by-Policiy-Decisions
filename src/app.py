@@ -22,22 +22,23 @@ from dash_extensions.enrich import Dash
 import pickle
 import plotly.graph_objects as go
 
-df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv')
+# df = pd.read_csv('https://raw.githubusercontent.com/plotly/datasets/master/2014_world_gdp_with_codes.csv')
+df = pickle.load(open('dataset/Country_population_co2.pkl', 'rb'))
 fig = go.Figure(data=go.Choropleth(
     locations = df['CODE'],
-    z = df['GDP (BILLIONS)'],
-    text = df['COUNTRY'],
-    colorscale = 'Blues',
-    autocolorscale=False,
+    z = df['co2_percent'],
+    text = df['Country'],
+    # colorscale = 'Blues',
+    # autocolorscale=False,
     reversescale=True,
     marker_line_color='darkgray',
     marker_line_width=0.5,
-    colorbar_tickprefix = '$',
-    colorbar_title = 'GDP<br>Billions US$',
+    # colorbar_tickprefix = '$',
+    colorbar_title = 'CO2 Percent<br>Contribution',
 ))
 
 fig.update_layout(
-    title_text='2014 Global GDP',
+    title_text='CO2 Emissions 2017(% of world)',
     autosize=True,
     geo=dict(
         showframe=False,
@@ -52,7 +53,8 @@ fig.update_layout(
         text='Source: <a href="https://www.cia.gov/library/publications/the-world-factbook/fields/2195.html">\
             CIA World Factbook</a>',
         showarrow = False
-    )]
+    )],
+    height=400, width=650, margin=dict(l=50, r=50, b=50, t=50, pad=4)
 )
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 external_stylesheets = [

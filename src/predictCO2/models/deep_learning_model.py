@@ -45,21 +45,22 @@ class DeepLearningModel(NN_Template):
 
             input_dim = self.n_feats
 
-            if layer['type'] == 'dense':
+            layer_name = layer['type']
+            if 'dense' in layer_name:
                 self.model.add(layers.Dense(neurons, activation=activation, kernel_regularizer='l2'))
-            if layer['type'] == 'flatten':
+            if layer_name == 'flatten':
                 self.model.add(layers.Flatten())
-            if layer['type'] == 'lstm':
+            if layer_name == 'lstm':
                 self.model.add(
                     layers.LSTM(neurons, input_shape=(input_timesteps, input_dim), return_sequences=return_seq))
-            if layer['type'] == 'conv1d':
+            if 'conv1d' in layer_name:
                 self.model.add(layers.Conv1D(filters=filters, kernel_size=kernel_size,
                                              input_shape=(input_timesteps, input_dim)))
-            if layer['type'] == 'leakyrelu':
+            if 'leakyrelu' in layer_name:
                 self.model.add(layers.LeakyReLU(alpha=leaky_alpha))
-            if layer['type'] == 'max_pool':
+            if layer_name == 'max_pool':
                 self.model.add(layers.MaxPooling1D(pool_size=pool_size))
-            if layer['type'] == 'dropout':
+            if 'dropout' in layer_name:
                 self.model.add(layers.Dropout(dropout_rate))
 
         self.model.compile(loss=self.config['model']['loss'],

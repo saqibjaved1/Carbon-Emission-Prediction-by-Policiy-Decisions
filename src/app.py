@@ -282,9 +282,13 @@ app.layout = html.Div(
                                   ),
                                   html.Div(className='right',
                                            children=[
-                                                dcc.Graph(id="my-graph", figure=fig)
-                                                # dcc.Graph(id='co2-percent-graph', figure=fig)
-                                                #html.Img(src='assets/map.png', height=400, width=700)
+                                               html.Div(className='map-container map-container-1',
+                                                        children=[
+                                                            dcc.Graph(id="my-graph", figure=fig)
+                                                            # dcc.Graph(id='co2-percent-graph', figure=fig)
+                                                            #html.Img(src='assets/map.png', height=400, width=700)
+                                                        ]
+                                               ),
                                            ]
                                   )
                                   #html.Img(src='assets/map.png', height=400, width=700)

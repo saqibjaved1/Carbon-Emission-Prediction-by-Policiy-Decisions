@@ -63,6 +63,7 @@ def register_callbacks(app, dcc):
             if input_switcher_state:  # when the toggle button is on right(stringency slider is on display)
                 parse_model_input.model_type = DataAnalysingModels.STRINGENCY_INDEX_MODEL
                 parse_model_input.stringency_idx = float(stringency_idx)
+                out = GenerateOutput()
             else:
                 parse_model_input.model_type = DataAnalysingModels.SOCIAL_POLICY_MODEL
                 parse_model_input.school_closing_score = int(school_closing_score)
@@ -73,9 +74,9 @@ def register_callbacks(app, dcc):
                 parse_model_input.stay_home_score = int(stay_home_score)
                 parse_model_input.internal_movement_score = int(internal_movement_score)
                 parse_model_input.international_travel_score = int(international_travel_score)
-            out = GenerateOutput()
+                out = GenerateOutput(pred_steps=204)
             df = out.get_dataframe_for_plotting(parse_model_input, countries)
-            fig1 = px.line(df, x='Date', y='MtCO2/day', color='Country', title="Mt CO<sub>2</sub> Emission per day")
+            fig1 = px.line(df, x='Date', y='MtCO2/day', color='Country', title="CO<sub>2</sub> Emission per day")
             fig1.update_layout(annotations=[dict(yref='paper', y=1,
                                                  xref='x', x=pd.to_datetime('2020-06-11'),
                                                  text='Forecasting from here')],
@@ -85,7 +86,7 @@ def register_callbacks(app, dcc):
                                             line=dict(dash="dot"))],
                                transition_duration=500)
 
-            fig2 = px.line(df, x='Date', y='MtCO2 reduced/day', color='Country', title='Mt Reduction in CO<sub>2</sub> '
+            fig2 = px.line(df, x='Date', y='MtCO2 reduced/day', color='Country', title='Reduction in CO<sub>2</sub> '
                                                                                        'emission per day')
             fig2.update_layout(annotations=[dict(yref='paper', y=1,
                                                  xref='x', x=pd.to_datetime('2020-06-11'),

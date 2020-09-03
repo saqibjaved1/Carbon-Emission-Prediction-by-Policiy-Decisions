@@ -47,13 +47,7 @@ fig.update_layout(
         showcoastlines=False,
         projection_type='equirectangular'
     ),
-    annotations = [dict(
-        x=0.55,
-        y=0.1,
-        xref='paper',
-        yref='paper',
-        showarrow = False
-    )],
+
     height=400, width=650, margin=dict(l=50, r=50, b=50, t=50, pad=4)
 )
 # external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']

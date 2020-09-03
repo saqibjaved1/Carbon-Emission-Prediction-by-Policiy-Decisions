@@ -299,12 +299,12 @@ app.layout = html.Div(
                               children=[
                                   html.Div(className='left-graph',
                                            children=[
-                                                dcc.Graph(id='absolute-graph')
-                                           ]),
+                                                dcc.Graph(id='absolute-graph')],
+                                           id='left_co2'),
                                   html.Div(className='right-graph',
                                            children=[
-                                                dcc.Graph(id='reduction-graph')
-                                           ]),
+                                                dcc.Graph(id='reduction-graph')],
+                                           id='right_co2'),
                                   #html.Div(className='output_figure', id='div_output_graph'),
                                   html.Div(id='graph_dash-loading-callback'),
                                   dcc.Store(id='trigger')

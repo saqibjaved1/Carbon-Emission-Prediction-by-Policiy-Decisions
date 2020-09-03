@@ -37,8 +37,7 @@ def register_callbacks(app, dcc):
             return {'display': 'none'}
 
     @app.callback(
-        [Output(component_id='left_co2', component_property='children'),
-         Output(component_id='right_co2', component_property='children')],
+        Output(component_id='outputs', component_property='children'),
         [Input('submit_policy_selection', 'n_clicks')],
         [State('input-switch', 'value'),
          State('stringency_index', 'value'),
@@ -81,10 +80,10 @@ def register_callbacks(app, dcc):
                                                  xref='x', x=pd.to_datetime('2020-06-11'),
                                                  text='Forecasting from here')],
                                shapes=[dict(type='line',
-                                            yref='paper', y0=0, y1=1,
-                                            xref='x', x0=pd.to_datetime('2020-06-11'), x1=pd.to_datetime('2020-06-11'),
-                                            line=dict(dash="dot"))],
-                               transition_duration=500)
+                                           yref='paper', y0=0, y1=1,
+                                           xref='x', x0=pd.to_datetime('2020-06-11'), x1=pd.to_datetime('2020-06-11'),
+                                           line=dict(dash="dot"))],
+                              transition_duration=500)
 
             fig2 = px.line(df, x='Date', y='MtCO2 reduced/day', color='Country', title='Reduction in CO<sub>2</sub> '
                                                                                        'emission per day')
@@ -96,9 +95,10 @@ def register_callbacks(app, dcc):
                                             xref='x', x0=pd.to_datetime('2020-06-11'), x1=pd.to_datetime('2020-06-11'),
                                             line=dict(dash="dot"))],
                                transition_duration=500)
-            return [dcc.Graph(id='co2-graph', figure=fig1), dcc.Graph(id='co2-reduction-graph', figure=fig2)]
+            return dcc.Graph(id='co2-graph', figure=fig1), dcc.Graph(id='co2-reduction-graph', figure=fig2), \
+                   dcc.Store(id='trigger')
         else:
-            return [None, None]
+            return None, None, dcc.Store(id='trigger')
 
     # @app.callback(Output("submit_policy_selection", "disabled"),
     #               Trigger("submit_policy_selection", "n_clicks"),

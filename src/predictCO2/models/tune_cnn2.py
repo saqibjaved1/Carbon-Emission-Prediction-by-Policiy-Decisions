@@ -60,5 +60,5 @@ class CNN2(HyperModel):
             return RandomSearch(self.build_model, objective='mae', max_trials=5, executions_per_trial=2,
                                 directory='./tuning', project_name='CNN2')
         if method == "hyperband":
-            return Hyperband(self.build_model, objective='mae', max_epochs=20, factor=2, directory='./tuning',
+            return Hyperband(self.build_model, objective='mae', max_epochs=100, factor=2, directory='./tuning',
                              project_name='CNN2_hyperband_huber')

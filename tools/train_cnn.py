@@ -64,7 +64,7 @@ _, n_features = train_features.shape
 # tuner = cnns.tuning(method="hyperband")
 # X, Y = utils.data_sequence_generator(train_features, train_labels, training_config['time_steps'])
 # X_val, Y_val = utils.data_sequence_generator(test_features, test_labels, training_config['time_steps'])
-# tuner.search(X, Y, epochs=20, validation_data=(X_val, Y_val))
+# tuner.search(X, Y, epochs=100, validation_data=(X_val, Y_val))
 # tuner.results_summary()
 cnn = DeepLearningModel(training_config, num_features=n_features, num_outputs=1)
 cnn.plot_and_save_model("content/model_arch/CNN_TAPAN.png")

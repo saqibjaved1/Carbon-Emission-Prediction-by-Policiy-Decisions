@@ -1,7 +1,7 @@
 """Created by: Tapan Sharma
 Date: 20/06/20
 """
-import Globals
+import os
 import pandas as pd
 import yaml
 import numpy as np
@@ -40,8 +40,9 @@ def conform_date(date_str):
 
 
 def load_cfg_file(cfg_name):
-    cfg_prefix = Globals.ROOT_DIR + '/cfg/'
-    cfg_rel_path = cfg_prefix + "/" + cfg_name
+    cur = os.path.realpath(__file__)
+    cfg_prefix = cur.split('group07/')[0] + '/group07/cfg/'
+    cfg_rel_path = cfg_prefix + cfg_name
     cfg = None
     with open(r'{}'.format(cfg_rel_path)) as file:
         # The FullLoader parameter handles the conversion from YAML

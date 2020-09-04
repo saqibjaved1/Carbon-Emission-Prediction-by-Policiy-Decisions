@@ -7,7 +7,7 @@ import abc
 import math
 from abc import ABC
 import logging
-import Globals
+import os
 import pandas as pd
 import predictCO2.preprocessing.utils as utils
 from sklearn.preprocessing import MinMaxScaler, StandardScaler
@@ -16,6 +16,8 @@ from enum import Enum
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
+
+ROOT_PATH = os.path.realpath(__file__)
 
 
 class DataType(Enum):
@@ -92,10 +94,10 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         """
         self.training_cfg = utils.load_cfg_file(training_cfg)
         self.country_name = country
-        carbon_csv = Globals.ROOT_DIR + "/" + self.training_cfg['labels']
+        carbon_csv = ROOT_PATH.split('group07/')[0] + '/group07/' + self.training_cfg['labels']
         self.carbon_emission_data = CarbonEmissionData(carbon_csv, country)
 
-        policy_csv = Globals.ROOT_DIR + "/" + self.training_cfg['features']
+        policy_csv = ROOT_PATH.split('group07/')[0] + '/group07/' + self.training_cfg['features']
         self.policy_data = PolicyData(policy_csv, self.country_name, policy_category=policy_category,
                                       include_flags=include_flags)
 

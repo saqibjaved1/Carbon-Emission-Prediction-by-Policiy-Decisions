@@ -39,7 +39,7 @@ def plot_stringency_index(df, country_name, config_file):
     :return:
     """
     training_cfg = utils.load_cfg_file(config_file)
-    policy_csv = Globals.ROOT_DIR + "/" + training_cfg['features']
+    policy_csv = "../" + training_cfg['features']
     policy_data = pd.read_excel(policy_csv, sheet_name=country_name)
     str_index = policy_data['StringencyIndexForDisplay'].tolist()
     print(str_index)

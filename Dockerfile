@@ -5,4 +5,4 @@ ADD requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
 EXPOSE 8050
-CMD ["python", "./tools/dummy_app.py" ]
+CMD ["python", "./src/app.py" ]

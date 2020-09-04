@@ -97,7 +97,7 @@ app.layout = html.Div(
                                                          style={'margin-left': 20, 'color': 'white'}),
                                               dcc.Dropdown(className='dropdown', id='country-dropdown',
                                                            options=country_list,
-                                                           value=['Italy', 'Finland'],
+                                                           value=[],
                                                            multi=True
                                                            ),
 

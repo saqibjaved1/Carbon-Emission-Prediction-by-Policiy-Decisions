@@ -1,6 +1,6 @@
-#Deployment
+# Deployment
 
-###Build from the source:
+### Build from the source:
 
 1: Setup virtual environment.
 
@@ -17,7 +17,7 @@
 
 Server is then available at http://127.0.0.1:8050
 
-###Deploy Docker container for web-app
+### Deploy Docker container for web-app
 
 If docker is not installed follow [this](https://docs.docker.com/engine/install/) link.
 

@@ -7,14 +7,17 @@ import abc
 import math
 from abc import ABC
 import logging
-import Globals
+import os
 import pandas as pd
 import predictCO2.preprocessing.utils as utils
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 from enum import Enum
 
 logging.basicConfig(level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
+
+ROOT_PATH = os.path.realpath(__file__)
 
 
 class DataType(Enum):
@@ -91,10 +94,10 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         """
         self.training_cfg = utils.load_cfg_file(training_cfg)
         self.country_name = country
-        carbon_csv = Globals.ROOT_DIR + "/" + self.training_cfg['labels']
+        carbon_csv = ROOT_PATH.split('group07/')[0] + '/group07/' + self.training_cfg['labels']
         self.carbon_emission_data = CarbonEmissionData(carbon_csv, country)
 
-        policy_csv = Globals.ROOT_DIR + "/" + self.training_cfg['features']
+        policy_csv = ROOT_PATH.split('group07/')[0] + '/group07/' + self.training_cfg['features']
         self.policy_data = PolicyData(policy_csv, self.country_name, policy_category=policy_category,
                                       include_flags=include_flags)
 
@@ -159,14 +162,6 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
             self.feature_df = self.feature_df[self.feature_df.columns[0:lab_shape[1]]]
         else:
             self.label_df = self.label_df[self.label_df.columns[0:feat_shape[1]]]
-
-        if self.normalize:
-            self.feature_df = self.feature_df.sub(self.feature_df.min()).div(self.feature_df.max().
-                                                                                     sub(self.feature_df.min()))
-            # self.feature_df = self.feature_df.sub(self.feature_df.mean(1), axis=0).div(self.feature_df.std(1), axis=0)
-            self.label_df = self.label_df.sub(self.label_df.min()).div(self.label_df.max().
-                                                                               sub(self.label_df.min()))
-            # self.label_df = self.label_df.sub(self.label_df.mean(1), axis=0).div(self.label_df.std(1), axis=0)
         return self.feature_df, self.label_df
 
     def split_train_test(self, validation_percentage=None, fill_nan=False):
@@ -199,6 +194,12 @@ class CountryPolicyCarbonData(TrainDataInterface, ABC):
         test_features = features_raw.tail(val_samples)
         train_labels = labels_raw.head(samples - val_samples)
         test_labels = labels_raw.tail(val_samples)
+        if self.normalize:
+            scaler = MinMaxScaler()
+            train_features = pd.DataFrame(scaler.fit_transform(train_features), columns=train_features.columns)
+            train_labels = pd.DataFrame(scaler.fit_transform(train_labels), columns=train_labels.columns)
+            test_features = pd.DataFrame(scaler.fit_transform(test_features), columns=test_features.columns)
+            test_labels = pd.DataFrame(scaler.fit_transform(test_labels), columns=test_labels.columns)
 
         return train_features, train_labels, test_features, test_labels
 

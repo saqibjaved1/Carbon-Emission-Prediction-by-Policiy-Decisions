@@ -4,6 +4,7 @@ seaborn
 pylint
 notebook
 tensorflow
+tensorflow-gpu
 matplotlib
 pyyaml
 xlrd
@@ -11,3 +12,8 @@ country-converter
 scikit-learn
 pydot
 PyQt5
+dash
+dash_daq
+dash_extensions
+keras-tuner
+lxml

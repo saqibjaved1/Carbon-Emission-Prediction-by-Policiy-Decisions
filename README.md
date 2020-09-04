@@ -1,22 +1,50 @@
-This is our git repo!
+# Deployment
 
-# Development Section
+### Build from the source:
 
-## Create and activate environment
+1: Setup virtual environment.
+
 ```python3 -m venv ./venv```  
 ```source venv/bin/activate```
 
-## Install packages
+2. Install dependencies
+
 ```pip install -r requirements.txt```
 
-## Install predictCO2 package
-```pip install -e .```
+3. Start the web-app
 
-## Run tests
-```pytest ./tests```
+```python src/app.py```
 
-## Run linter
-```pylint src```
+Server is then available at http://127.0.0.1:8050
+
+### Deploy Docker container for web-app
+
+If docker is not installed follow [this](https://docs.docker.com/engine/install/) link.
+
+1. Execute startup script.
+
+```bash start.sh```
+
+The script first checks if docker image is locally available. If not, image is 
+pulled from the docker hub.
+
+If any error is encountered during docker deployment, follow the following steps:
+
+1. Fetch docker image for the project: ```docker pull t6nand/group07-co2```
+
+2. Deploy container: `docker run -d -p 8050:8050 t6nand/group07-co2`
+
+
+# Web Application Requirement
+
+Requires Python 3.5+
+
+## Start server: 
+```python src/app.py``` 
+
+## Open web app:
+```http://127.0.0.1:8050/```
+
 
 ## Run Data Analysis Pipeline
 To run evaluation on a pretrained model for some test data set, 
@@ -42,4 +70,4 @@ report). Overall 10 models were considered as documented in the milestone 3
 report.
 3. Evaluation: In this part, test data fetched from step 1 can be used on the 
 pre-trained model for making prediction and fetch performance metrics i.e. MSE, 
-MAE and Soft Accuracy scores as also defined in the Milestone 3 report. 
+MAE and Soft Accuracy scores as also defined in the Milestone 3 report.

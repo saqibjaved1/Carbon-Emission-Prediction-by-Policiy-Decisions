@@ -81,6 +81,9 @@ class stringency_model():
         for i in range(self.pred_steps):
             if i >= self.n_steps:
                 input_data[0, 1:] = output_arr[i - self.n_steps:]
+            else:
+                input_data[0, self.n_steps-i+1:] = output_arr[:]
+                input_data[0, 1:self.n_steps+1-i] = self.co2_data_avlbl.iloc[0, -self.n_steps+i:]
             out_data = self.lr.predict(input_data)
             output_arr.append(out_data)
         return output_arr
